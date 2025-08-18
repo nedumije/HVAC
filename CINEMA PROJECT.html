@@ -1,0 +1,1662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premiere Cinemas - Book Your Movie Experience</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #e50914;
+            --secondary: #141414;
+            --accent: #f5f5f1;
+            --highlight: #b81d24;
+            --text: #ffffff;
+            --text-secondary: #a3a3a3;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+        
+        body {
+            background-color: var(--secondary);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+            padding: 20px 50px;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            color: var(--primary);
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 30px;
+        }
+        
+        nav ul li a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: var(--primary);
+        }
+        
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-actions a {
+            color: var(--text);
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .user-actions .btn-signin {
+            background-color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .user-actions .btn-signin:hover {
+            background-color: var(--highlight);
+        }
+        
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 70vh;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('https://via.placeholder.com/1920x1080') center/cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+        }
+        
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--text);
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--highlight);
+            transform: scale(1.05);
+        }
+        
+        /* Booking Section */
+        .booking-container {
+            background-color: rgba(20, 20, 20, 0.9);
+            padding: 40px;
+            border-radius: 8px;
+            margin: -50px auto 50px;
+            width: 90%;
+            max-width: 1200px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 5;
+        }
+        
+        .booking-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .booking-header h2 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .booking-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        
+        .booking-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 4px;
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: rgba(255,255,255,0.2);
+        }
+        
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 20px;
+        }
+        
+        .btn-submit {
+            grid-column: 1 / -1;
+            background-color: var(--primary);
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-submit:hover {
+            background-color: var(--highlight);
+            transform: translateY(-2px);
+        }
+        
+        /* Movies Section */
+        .movies-section {
+            padding: 60px 20px;
+            background-color: var(--secondary);
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .section-header h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .movie-card {
+            background-color: rgba(30, 30, 30, 0.8);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        
+        .movie-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+        }
+        
+        .movie-poster {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+        
+        .movie-info {
+            padding: 20px;
+        }
+        
+        .movie-title {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+        
+        .movie-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .movie-rating {
+            color: #f5c518;
+            font-weight: bold;
+        }
+        
+        .movie-description {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .btn-more {
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 8px 15px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-more:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        /* Analytics Section */
+        .analytics-section {
+            padding: 60px 20px;
+            background-color: #000;
+        }
+        
+        .analytics-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 40px;
+        }
+        
+        .chart-container {
+            background-color: rgba(30, 30, 30, 0.8);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .chart-header h3 {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .chart-filter {
+            background-color: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: var(--text);
+            padding: 8px 15px;
+            border-radius: 4px;
+        }
+        
+        .chart {
+            height: 300px;
+            background-color: rgba(255,255,255,0.05);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #000;
+            padding: 60px 20px 30px;
+            margin-top: auto;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            color: var(--text);
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary);
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: var(--primary);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-links a {
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: var(--primary);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            z-index: 100;
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            background-color: var(--secondary);
+            margin: 50px auto;
+            max-width: 900px;
+            border-radius: 8px;
+            overflow: hidden;
+            animation: modalFadeIn 0.3s;
+        }
+        
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #000;
+        }
+        
+        .modal-header h2 {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+        
+        .modal-poster {
+            width: 100%;
+            border-radius: 8px;
+        }
+        
+        .modal-movie-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+        
+        .modal-movie-info p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+        
+        .modal-movie-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .modal-movie-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--text-secondary);
+        }
+        
+        .modal-movie-meta i {
+            color: var(--primary);
+        }
+        
+        .modal-selection {
+            margin-top: 30px;
+            background-color: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .modal-selection h4 {
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+        
+        .modal-seats {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .seat {
+            width: 30px;
+            height: 30px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .seat:hover {
+            background-color: rgba(229, 9, 20, 0.5);
+        }
+        
+        .seat.selected {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .seat.occupied {
+            background-color: rgba(255,255,255,0.3);
+            cursor: not-allowed;
+        }
+        
+        .screen {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .modal-summary {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .modal-summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .modal-summary-total {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            padding: 20px;
+            background-color: #000;
+            gap: 15px;
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text);
+            border: 1px solid var(--text);
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .modal-body {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-poster {
+                max-width: 300px;
+                margin: 0 auto;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            nav ul {
+                margin-top: 15px;
+                flex-wrap: wrap;
+            }
+            
+            nav ul li {
+                margin: 0 15px 10px 0;
+            }
+            
+            .user-actions {
+                margin-top: 15px;
+                width: 100%;
+                justify-content: flex-end;
+            }
+            
+            .hero {
+                height: 60vh;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .booking-container {
+                padding: 30px 20px;
+                width: 95%;
+            }
+            
+            .analytics-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-seats {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero {
+                height: 50vh;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .section-header h2 {
+                font-size: 2rem;
+            }
+            
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <a href="#" class="logo">
+            <i class="fas fa-film"></i> Premiere Cinemas
+        </a>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Movies</a></li>
+                <li><a href="#">Promotions</a></li>
+                <li><a href="#">Locations</a></li>
+                <li><a href="#">Food & Drinks</a></li>
+                <li><a href="#">About Us</a></li>
+            </ul>
+        </nav>
+        <div class="user-actions">
+            <a href="#"><i class="fas fa-search"></i></a>
+            <a href="#" class="btn-signin">Sign In</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Experience Movies Like Never Before</h1>
+            <p>Book your tickets now for the ultimate cinematic experience with premium seating, Dolby Atmos sound, and crystal-clear 4K projection.</p>
+            <a href="#booking" class="btn-primary">Book Now</a>
+        </div>
+    </section>
+
+    <!-- Booking Section -->
+    <section id="booking" class="booking-container">
+        <div class="booking-header">
+            <h2>Book Your Movie Tickets</h2>
+            <p>Select your preferred movie, location, date, and time to secure your seats</p>
+        </div>
+        <form class="booking-form">
+            <div class="form-group">
+                <label for="movie">Movie</label>
+                <select id="movie" class="form-control" required>
+                    <option value="" disabled selected>Select a movie</option>
+                    <option value="avengers-endgame">Avengers: Endgame</option>
+                    <option value="dune">Dune: Part Two</option>
+                    <option value="oppenheimer">Oppenheimer</option>
+                    <option value="barbie">Barbie</option>
+                    <option value="john-wick">John Wick: Chapter 4</option>
+                    <option value="avatar">Avatar: The Way of Water</option>
+                    <option value="spiderman">Spider-Man: Across the Spider-Verse</option>
+                    <option value="mission-impossible">Mission: Impossible - Dead Reckoning</option>
+                    <option value="guardians">Guardians of the Galaxy Vol. 3</option>
+                    <option value="fast-x">Fast X</option>
+                    <option value="little-mermaid">The Little Mermaid</option>
+                    <option value="ant-man">Ant-Man and the Wasp: Quantumania</option>
+                    <option value="transformers">Transformers: Rise of the Beasts</option>
+                    <option value="indiana-jones">Indiana Jones and the Dial of Destiny</option>
+                    <option value="the-flash">The Flash</option>
+                    <option value="elemental">Elemental</option>
+                    <option value="mario">The Super Mario Bros. Movie</option>
+                    <option value="evil-dead">Evil Dead Rise</option>
+                    <option value="creed">Creed III</option>
+                    <option value="shazam">Shazam! Fury of the Gods</option>
+                    <option value="black-panther">Black Panther: Wakanda Forever</option>
+                    <option value="puss-in-boots">Puss in Boots: The Last Wish</option>
+                    <option value="everything-everywhere">Everything Everywhere All at Once</option>
+                    <option value="the-batman">The Batman</option>
+                    <option value="top-gun">Top Gun: Maverick</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="location">Location</label>
+                <select id="location" class="form-control" required>
+                    <option value="" disabled selected>Select a location</option>
+                    <option value="nyc">New York City - Times Square</option>
+                    <option value="la">Los Angeles - Hollywood</option>
+                    <option value="chicago">Chicago - Magnificent Mile</option>
+                    <option value="houston">Houston - Downtown</option>
+                    <option value="phoenix">Phoenix - Desert Ridge</option>
+                    <option value="philadelphia">Philadelphia - Center City</option>
+                    <option value="san-antonio">San Antonio - River Walk</option>
+                    <option value="san-diego">San Diego - Gaslamp Quarter</option>
+                    <option value="dallas">Dallas - Uptown</option>
+                    <option value="san-jose">San Jose - Santana Row</option>
+                    <option value="austin">Austin - Downtown</option>
+                    <option value="jacksonville">Jacksonville - Southside</option>
+                    <option value="fort-worth">Fort Worth - Sundance Square</option>
+                    <option value="columbus">Columbus - Easton Town Center</option>
+                    <option value="charlotte">Charlotte - SouthPark</option>
+                    <option value="san-francisco">San Francisco - Union Square</option>
+                    <option value="indianapolis">Indianapolis - Downtown</option>
+                    <option value="seattle">Seattle - Downtown</option>
+                    <option value="denver">Denver - LoDo</option>
+                    <option value="washington">Washington D.C. - Georgetown</option>
+                    <option value="boston">Boston - Back Bay</option>
+                    <option value="el-paso">El Paso - Westside</option>
+                    <option value="nashville">Nashville - Downtown</option>
+                    <option value="detroit">Detroit - Downtown</option>
+                    <option value="oklahoma-city">Oklahoma City - Bricktown</option>
+                    <option value="portland">Portland - Pearl District</option>
+                    <option value="las-vegas">Las Vegas - The Strip</option>
+                    <option value="memphis">Memphis - Downtown</option>
+                    <option value="louisville">Louisville - Downtown</option>
+                    <option value="baltimore">Baltimore - Inner Harbor</option>
+                    <option value="milwaukee">Milwaukee - Downtown</option>
+                    <option value="albuquerque">Albuquerque - Uptown</option>
+                    <option value="tucson">Tucson - Foothills</option>
+                    <option value="fresno">Fresno - River Park</option>
+                    <option value="sacramento">Sacramento - Downtown</option>
+                    <option value="kansas-city">Kansas City - Power & Light</option>
+                    <option value="atlanta">Atlanta - Buckhead</option>
+                    <option value="miami">Miami - South Beach</option>
+                    <option value="orlando">Orlando - International Drive</option>
+                    <option value="tampa">Tampa - Channelside</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="date">Date</label>
+                <select id="date" class="form-control" required>
+                    <option value="" disabled selected>Select a date</option>
+                    <option value="today">Today, June 15</option>
+                    <option value="tomorrow">Tomorrow, June 16</option>
+                    <option value="day3">Friday, June 17</option>
+                    <option value="day4">Saturday, June 18</option>
+                    <option value="day5">Sunday, June 19</option>
+                    <option value="day6">Monday, June 20</option>
+                    <option value="day7">Tuesday, June 21</option>
+                    <option value="day8">Wednesday, June 22</option>
+                    <option value="day9">Thursday, June 23</option>
+                    <option value="day10">Friday, June 24</option>
+                    <option value="day11">Saturday, June 25</option>
+                    <option value="day12">Sunday, June 26</option>
+                    <option value="day13">Monday, June 27</option>
+                    <option value="day14">Tuesday, June 28</option>
+                    <option value="day15">Wednesday, June 29</option>
+                    <option value="day16">Thursday, June 30</option>
+                    <option value="day17">Friday, July 1</option>
+                    <option value="day18">Saturday, July 2</option>
+                    <option value="day19">Sunday, July 3</option>
+                    <option value="day20">Monday, July 4</option>
+                    <option value="day21">Tuesday, July 5</option>
+                    <option value="day22">Wednesday, July 6</option>
+                    <option value="day23">Thursday, July 7</option>
+                    <option value="day24">Friday, July 8</option>
+                    <option value="day25">Saturday, July 9</option>
+                    <option value="day26">Sunday, July 10</option>
+                    <option value="day27">Monday, July 11</option>
+                    <option value="day28">Tuesday, July 12</option>
+                    <option value="day29">Wednesday, July 13</option>
+                    <option value="day30">Thursday, July 14</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="time">Time</label>
+                <select id="time" class="form-control" required>
+                    <option value="" disabled selected>Select a time</option>
+                    <option value="10:00">10:00 AM</option>
+                    <option value="11:30">11:30 AM</option>
+                    <option value="13:00">1:00 PM</option>
+                    <option value="14:30">2:30 PM</option>
+                    <option value="16:00">4:00 PM</option>
+                    <option value="17:30">5:30 PM</option>
+                    <option value="19:00">7:00 PM</option>
+                    <option value="20:30">8:30 PM</option>
+                    <option value="22:00">10:00 PM</option>
+                    <option value="23:30">11:30 PM</option>
+                    <option value="00:45">12:45 AM (Late Night)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="experience">Experience</label>
+                <select id="experience" class="form-control" required>
+                    <option value="" disabled selected>Select an experience</option>
+                    <option value="standard">Standard</option>
+                    <option value="imax">IMAX</option>
+                    <option value="dolby">Dolby Cinema</option>
+                    <option value="4dx">4DX</option>
+                    <option value="screenx">ScreenX</option>
+                    <option value="vip">VIP Premium</option>
+                    <option value="3d">3D</option>
+                    <option value="atmos">Dolby Atmos</option>
+                    <option value="plf">Premium Large Format</option>
+                    <option value="private">Private Screening</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="tickets">Number of Tickets</label>
+                <select id="tickets" class="form-control" required>
+                    <option value="" disabled selected>Select number of tickets</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn-submit">Find Seats</button>
+        </form>
+    </section>
+
+    <!-- Now Showing Section -->
+    <section class="movies-section">
+        <div class="section-header">
+            <h2>Now Showing</h2>
+            <p>Discover the latest blockbusters and critically acclaimed films currently playing in our theaters</p>
+        </div>
+        <div class="movies-grid">
+            <div class="movie-card" data-movie="avengers-endgame">
+                <img src="https://via.placeholder.com/300x450?text=Avengers+Endgame" alt="Avengers: Endgame" class="movie-poster">
+                <div class="movie-info">
+                    <h3 class="movie-title">Avengers: Endgame</h3>
+                    <div class="movie-meta">
+                        <span>PG-13</span>
+                        <span class="movie-rating"><i class="fas fa-star"></i> 8.4/10</span>
+                        <span>181 min</span>
+                    </div>
+                    <p class="movie-description">After the devastating events of Avengers: Infinity War, the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos' actions and restore balance to the universe.</p>
+                    <button class="btn-more">Book Tickets</button>
+                </div>
+            </div>
+            
+            <div class="movie-card" data-movie="dune">
+                <img src="https://via.placeholder.com/300x450?text=Dune+Part+Two" alt="Dune: Part Two" class="movie-poster">
+                <div class="movie-info">
+                    <h3 class="movie-title">Dune: Part Two</h3>
+                    <div class="movie-meta">
+                        <span>PG-13</span>
+                        <span class="movie-rating"><i class="fas fa-star"></i> 9.1/10</span>
+                        <span>166 min</span>
+                    </div>
+                    <p class="movie-description">Paul Atreides unites with Chani and the Fremen while seeking revenge against the conspirators who destroyed his family. Facing a choice between the love of his life and the fate of the universe, he must prevent a terrible future only he can foresee.</p>
+                    <button class="btn-more">Book Tickets</button>
+                </div>
+            </div>
+            
+            <div class="movie-card" data-movie="oppenheimer">
+                <img src="https://via.placeholder.com/300x450?text=Oppenheimer" alt="Oppenheimer" class="movie-poster">
+                <div class="movie-info">
+                    <h3 class="movie-title">Oppenheimer</h3>
+                    <div class="movie-meta">
+                        <span>R</span>
+                        <span class="movie-rating"><i class="fas fa-star"></i> 8.8/10</span>
+                        <span>180 min</span>
+                    </div>
+                    <p class="movie-description">The story of American scientist J. Robert Oppenheimer and his role in the development of the atomic bomb during World War II, and his subsequent fall from grace due to his opposition to the hydrogen bomb.</p>
+                    <button class="btn-more">Book Tickets</button>
+                </div>
+            </div>
+            
+            <div class="movie-card" data-movie="barbie">
+                <img src="https://via.placeholder.com/300x450?text=Barbie" alt="Barbie" class="movie-poster">
+                <div class="movie-info">
+                    <h3 class="movie-title">Barbie</h3>
+                    <div class="movie-meta">
+                        <span>PG-13</span>
+                        <span class="movie-rating"><i class="fas fa-star"></i> 7.3/10</span>
+                        <span>114 min</span>
+                    </div>
+                    <p class="movie-description">Barbie suffers a crisis that leads her to question her world and her existence, prompting her to embark on a journey of self-discovery to the real world with Ken by her side.</p>
+                    <button class="btn-more">Book Tickets</button>
+                </div>
+            </div>
+            
+            <div class="movie-card" data-movie="john-wick">
+                <img src="https://via.placeholder.com/300x450?text=John+Wick+4" alt="John Wick: Chapter 4" class="movie-poster">
+                <div class="movie-info">
+                    <h3 class="movie-title">John Wick: Chapter 4</h3>
+                    <div class="movie-meta">
+                        <span>R</span>
+                        <span class="movie-rating"><i class="fas fa-star"></i> 8.0/10</span>
+                        <span>169 min</span>
+                    </div>
+                    <p class="movie-description">John Wick uncovers a path to defeating The High Table. But before he can earn his freedom, Wick must face off against a new enemy with powerful alliances across the globe and forces that turn old friends into foes.</p>
+                    <button class="btn-more">Book Tickets</button>
+                </div>
+            </div>
+            
+            <div class="movie-card" data-movie="avatar">
+                <img src="https://via.placeholder.com/300x450?text=Avatar+2" alt="Avatar: The Way of Water" class="movie-poster">
+                <div class="movie-info">
+                    <h3 class="movie-title">Avatar: The Way of Water</h3>
+                    <div class="movie-meta">
+                        <span>PG-13</span>
+                        <span class="movie-rating"><i class="fas fa-star"></i> 7.6/10</span>
+                        <span>192 min</span>
+                    </div>
+                    <p class="movie-description">Jake Sully lives with his newfound family formed on the planet of Pandora. Once a familiar threat returns to finish what was previously started, Jake must work with Neytiri and the army of the Na'vi race to protect their planet.</p>
+                    <button class="btn-more">Book Tickets</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Coming Soon Section -->
+    <section class="movies-section" style="background-color: #000;">
+        <div class="section-header">
+            <h2>Coming Soon</h2>
+            <p>Get ready for these highly anticipated upcoming releases</p>
+        </div>
+        <div class="movies-grid">
+            <div class="movie-card" data-movie="mission-impossible">
+                <img src="https://via.placeholder.com/300x450?text=Mission+Impossible" alt="Mission: Impossible - Dead Reckoning" class="movie-poster">
+                <div class="movie-info">
+                    <h3 class="movie-title">Mission: Impossible - Dead Reckoning</h3>
+                    <div class="movie-meta">
+                        <span>PG-13</span>
+                        <span class="movie-rating"><i class="fas fa-star"></i> Coming Soon</span>
+                        <span>163 min</span>
+                    </div>
+                    <p class="movie-description">Ethan Hunt and his IMF team must track down a terrifying new weapon that threatens all of humanity if it falls into the wrong hands. With control of the future and the fate of the world at stake, a deadly race around the globe begins.</p>
+                    <button class="btn-more">Notify Me</button>
+                </div>
+            </div>
+            
+            <div class="movie-card" data-movie="guardians">
+                <img src="https://via.placeholder.com/300x450?text=Guardians+3" alt="Guardians of the Galaxy Vol. 3" class="movie-poster">
+                <div class="movie-info">
+                    <h3 class="movie-title">Guardians of the Galaxy Vol. 3</h3>
+                    <div class="movie-meta">
+                        <span>PG-13</span>
+                        <span class="movie-rating"><i class="fas fa-star"></i> Coming Soon</span>
+                        <span>150 min</span>
+                    </div>
+                    <p class="movie-description">Still reeling from the loss of Gamora, Peter Quill must rally his team to defend the universe and protect one of their own. If the Guardians fail, it could lead to the end of the team as we know them.</p>
+                    <button class="btn-more">Notify Me</button>
+                </div>
+            </div>
+            
+            <div class="movie-card" data-movie="fast-x">
+                <img src="https://via.placeholder.com/300x450?text=Fast+X" alt="Fast X" class="movie-poster">
+                <div class="movie-info">
+                    <h3 class="movie-title">Fast X</h3>
+                    <div class="movie-meta">
+                        <span>PG-13</span>
+                        <span class="movie-rating"><i class="fas fa-star"></i> Coming Soon</span>
+                        <span>141 min</span>
+                    </div>
+                    <p class="movie-description">Dom Toretto and his family are targeted by the vengeful son of drug kingpin Hernan Reyes, who they toppled in Fast Five, as he seeks revenge with the help of a new enemy in the form of a rising cyber-terrorist.</p>
+                    <button class="btn-more">Notify Me</button>
+                </div>
+            </div>
+            
+            <div class="movie-card" data-movie="little-mermaid">
+                <img src="https://via.placeholder.com/300x450?text=Little+Mermaid" alt="The Little Mermaid" class="movie-poster">
+                <div class="movie-info">
+                    <h3 class="movie-title">The Little Mermaid</h3>
+                    <div class="movie-meta">
+                        <span>PG</span>
+                        <span class="movie-rating"><i class="fas fa-star"></i> Coming Soon</span>
+                        <span>135 min</span>
+                    </div>
+                    <p class="movie-description">A young mermaid makes a deal with a sea witch to trade her beautiful voice for human legs so she can discover the world above water and impress a prince.</p>
+                    <button class="btn-more">Notify Me</button>
+                </div>
+            </div>
+            
+            <div class="movie-card" data-movie="ant-man">
+                <img src="https://via.placeholder.com/300x450?text=Ant-Man+3" alt="Ant-Man and the Wasp: Quantumania" class="movie-poster">
+                <div class="movie-info">
+                    <h3 class="movie-title">Ant-Man and the Wasp: Quantumania</h3>
+                    <div class="movie-meta">
+                        <span>PG-13</span>
+                        <span class="movie-rating"><i class="fas fa-star"></i> Coming Soon</span>
+                        <span>125 min</span>
+                    </div>
+                    <p class="movie-description">Scott Lang and Hope Van Dyne are dragged into the Quantum Realm, along with Hope's parents and Scott's daughter Cassie. Together they must find a way to escape, but what secrets is Kang the Conqueror hiding?</p>
+                    <button class="btn-more">Notify Me</button>
+                </div>
+            </div>
+            
+            <div class="movie-card" data-movie="transformers">
+                <img src="https://via.placeholder.com/300x450?text=Transformers+7" alt="Transformers: Rise of the Beasts" class="movie-poster">
+                <div class="movie-info">
+                    <h3 class="movie-title">Transformers: Rise of the Beasts</h3>
+                    <div class="movie-meta">
+                        <span>PG-13</span>
+                        <span class="movie-rating"><i class="fas fa-star"></i> Coming Soon</span>
+                        <span>127 min</span>
+                    </div>
+                    <p class="movie-description">Optimus Prime and the Autobots take on their biggest challenge yet. When a new threat capable of destroying the entire planet emerges, they must team with a powerful faction of Transformers known as the Maximals to save Earth.</p>
+                    <button class="btn-more">Notify Me</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Analytics Section -->
+    <section class="analytics-section">
+        <div class="section-header">
+            <h2>Movie Analytics</h2>
+            <p>Discover trends and insights about current and upcoming movies</p>
+        </div>
+        <div class="analytics-container">
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3>Top Grossing Movies This Month</h3>
+                    <select class="chart-filter">
+                        <option>This Month</option>
+                        <option>Last Month</option>
+                        <option>This Year</option>
+                    </select>
+                </div>
+                <div class="chart">
+                    <canvas id="revenueChart" width="400" height="300"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3>Audience Ratings Comparison</h3>
+                    <select class="chart-filter">
+                        <option>All Movies</option>
+                        <option>Action</option>
+                        <option>Drama</option>
+                        <option>Comedy</option>
+                    </select>
+                </div>
+                <div class="chart">
+                    <canvas id="ratingsChart" width="400" height="300"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3>Most Popular Showtimes</h3>
+                    <select class="chart-filter">
+                        <option>All Locations</option>
+                        <option>New York</option>
+                        <option>Los Angeles</option>
+                        <option>Chicago</option>
+                    </select>
+                </div>
+                <div class="chart">
+                    <canvas id="showtimesChart" width="400" height="300"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3>Genre Popularity</h3>
+                    <select class="chart-filter">
+                        <option>This Month</option>
+                        <option>Last Month</option>
+                        <option>This Year</option>
+                    </select>
+                </div>
+                <div class="chart">
+                    <canvas id="genreChart" width="400" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>About Premiere</h3>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Investor Relations</a></li>
+                    <li><a href="#">Corporate Information</a></li>
+                    <li><a href="#">Newsroom</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Help & Contact</h3>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">FAQs</a></li>
+                    <li><a href="#">Gift Cards</a></li>
+                    <li><a href="#">Accessibility</a></li>
+                    <li><a href="#">Feedback</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Movies</h3>
+                <ul>
+                    <li><a href="#">Now Showing</a></li>
+                    <li><a href="#">Coming Soon</a></li>
+                    <li><a href="#">IMAX</a></li>
+                    <li><a href="#">3D Movies</a></li>
+                    <li><a href="#">Private Screenings</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Locations</h3>
+                <ul>
+                    <li><a href="#">Find a Theater</a></li>
+                    <li><a href="#">NYC Theaters</a></li>
+                    <li><a href="#">LA Theaters</a></li>
+                    <li><a href="#">Chicago Theaters</a></li>
+                    <li><a href="#">All Locations</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Connect With Us</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                </div>
+                <h3 style="margin-top: 20px;">Download Our App</h3>
+                <div class="app-download">
+                    <a href="#"><img src="https://via.placeholder.com/120x40?text=App+Store" alt="App Store" style="margin-bottom: 10px;"></a>
+                    <a href="#"><img src="https://via.placeholder.com/120x40?text=Google+Play" alt="Google Play"></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2023 Premiere Cinemas. All Rights Reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Use</a> | <a href="#">Cookie Preferences</a></p>
+        </div>
+    </footer>
+
+    <!-- Booking Modal -->
+    <div class="modal" id="bookingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Book Your Tickets</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img src="https://via.placeholder.com/300x450?text=Movie+Poster" alt="Movie Poster" class="modal-poster">
+                <div class="modal-movie-info">
+                    <h3>Avengers: Endgame</h3>
+                    <div class="modal-movie-meta">
+                        <span><i class="fas fa-clock"></i> 181 min</span>
+                        <span><i class="fas fa-star"></i> 8.4/10</span>
+                        <span><i class="fas fa-certificate"></i> PG-13</span>
+                    </div>
+                    <p>After the devastating events of Avengers: Infinity War, the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos' actions and restore balance to the universe.</p>
+                    
+                    <div class="modal-selection">
+                        <h4>Your Selection</h4>
+                        <div class="modal-summary-item">
+                            <span>Location:</span>
+                            <span>New York City - Times Square</span>
+                        </div>
+                        <div class="modal-summary-item">
+                            <span>Date & Time:</span>
+                            <span>June 15, 2023 - 7:00 PM</span>
+                        </div>
+                        <div class="modal-summary-item">
+                            <span>Experience:</span>
+                            <span>IMAX</span>
+                        </div>
+                        <div class="modal-summary-item">
+                            <span>Tickets:</span>
+                            <span>2 Adults</span>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-selection">
+                        <h4>Select Your Seats</h4>
+                        <div class="screen">SCREEN</div>
+                        <div class="modal-seats">
+                            <div class="seat">A1</div>
+                            <div class="seat">A2</div>
+                            <div class="seat">A3</div>
+                            <div class="seat">A4</div>
+                            <div class="seat">A5</div>
+                            <div class="seat">A6</div>
+                            <div class="seat">A7</div>
+                            <div class="seat">A8</div>
+                            <div class="seat">A9</div>
+                            <div class="seat">A10</div>
+                            <div class="seat">B1</div>
+                            <div class="seat">B2</div>
+                            <div class="seat occupied">B3</div>
+                            <div class="seat occupied">B4</div>
+                            <div class="seat">B5</div>
+                            <div class="seat">B6</div>
+                            <div class="seat">B7</div>
+                            <div class="seat">B8</div>
+                            <div class="seat">B9</div>
+                            <div class="seat">B10</div>
+                            <div class="seat">C1</div>
+                            <div class="seat">C2</div>
+                            <div class="seat">C3</div>
+                            <div class="seat">C4</div>
+                            <div class="seat">C5</div>
+                            <div class="seat">C6</div>
+                            <div class="seat">C7</div>
+                            <div class="seat">C8</div>
+                            <div class="seat">C9</div>
+                            <div class="seat">C10</div>
+                            <div class="seat">D1</div>
+                            <div class="seat">D2</div>
+                            <div class="seat">D3</div>
+                            <div class="seat">D4</div>
+                            <div class="seat">D5</div>
+                            <div class="seat">D6</div>
+                            <div class="seat">D7</div>
+                            <div class="seat">D8</div>
+                            <div class="seat">D9</div>
+                            <div class="seat">D10</div>
+                            <div class="seat">E1</div>
+                            <div class="seat">E2</div>
+                            <div class="seat">E3</div>
+                            <div class="seat">E4</div>
+                            <div class="seat">E5</div>
+                            <div class="seat">E6</div>
+                            <div class="seat">E7</div>
+                            <div class="seat">E8</div>
+                            <div class="seat">E9</div>
+                            <div class="seat">E10</div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-summary">
+                        <div class="modal-summary-item">
+                            <span>2 x Adult IMAX Ticket</span>
+                            <span>$32.00</span>
+                        </div>
+                        <div class="modal-summary-item">
+                            <span>Service Fee</span>
+                            <span>$3.50</span>
+                        </div>
+                        <div class="modal-summary-total">
+                            <span>Total</span>
+                            <span>$35.50</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary">Cancel</button>
+                <button class="btn-primary">Confirm Booking</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Modal functionality
+        const modal = document.getElementById('bookingModal');
+        const closeModal = document.querySelector('.close-modal');
+        const bookButtons = document.querySelectorAll('.btn-more');
+        
+        bookButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+        
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+        
+        // Seat selection
+        const seats = document.querySelectorAll('.seat:not(.occupied)');
+        seats.forEach(seat => {
+            seat.addEventListener('click', () => {
+                seat.classList.toggle('selected');
+                updateSummary();
+            });
+        });
+        
+        function updateSummary() {
+            const selectedSeats = document.querySelectorAll('.seat.selected');
+            // Update summary with selected seats
+        }
+        
+        // Charts
+        // Revenue Chart
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        const revenueChart = new Chart(revenueCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Avengers: Endgame', 'Dune: Part Two', 'Oppenheimer', 'Barbie', 'John Wick 4'],
+                datasets: [{
+                    label: 'Revenue (in millions)',
+                    data: [42.5, 38.2, 35.7, 32.9, 29.4],
+                    backgroundColor: [
+                        'rgba(229, 9, 20, 0.7)',
+                        'rgba(20, 20, 20, 0.7)',
+                        'rgba(245, 245, 241, 0.7)',
+                        'rgba(184, 29, 36, 0.7)',
+                        'rgba(163, 163, 163, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(229, 9, 20, 1)',
+                        'rgba(20, 20, 20, 1)',
+                        'rgba(245, 245, 241, 1)',
+                        'rgba(184, 29, 36, 1)',
+                        'rgba(163, 163, 163, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value + 'M';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Ratings Chart
+        const ratingsCtx = document.getElementById('ratingsChart').getContext('2d');
+        const ratingsChart = new Chart(ratingsCtx, {
+            type: 'radar',
+            data: {
+                labels: ['Story', 'Acting', 'Visuals', 'Sound', 'Direction', 'Entertainment'],
+                datasets: [
+                    {
+                        label: 'Avengers: Endgame',
+                        data: [9, 8, 9, 9, 8, 10],
+                        backgroundColor: 'rgba(229, 9, 20, 0.2)',
+                        borderColor: 'rgba(229, 9, 20, 1)',
+                        pointBackgroundColor: 'rgba(229, 9, 20, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(229, 9, 20, 1)'
+                    },
+                    {
+                        label: 'Dune: Part Two',
+                        data: [10, 9, 10, 10, 9, 9],
+                        backgroundColor: 'rgba(20, 20, 20, 0.2)',
+                        borderColor: 'rgba(20, 20, 20, 1)',
+                        pointBackgroundColor: 'rgba(20, 20, 20, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(20, 20, 20, 1)'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    r: {
+                        angleLines: {
+                            display: true
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 10
+                    }
+                }
+            }
+        });
+        
+        // Showtimes Chart
+        const showtimesCtx = document.getElementById('showtimesChart').getContext('2d');
+        const showtimesChart = new Chart(showtimesCtx, {
+            type: 'line',
+            data: {
+                labels: ['10:00 AM', '1:00 PM', '4:00 PM', '7:00 PM', '10:00 PM'],
+                datasets: [
+                    {
+                        label: 'Weekday',
+                        data: [35, 45, 60, 85, 70],
+                        borderColor: 'rgba(229, 9, 20, 1)',
+                        backgroundColor: 'rgba(229, 9, 20, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'Weekend',
+                        data: [60, 75, 85, 95, 90],
+                        borderColor: 'rgba(245, 245, 241, 1)',
+                        backgroundColor: 'rgba(245, 245, 241, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Attendance by Showtime (%)'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+        
+        // Genre Chart
+        const genreCtx = document.getElementById('genreChart').getContext('2d');
+        const genreChart = new Chart(genreCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Action', 'Drama', 'Comedy', 'Sci-Fi', 'Horror', 'Animation'],
+                datasets: [{
+                    data: [35, 25, 15, 12, 8, 5],
+                    backgroundColor: [
+                        'rgba(229, 9, 20, 0.7)',
+                        'rgba(20, 20, 20, 0.7)',
+                        'rgba(245, 245, 241, 0.7)',
+                        'rgba(184, 29, 36, 0.7)',
+                        'rgba(163, 163, 163, 0.7)',
+                        'rgba(100, 100, 100, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(229, 9, 20, 1)',
+                        'rgba(20, 20, 20, 1)',
+                        'rgba(245, 245, 241, 1)',
+                        'rgba(184, 29, 36, 1)',
+                        'rgba(163, 163, 163, 1)',
+                        'rgba(100, 100, 100, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Ticket Sales by Genre (%)'
+                    }
+                }
+            }
+        });
+        
+        // Form submission
+        const bookingForm = document.querySelector('.booking-form');
+        bookingForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            
+            // Update modal with selected options
+            const movieTitle = document.querySelector('#movie option:checked').text;
+            const location = document.querySelector('#location option:checked').text;
+            const dateTime = document.querySelector('#date option:checked').text + ' - ' + 
+                            document.querySelector('#time option:checked').text;
+            const experience = document.querySelector('#experience option:checked').text;
+            const tickets = document.querySelector('#tickets option:checked').text + ' Adults';
+            
+            document.querySelector('.modal-movie-info h3').textContent = movieTitle;
+            document.querySelectorAll('.modal-summary-item span')[0].textContent = 'Location:';
+            document.querySelectorAll('.modal-summary-item span')[1].textContent = location;
+            document.querySelectorAll('.modal-summary-item span')[2].textContent = 'Date & Time:';
+            document.querySelectorAll('.modal-summary-item span')[3].textContent = dateTime;
+            document.querySelectorAll('.modal-summary-item span')[4].textContent = 'Experience:';
+            document.querySelectorAll('.modal-summary-item span')[5].textContent = experience;
+            document.querySelectorAll('.modal-summary-item span')[6].textContent = 'Tickets:';
+            document.querySelectorAll('.modal-summary-item span')[7].textContent = tickets;
+            
+            // Update pricing
+            const ticketCount = parseInt(document.querySelector('#tickets').value);
+            const ticketPrice = experience.includes('IMAX') ? 16 : 
+                              experience.includes('Dolby') ? 18 : 
+                              experience.includes('4DX') ? 20 : 
+                              experience.includes('VIP') ? 25 : 12;
+            
+            const subtotal = ticketCount * ticketPrice;
+            const serviceFee = 1.75 * ticketCount;
+            const total = subtotal + serviceFee;
+            
+            document.querySelectorAll('.modal-summary-item span')[8].textContent = 
+                `${ticketCount} x ${experience} Ticket`;
+            document.querySelectorAll('.modal-summary-item span')[9].textContent = 
+                `$${subtotal.toFixed(2)}`;
+            document.querySelectorAll('.modal-summary-item span')[10].textContent = 'Service Fee';
+            document.querySelectorAll('.modal-summary-item span')[11].textContent = 
+                `$${serviceFee.toFixed(2)}`;
+            document.querySelectorAll('.modal-summary-total span')[1].textContent = 
+                `$${total.toFixed(2)}`;
+        });
+    </script>
+</body>
+</html>
