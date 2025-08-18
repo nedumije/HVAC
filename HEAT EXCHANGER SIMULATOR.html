@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HEXpert - Advanced Heat Exchanger Analysis</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+        }
+        .nav-tabs .nav-link.active {
+            font-weight: bold;
+            border-bottom: 3px solid var(--accent-color);
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            border: none;
+        }
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+        }
+        .btn-primary {
+            background-color: var(--secondary-color);
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        .graph-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .param-input {
+            border-left: 3px solid var(--secondary-color);
+        }
+        .results-panel {
+            border-left: 3px solid var(--accent-color);
+            background-color: #f8f9fa;
+        }
+        .hover-info {
+            cursor: help;
+            border-bottom: 1px dotted #666;
+        }
+        #pinchChart {
+            height: 500px;
+        }
+        .tab-pane {
+            padding: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-4">
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <h1 class="display-4">HEXpert</h1>
+                <p class="lead">Advanced Heat Exchanger Analysis, Design, Retrofit & Pinch Technology</p>
+            </div>
+        </div>
+
+        <ul class="nav nav-tabs" id="mainTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="design-tab" data-bs-toggle="tab" data-bs-target="#design" type="button" role="tab">Design Analysis</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="performance-tab" data-bs-toggle="tab" data-bs-target="#performance" type="button" role="tab">Performance Rating</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="retrofit-tab" data-bs-toggle="tab" data-bs-target="#retrofit" type="button" role="tab">Retrofit Analysis</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pinch-tab" data-bs-toggle="tab" data-bs-target="#pinch" type="button" role="tab">Pinch Analysis</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="compare-tab" data-bs-toggle="tab" data-bs-target="#compare" type="button" role="tab">Compare Scenarios</button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="mainTabsContent">
+            <!-- Design Analysis Tab -->
+            <div class="tab-pane fade show active" id="design" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Design Parameters</h5>
+                            </div>
+                            <div class="card-body param-input">
+                                <div class="mb-3">
+                                    <label class="form-label">Heat Exchanger Type</label>
+                                    <select class="form-select" id="hexType">
+                                        <option value="shellTube">Shell & Tube</option>
+                                        <option value="plate">Plate Heat Exchanger</option>
+                                        <option value="doublePipe">Double Pipe</option>
+                                        <option value="airCooled">Air Cooled</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Hot Fluid</label>
+                                        <select class="form-select" id="hotFluid">
+                                            <option value="water">Water</option>
+                                            <option value="steam">Steam</option>
+                                            <option value="oil">Oil</option>
+                                            <option value="air">Air</option>
+                                            <option value="custom">Custom</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Cold Fluid</label>
+                                        <select class="form-select" id="coldFluid">
+                                            <option value="water">Water</option>
+                                            <option value="oil">Oil</option>
+                                            <option value="air">Air</option>
+                                            <option value="custom">Custom</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div id="fluidProperties">
+                                    <!-- Dynamic content based on fluid selection -->
+                                    <div class="mt-3">
+                                        <h6>Hot Fluid Properties</h6>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label class="form-label">Flow Rate (kg/s)</label>
+                                                <input type="number" class="form-control" id="hotFlowRate" value="10">
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label">Inlet Temp (°C)</label>
+                                                <input type="number" class="form-control" id="hotInTemp" value="120">
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-6">
+                                                <label class="form-label">Outlet Temp (°C)</label>
+                                                <input type="number" class="form-control" id="hotOutTemp" value="80">
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label">Specific Heat (kJ/kg°C)</label>
+                                                <input type="number" step="0.01" class="form-control" id="hotCp" value="4.18">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mt-3">
+                                        <h6>Cold Fluid Properties</h6>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label class="form-label">Flow Rate (kg/s)</label>
+                                                <input type="number" class="form-control" id="coldFlowRate" value="15">
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label">Inlet Temp (°C)</label>
+                                                <input type="number" class="form-control" id="coldInTemp" value="20">
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-6">
+                                                <label class="form-label">Outlet Temp (°C)</label>
+                                                <input type="number" class="form-control" id="coldOutTemp" value="60">
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label">Specific Heat (kJ/kg°C)</label>
+                                                <input type="number" step="0.01" class="form-control" id="coldCp" value="4.18">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-3">
+                                    <button class="btn btn-primary w-100" id="calculateDesign">Calculate Design</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card mt-3 results-panel" id="designResults" style="display: none;">
+                            <div class="card-header bg-success text-white">
+                                <h5>Design Results</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <td>Heat Duty (kW)</td>
+                                            <td id="heatDuty">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>LMTD (°C)</td>
+                                            <td id="lmtd">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Required Area (m²)</td>
+                                            <td id="reqArea">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Overall U (W/m²°C)</td>
+                                            <td id="overallU">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Effectiveness (%)</td>
+                                            <td id="effectiveness">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>NTU</td>
+                                            <td id="ntu">-</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <button class="btn btn-outline-primary mt-2 w-100" id="optimizeDesign">Optimize Design</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Temperature Profile</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="graph-container">
+                                    <div id="tempProfileChart" style="height: 300px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Heat Transfer Coefficients</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="graph-container">
+                                            <canvas id="coefficientChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Pressure Drops</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="graph-container">
+                                            <canvas id="pressureDropChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Performance Rating Tab -->
+            <div class="tab-pane fade" id="performance" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Existing Heat Exchanger</h5>
+                            </div>
+                            <div class="card-body param-input">
+                                <div class="mb-3">
+                                    <label class="form-label">Heat Exchanger Type</label>
+                                    <select class="form-select" id="existingHexType">
+                                        <option value="shellTube">Shell & Tube</option>
+                                        <option value="plate">Plate Heat Exchanger</option>
+                                    </select>
+                                </div>
+                                
+                                <div id="shellTubeParams" class="hex-params">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label class="form-label">Shell Diameter (m)</label>
+                                            <input type="number" step="0.01" class="form-control" id="shellDia" value="0.5">
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label">Tube Length (m)</label>
+                                            <input type="number" step="0.01" class="form-control" id="tubeLength" value="6">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-6">
+                                            <label class="form-label">Tube OD (mm)</label>
+                                            <input type="number" step="0.1" class="form-control" id="tubeOD" value="19.05">
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label">Tube Pitch (mm)</label>
+                                            <input type="number" step="0.1" class="form-control" id="tubePitch" value="25">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-6">
+                                            <label class="form-label">Number of Tubes</label>
+                                            <input type="number" class="form-control" id="numTubes" value="100">
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label">Number of Passes</label>
+                                            <input type="number" class="form-control" id="numPasses" value="2">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div id="plateParams" class="hex-params" style="display: none;">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label class="form-label">Plate Width (m)</label>
+                                            <input type="number" step="0.01" class="form-control" id="plateWidth" value="0.5">
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label">Plate Height (m)</label>
+                                            <input type="number" step="0.01" class="form-control" id="plateHeight" value="1.2">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-6">
+                                            <label class="form-label">Plate Gap (mm)</label>
+                                            <input type="number" step="0.1" class="form-control" id="plateGap" value="5">
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label">Number of Plates</label>
+                                            <input type="number" class="form-control" id="numPlates" value="50">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-3">
+                                    <button class="btn btn-primary w-100" id="ratePerformance">Rate Performance</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card mt-3 results-panel" id="ratingResults" style="display: none;">
+                            <div class="card-header bg-info text-white">
+                                <h5>Performance Results</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <td>Actual Heat Transfer (kW)</td>
+                                            <td id="actualHeat">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Required Heat Transfer (kW)</td>
+                                            <td id="requiredHeat">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Overdesign (%)</td>
+                                            <td id="overdesign">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Fouling Factor (m²°C/W)</td>
+                                            <td id="foulingFactor">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Velocity (m/s)</td>
+                                            <td id="fluidVelocity">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Reynolds Number</td>
+                                            <td id="reynolds">-</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="alert mt-2" id="ratingAlert"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Performance Analysis</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="graph-container">
+                                    <div id="performanceChart" style="height: 400px;"></div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-md-6">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="showFouling">
+                                            <label class="form-check-label" for="showFouling">Show Fouling Impact</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="showVelocity">
+                                            <label class="form-check-label" for="showVelocity">Show Velocity Impact</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Retrofit Analysis Tab -->
+            <div class="tab-pane fade" id="retrofit" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Retrofit Options</h5>
+                            </div>
+                            <div class="card-body param-input">
+                                <div class="mb-3">
+                                    <label class="form-label">Current Configuration</label>
+                                    <select class="form-select" id="currentConfig">
+                                        <option value="shellTube1-2">Shell & Tube (1-2)</option>
+                                        <option value="shellTube2-4">Shell & Tube (2-4)</option>
+                                        <option value="plate">Plate Heat Exchanger</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Retrofit Objective</label>
+                                    <select class="form-select" id="retrofitObjective">
+                                        <option value="increaseCapacity">Increase Capacity</option>
+                                        <option value="reducePressureDrop">Reduce Pressure Drop</option>
+                                        <option value="improveEffectiveness">Improve Effectiveness</option>
+                                        <option value="reduceFouling">Reduce Fouling</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Available Options</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="optionTubeInsert" checked>
+                                        <label class="form-check-label" for="optionTubeInsert">Tube Inserts</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="optionEnhancedTubes" checked>
+                                        <label class="form-check-label" for="optionEnhancedTubes">Enhanced Tubes</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="optionBaffleChange" checked>
+                                        <label class="form-check-label" for="optionBaffleChange">Baffle Modification</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="optionAddUnits" checked>
+                                        <label class="form-check-label" for="optionAddUnits">Additional Units</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Budget Constraint ($)</label>
+                                    <input type="number" class="form-control" id="retrofitBudget" value="50000">
+                                </div>
+                                
+                                <button class="btn btn-primary w-100" id="analyzeRetrofit">Analyze Retrofit Options</button>
+                            </div>
+                        </div>
+                        
+                        <div class="card mt-3 results-panel" id="retrofitResults" style="display: none;">
+                            <div class="card-header bg-warning text-dark">
+                                <h5>Retrofit Recommendations</h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="retrofitOptionsList">
+                                    <!-- Dynamic content will be inserted here -->
+                                </div>
+                                <button class="btn btn-outline-primary mt-2 w-100" id="compareRetrofit">Compare Options</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Retrofit Comparison</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="graph-container">
+                                    <div id="retrofitRadarChart" style="height: 400px;"></div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">X-Axis Metric</label>
+                                        <select class="form-select" id="retrofitXAxis">
+                                            <option value="cost">Cost</option>
+                                            <option value="capacity">Capacity Increase</option>
+                                            <option value="pressureDrop">Pressure Drop Reduction</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Y-Axis Metric</label>
+                                        <select class="form-select" id="retrofitYAxis">
+                                            <option value="effectiveness">Effectiveness</option>
+                                            <option value="payback">Payback Period</option>
+                                            <option value="maintenance">Maintenance Reduction</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pinch Analysis Tab -->
+            <div class="tab-pane fade" id="pinch" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Process Streams</h5>
+                            </div>
+                            <div class="card-body param-input">
+                                <div id="streamInputs">
+                                    <div class="stream-group mb-3">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <h6>Stream 1</h6>
+                                            <button class="btn btn-sm btn-danger remove-stream">×</button>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label class="form-label">Type</label>
+                                                <select class="form-select stream-type">
+                                                    <option value="hot">Hot</option>
+                                                    <option value="cold">Cold</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label">Heat Capacity (kW/°C)</label>
+                                                <input type="number" step="0.01" class="form-control stream-cp" value="10">
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-6">
+                                                <label class="form-label">Supply Temp (°C)</label>
+                                                <input type="number" class="form-control stream-supply" value="180">
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label">Target Temp (°C)</label>
+                                                <input type="number" class="form-control stream-target" value="80">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-sm btn-outline-secondary w-100" id="addStream">Add Stream</button>
+                                
+                                <div class="mt-3">
+                                    <label class="form-label">Minimum Approach ΔT (°C)</label>
+                                    <input type="number" class="form-control" id="minApproach" value="10">
+                                </div>
+                                
+                                <button class="btn btn-primary w-100 mt-3" id="calculatePinch">Calculate Pinch</button>
+                            </div>
+                        </div>
+                        
+                        <div class="card mt-3 results-panel" id="pinchResults" style="display: none;">
+                            <div class="card-header bg-success text-white">
+                                <h5>Pinch Results</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <td>Pinch Temperature (°C)</td>
+                                            <td id="pinchTemp">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Hot Utility (kW)</td>
+                                            <td id="hotUtility">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Cold Utility (kW)</td>
+                                            <td id="coldUtility">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Maximum Energy Recovery (kW)</td>
+                                            <td id="maxRecovery">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Number of Units</td>
+                                            <td id="numUnits">-</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Composite Curves</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="graph-container">
+                                    <div id="compositeCurveChart" style="height: 400px;"></div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Temperature Interval (°C)</label>
+                                        <input type="number" class="form-control" id="tempInterval" value="10" min="1">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check form-switch mt-4">
+                                            <input class="form-check-input" type="checkbox" id="showGrandComposite">
+                                            <label class="form-check-label" for="showGrandComposite">Show Grand Composite</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Compare Scenarios Tab -->
+            <div class="tab-pane fade" id="compare" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Saved Scenarios</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="list-group" id="scenarioList">
+                                    <a href="#" class="list-group-item list-group-item-action active">Base Case</a>
+                                    <a href="#" class="list-group-item list-group-item-action">Optimized Design</a>
+                                    <a href="#" class="list-group-item list-group-item-action">Retrofit Option 1</a>
+                                    <a href="#" class="list-group-item list-group-item-action">Pinch Design</a>
+                                </div>
+                                <button class="btn btn-outline-primary w-100 mt-3" id="addScenario">Save Current as Scenario</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Scenario Comparison</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="graph-container">
+                                    <div id="scenarioChart" style="height: 400px;"></div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Comparison Metric</label>
+                                        <select class="form-select" id="compareMetric">
+                                            <option value="cost">Total Cost</option>
+                                            <option value="energy">Energy Savings</option>
+                                            <option value="area">Heat Transfer Area</option>
+                                            <option value="efficiency">Thermal Efficiency</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Chart Type</label>
+                                        <select class="form-select" id="compareChartType">
+                                            <option value="bar">Bar Chart</option>
+                                            <option value="radar">Radar Chart</option>
+                                            <option value="parallel">Parallel Coordinates</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        
+        // Sample data for charts (in a real app, this would be calculated)
+        var tempProfileData = {
+            x: [0, 0.2, 0.4, 0.6, 0.8, 1.0],
+            yHot: [120, 110, 100, 90, 85, 80],
+            yCold: [20, 30, 40, 50, 55, 60]
+        };
+        
+        var coefficientData = {
+            labels: ['Shell Side', 'Tube Side', 'Wall', 'Overall'],
+            datasets: [{
+                label: 'Heat Transfer Coefficient (W/m²°C)',
+                data: [2500, 1800, 50000, 800],
+                backgroundColor: 'rgba(52, 152, 219, 0.7)'
+            }]
+        };
+        
+        var pressureDropData = {
+            labels: ['Shell Side', 'Tube Side', 'Total'],
+            datasets: [{
+                label: 'Pressure Drop (kPa)',
+                data: [35, 45, 80],
+                backgroundColor: 'rgba(231, 76, 60, 0.7)'
+            }]
+        };
+        
+        // Initialize charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Temperature Profile Chart
+            Plotly.newPlot('tempProfileChart', [{
+                x: tempProfileData.x,
+                y: tempProfileData.yHot,
+                name: 'Hot Fluid',
+                line: {color: 'red', width: 3}
+            }, {
+                x: tempProfileData.x,
+                y: tempProfileData.yCold,
+                name: 'Cold Fluid',
+                line: {color: 'blue', width: 3}
+            }], {
+                title: 'Temperature Profile Along Heat Exchanger',
+                xaxis: {title: 'Relative Position'},
+                yaxis: {title: 'Temperature (°C)'}
+            });
+            
+            // Coefficient Chart
+            var coefficientCtx = document.getElementById('coefficientChart').getContext('2d');
+            new Chart(coefficientCtx, {
+                type: 'bar',
+                data: coefficientData,
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // Pressure Drop Chart
+            var pressureDropCtx = document.getElementById('pressureDropChart').getContext('2d');
+            new Chart(pressureDropCtx, {
+                type: 'bar',
+                data: pressureDropData,
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // Performance Chart (placeholder)
+            Plotly.newPlot('performanceChart', [{
+                y: ['Clean', 'Fouled', 'Increased Flow'],
+                x: [100, 85, 110],
+                type: 'bar',
+                orientation: 'h',
+                marker: {color: ['rgba(46, 204, 113, 0.7)', 'rgba(241, 196, 15, 0.7)', 'rgba(52, 152, 219, 0.7)']}
+            }], {
+                title: 'Heat Transfer Performance Under Different Conditions',
+                xaxis: {title: 'Heat Transfer Rate (kW)'}
+            });
+            
+            // Retrofit Radar Chart (placeholder)
+            Plotly.newPlot('retrofitRadarChart', [{
+                type: 'scatterpolar',
+                r: [90, 70, 85, 60, 75],
+                theta: ['Cost', 'Capacity', 'Efficiency', 'Maintenance', 'Payback'],
+                fill: 'toself',
+                name: 'Option 1'
+            }, {
+                type: 'scatterpolar',
+                r: [70, 85, 75, 80, 65],
+                theta: ['Cost', 'Capacity', 'Efficiency', 'Maintenance', 'Payback'],
+                fill: 'toself',
+                name: 'Option 2'
+            }, {
+                type: 'scatterpolar',
+                r: [50, 95, 65, 70, 80],
+                theta: ['Cost', 'Capacity', 'Efficiency', 'Maintenance', 'Payback'],
+                fill: 'toself',
+                name: 'Option 3'
+            }], {
+                polar: {
+                    radialaxis: {
+                        visible: true,
+                        range: [0, 100]
+                    }
+                }
+            });
+            
+            // Composite Curve Chart (placeholder)
+            Plotly.newPlot('compositeCurveChart', [{
+                x: [0, 50, 100, 150, 200],
+                y: [20, 60, 100, 140, 180],
+                name: 'Hot Composite',
+                line: {color: 'red', width: 3}
+            }, {
+                x: [0, 40, 80, 120, 160],
+                y: [10, 50, 90, 130, 170],
+                name: 'Cold Composite',
+                line: {color: 'blue', width: 3}
+            }], {
+                title: 'Composite Curves',
+                xaxis: {title: 'Heat Flow (kW)'},
+                yaxis: {title: 'Temperature (°C)'}
+            });
+            
+            // Scenario Comparison Chart (placeholder)
+            Plotly.newPlot('scenarioChart', [{
+                x: ['Base Case', 'Optimized', 'Retrofit', 'Pinch'],
+                y: [100, 85, 120, 95],
+                type: 'bar',
+                marker: {color: ['rgba(52, 152, 219, 0.7)', 'rgba(46, 204, 113, 0.7)', 'rgba(155, 89, 182, 0.7)', 'rgba(241, 196, 15, 0.7)']}
+            }], {
+                title: 'Scenario Comparison - Total Cost',
+                yaxis: {title: 'Cost (k$)'}
+            });
+            
+            // Show design results when calculate is clicked
+            document.getElementById('calculateDesign').addEventListener('click', function() {
+                document.getElementById('designResults').style.display = 'block';
+                // Update results with sample data
+                document.getElementById('heatDuty').textContent = '1672';
+                document.getElementById('lmtd').textContent = '43.2';
+                document.getElementById('reqArea').textContent = '48.4';
+                document.getElementById('overallU').textContent = '800';
+                document.getElementById('effectiveness').textContent = '75.4';
+                document.getElementById('ntu').textContent = '1.42';
+            });
+            
+            // Show rating results when calculate is clicked
+            document.getElementById('ratePerformance').addEventListener('click', function() {
+                document.getElementById('ratingResults').style.display = 'block';
+                // Update results with sample data
+                document.getElementById('actualHeat').textContent = '1580';
+                document.getElementById('requiredHeat').textContent = '1672';
+                document.getElementById('overdesign').textContent = '-5.5';
+                document.getElementById('foulingFactor').textContent = '0.0002';
+                document.getElementById('fluidVelocity').textContent = '1.8';
+                document.getElementById('reynolds').textContent = '12500';
+                
+                var alert = document.getElementById('ratingAlert');
+                alert.textContent = 'Warning: Heat exchanger is undersized by 5.5% for current duty.';
+                alert.className = 'alert alert-warning';
+            });
+            
+            // Show retrofit results when analyze is clicked
+            document.getElementById('analyzeRetrofit').addEventListener('click', function() {
+                document.getElementById('retrofitResults').style.display = 'block';
+                var optionsList = document.getElementById('retrofitOptionsList');
+                optionsList.innerHTML = `
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="retrofitOption" id="option1" checked>
+                        <label class="form-check-label" for="option1">
+                            <strong>Enhanced Tubes</strong> - $32,000, +25% capacity
+                        </label>
+                    </div>
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="radio" name="retrofitOption" id="option2">
+                        <label class="form-check-label" for="option2">
+                            <strong>Baffle Modification</strong> - $18,000, +15% capacity
+                        </label>
+                    </div>
+                    <div class="form-check mt-2">
+                        <input class="form-check-input" type="radio" name="retrofitOption" id="option3">
+                        <label class="form-check-label" for="option3">
+                            <strong>Add Parallel Unit</strong> - $45,000, +40% capacity
+                        </label>
+                    </div>
+                `;
+            });
+            
+            // Show pinch results when calculate is clicked
+            document.getElementById('calculatePinch').addEventListener('click', function() {
+                document.getElementById('pinchResults').style.display = 'block';
+                // Update results with sample data
+                document.getElementById('pinchTemp').textContent = '90';
+                document.getElementById('hotUtility').textContent = '1200';
+                document.getElementById('coldUtility').textContent = '800';
+                document.getElementById('maxRecovery').textContent = '3500';
+                document.getElementById('numUnits').textContent = '5';
+            });
+            
+            // Toggle between shell & tube and plate parameters
+            document.getElementById('existingHexType').addEventListener('change', function() {
+                if(this.value === 'shellTube') {
+                    document.getElementById('shellTubeParams').style.display = 'block';
+                    document.getElementById('plateParams').style.display = 'none';
+                } else {
+                    document.getElementById('shellTubeParams').style.display = 'none';
+                    document.getElementById('plateParams').style.display = 'block';
+                }
+            });
+            
+            // Add stream button functionality
+            document.getElementById('addStream').addEventListener('click', function() {
+                var streamCount = document.querySelectorAll('.stream-group').length + 1;
+                var newStream = document.createElement('div');
+                newStream.className = 'stream-group mb-3';
+                newStream.innerHTML = `
+                    <div class="d-flex justify-content-between mb-2">
+                        <h6>Stream ${streamCount}</h6>
+                        <button class="btn btn-sm btn-danger remove-stream">×</button>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label">Type</label>
+                            <select class="form-select stream-type">
+                                <option value="hot">Hot</option>
+                                <option value="cold">Cold</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Heat Capacity (kW/°C)</label>
+                            <input type="number" step="0.01" class="form-control stream-cp" value="10">
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label class="form-label">Supply Temp (°C)</label>
+                            <input type="number" class="form-control stream-supply" value="180">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Target Temp (°C)</label>
+                            <input type="number" class="form-control stream-target" value="80">
+                        </div>
+                    </div>
+                `;
+                document.getElementById('streamInputs').appendChild(newStream);
+                
+                // Add event listener to remove button
+                newStream.querySelector('.remove-stream').addEventListener('click', function() {
+                    newStream.remove();
+                    // Renumber remaining streams
+                    var streams = document.querySelectorAll('.stream-group');
+                    streams.forEach(function(stream, index) {
+                        stream.querySelector('h6').textContent = 'Stream ' + (index + 1);
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

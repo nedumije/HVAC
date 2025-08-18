@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SparkClean UK | Professional Cleaning Services in Derby and Surrounding Areas</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="CLEANING COMPANY PROJECT.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="https://www.high-classcleaning.co.uk/wp-content/uploads/2020/10/blog-main-pic-1.jpg" alt="SparkClean Logo">
+            <h1>SparkClean UK</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#sites">Site Management</a></li>
+                <li><a href="#shifts">Shift Allocation</a></li>
+                <li><a href="#analytics">Analytics</a></li>
+                <li class="user-profile">
+                    <img src="data:image/jpeg;base64,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" alt="User Profile">
+                    <span>Cleaner ID: <span id="cleaner-id">CL-2023-4567</span></span>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="active-section">
+            <div class="dashboard-grid">
+                <div class="stats-card">
+                    <h3>Your Available Shifts</h3>
+                    <div class="stat-value" id="available-shifts">12</div>
+                    <div class="stat-trend up">+2 from yesterday</div>
+                </div>
+                <div class="stats-card">
+                    <h3>Sites Near You</h3>
+                    <div class="stat-value" id="nearby-sites">8</div>
+                    <div class="stat-description">Within 5 miles</div>
+                </div>
+                <div class="stats-card">
+                    <h3>Your Rating</h3>
+                    <div class="stat-value" id="cleaner-rating">4.8</div>
+                    <div class="rating-stars">★★★★☆</div>
+                </div>
+                <div class="stats-card">
+                    <h3>Earnings This Month</h3>
+                    <div class="stat-value" id="month-earnings">£1,245</div>
+                    <div class="stat-trend up">+£320 from last month</div>
+                </div>
+                
+                <div class="map-container">
+                    <h3>Your Location and Nearby Sites</h3>
+                    <div id="dashboard-map"></div>
+                </div>
+                
+                <div class="upcoming-shifts">
+                    <h3>Your Upcoming Shifts</h3>
+                    <div class="shift-list" id="upcoming-shifts-list">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Site Management Section -->
+        <section id="sites">
+            <div class="section-header">
+                <h2>Site Management</h2>
+                <div class="search-filter">
+                    <input type="text" id="site-search" placeholder="Search by Site ID or Address">
+                    <select id="city-filter">
+                        <option value="all">All Cities</option>
+                        <option value="derby">Derby</option>
+                        <option value="nottingham">Nottingham</option>
+                        <option value="leicester">Leicester</option>
+                        <option value="burton-upon-trent">Burton upon Trent</option>
+                        <option value="ashbourne">Ashbourne</option>
+                        <option value="belper">Belper</option>
+                        <option value="ilkeston">Ilkeston</option>
+                        <option value="long-eaton">Long Eaton</option>
+                        <option value="alfreton">Alfreton</option>
+                        <option value="ripley">Ripley</option>
+                        <option value="heanor">Heanor</option>
+                        <option value="swadlincote">Swadlincote</option>
+                        <option value="melton-mowbray">Melton Mowbray</option>
+                        <option value="loughborough">Loughborough</option>
+                        <option value="coalville">Coalville</option>
+                        <option value="castle-donington">Castle Donington</option>
+                    </select>
+                    <button id="refresh-sites">Refresh</button>
+                </div>
+            </div>
+            
+            <div class="sites-container">
+                <div class="map-view">
+                    <div id="sites-map"></div>
+                    <div class="map-legend">
+                        <div><span class="legend-icon high-priority"></span> High Priority</div>
+                        <div><span class="legend-icon medium-priority"></span> Medium Priority</div>
+                        <div><span class="legend-icon low-priority"></span> Low Priority</div>
+                        <div><span class="legend-icon your-shift"></span> Your Shift</div>
+                    </div>
+                </div>
+                
+                <div class="sites-list-container">
+                    <div class="sites-list-header">
+                        <span class="site-id">Site ID</span>
+                        <span class="site-address">Address</span>
+                        <span class="site-next-cleaning">Next Cleaning</span>
+                        <span class="site-priority">Priority</span>
+                    </div>
+                    <div class="sites-list" id="sites-list">
+                        <!-- Dynamically populated with all 950 sites -->
+                    </div>
+                    <div class="pagination-controls">
+                        <button id="prev-page">Previous</button>
+                        <span id="page-info">Page 1 of 48</span>
+                        <button id="next-page">Next</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Shift Allocation Section -->
+        <section id="shifts">
+            <div class="section-header">
+                <h2>Shift Allocation</h2>
+                <div class="shift-filters">
+                    <input type="date" id="shift-date-filter">
+                    <select id="shift-city-filter">
+                        <option value="all">All Cities</option>
+                        <option value="derby">Derby</option>
+                        <option value="nottingham">Nottingham</option>
+                        <option value="leicester">Leicester</option>
+                        <option value="burton-upon-trent">Burton upon Trent</option>
+                        <option value="ashbourne">Ashbourne</option>
+                        <option value="belper">Belper</option>
+                        <option value="ilkeston">Ilkeston</option>
+                        <option value="long-eaton">Long Eaton</option>
+                        <option value="alfreton">Alfreton</option>
+                        <option value="ripley">Ripley</option>
+                        <option value="heanor">Heanor</option>
+                        <option value="swadlincote">Swadlincote</option>
+                        <option value="melton-mowbray">Melton Mowbray</option>
+                        <option value="loughborough">Loughborough</option>
+                        <option value="coalville">Coalville</option>
+                        <option value="castle-donington">Castle Donington</option>
+                    </select>
+                    <select id="shift-radius-filter">
+                        <option value="5">5 miles</option>
+                        <option value="10">10 miles</option>
+                        <option value="15">15 miles</option>
+                        <option value="20">20 miles</option>
+                        <option value="all">All Sites</option>
+                    </select>
+                    <button id="apply-shift-filters">Apply Filters</button>
+                </div>
+            </div>
+            
+            <div class="shift-allocation-container">
+                <div class="shift-calendar">
+                    <div class="calendar-header">
+                        <button id="prev-week">◀</button>
+                        <h3 id="current-week">Week of June 5, 2023</h3>
+                        <button id="next-week">▶</button>
+                    </div>
+                    <div class="calendar-grid" id="shift-calendar">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+                
+                <div class="shift-details">
+                    <h3 id="selected-shift-date">Monday, June 5</h3>
+                    <div class="shift-options" id="shift-options">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analytics Section -->
+        <section id="analytics">
+            <div class="section-header">
+                <h2>Analytics Dashboard</h2>
+                <div class="analytics-timeframe">
+                    <select id="analytics-timeframe">
+                        <option value="7">Last 7 Days</option>
+                        <option value="30" selected>Last 30 Days</option>
+                        <option value="90">Last Quarter</option>
+                        <option value="365">Last Year</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <h3>Job Types Distribution</h3>
+                    <canvas id="job-types-chart"></canvas>
+                </div>
+                
+                <div class="analytics-card">
+                    <h3>Priority Analysis</h3>
+                    <canvas id="priority-chart"></canvas>
+                </div>
+                
+                <div class="analytics-card">
+                    <h3>Completion Rate by City</h3>
+                    <canvas id="city-performance-chart"></canvas>
+                </div>
+                
+                <div class="analytics-card">
+                    <h3>Shift Coverage</h3>
+                    <canvas id="shift-coverage-chart"></canvas>
+                </div>
+                
+                <div class="analytics-card wide-card">
+                    <h3>Monthly Performance Trends</h3>
+                    <canvas id="performance-trend-chart"></canvas>
+                </div>
+                
+                <div class="analytics-card wide-card">
+                    <h3>Top 10 Sites Needing Attention</h3>
+                    <div class="priority-sites-list" id="priority-sites-list">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="contact-info">
+                <h4>Contact Us</h4>
+                <p>Email: info@sparkclean.co.uk</p>
+                <p>Phone: 01332 456789</p>
+                <p>Address: 123 Clean Street, Derby, DE1 1AB</p>
+            </div>
+            <div class="quick-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Cleaner Handbook</a></li>
+                    <li><a href="#">FAQs</a></li>
+                </ul>
+            </div>
+            <div class="operating-cities">
+                <h4>We Operate In</h4>
+                <ul>
+                    <li>Derby</li>
+                    <li>Nottingham</li>
+                    <li>Leicester</li>
+                    <li>Burton upon Trent</li>
+                    <li>Ashbourne</li>
+                    <li>Belper</li>
+                    <li>Ilkeston</li>
+                    <li>Long Eaton</li>
+                    <li>Alfreton</li>
+                    <li>Ripley</li>
+                    <li>Heanor</li>
+                    <li>Swadlincote</li>
+                    <li>Melton Mowbray</li>
+                    <li>Loughborough</li>
+                    <li>Coalville</li>
+                    <li>Castle Donington</li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 SparkClean UK. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="CLEANING COMPANY PROJECT.js"></script>
+</body>
+</html>

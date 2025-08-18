@@ -1,0 +1,1565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced PFD Viewer | Industrial Process Visualization</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-bg: #f8f9fa;
+            --dark-bg: #343a40;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --text-light: #f8f9fa;
+            --text-dark: #212529;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        .app-container {
+            display: grid;
+            grid-template-areas:
+                "header header"
+                "sidebar main"
+                "footer footer";
+            grid-template-columns: 300px 1fr;
+            grid-template-rows: auto 1fr auto;
+            min-height: 100vh;
+        }
+        
+        /* Header Styles */
+        .header {
+            grid-area: header;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: var(--text-light);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo-icon {
+            font-size: 2rem;
+        }
+        
+        .logo-text h1 {
+            font-size: 1.5rem;
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .logo-text p {
+            font-size: 0.9rem;
+            margin: 0;
+            opacity: 0.8;
+        }
+        
+        .user-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            grid-area: sidebar;
+            background-color: white;
+            border-right: 1px solid #e0e0e0;
+            padding: 1.5rem;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+        }
+        
+        .search-box {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%236c757d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>');
+            background-repeat: no-repeat;
+            background-position: 0.75rem center;
+            background-size: 1rem;
+        }
+        
+        .process-categories {
+            margin-bottom: 1.5rem;
+        }
+        
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--primary-color);
+            border-bottom: 1px solid #eee;
+            margin-bottom: 0.5rem;
+        }
+        
+        .category-header:hover {
+            color: var(--secondary-color);
+        }
+        
+        .process-list {
+            list-style: none;
+            margin-left: 0.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .process-list.show {
+            max-height: 1000px;
+        }
+        
+        .process-item {
+            padding: 0.5rem 0.5rem 0.5rem 1.5rem;
+            cursor: pointer;
+            border-radius: 4px;
+            position: relative;
+            font-size: 0.9rem;
+        }
+        
+        .process-item:hover {
+            background-color: #f0f8ff;
+            color: var(--secondary-color);
+        }
+        
+        .process-item.active {
+            background-color: #e3f2fd;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+        
+        .process-item.active::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background-color: var(--secondary-color);
+            border-radius: 2px;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .sidebar-section h3 {
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .sidebar-section h3 svg {
+            width: 16px;
+            height: 16px;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            grid-area: main;
+            padding: 1.5rem;
+            overflow: auto;
+            background-color: #f5f7fa;
+            position: relative;
+        }
+        
+        .pfd-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            background-color: white;
+            padding: 1rem;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .pfd-title h2 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin: 0;
+        }
+        
+        .pfd-title p {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin: 0.25rem 0 0;
+        }
+        
+        .pfd-controls {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .control-button {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        
+        .control-button:hover {
+            background-color: #f8f9fa;
+            border-color: #ccc;
+        }
+        
+        .control-button svg {
+            width: 14px;
+            height: 14px;
+        }
+        
+        .pfd-container {
+            background-color: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            height: calc(100% - 80px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pfd-diagram {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: auto;
+            background-color: #f9f9f9;
+            background-image: linear-gradient(#eee 1px, transparent 1px),
+                              linear-gradient(90deg, #eee 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        .equipment {
+            position: absolute;
+            border: 2px solid var(--secondary-color);
+            border-radius: 6px;
+            background-color: rgba(255,255,255,0.95);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+        
+        .equipment:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 20;
+            transform: scale(1.05);
+        }
+        
+        .equipment-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .equipment-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            max-width: 100px;
+            word-wrap: break-word;
+            line-height: 1.2;
+        }
+        
+        .process-line {
+            position: absolute;
+            background-color: #666;
+            z-index: 5;
+        }
+        
+        .process-line-arrow {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+        
+        .tooltip {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 1rem;
+            width: 300px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            display: none;
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+        
+        .tooltip h4 {
+            margin: 0 0 0.5rem 0;
+            color: var(--secondary-color);
+            font-size: 1.1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .tooltip-id {
+            font-size: 0.8rem;
+            color: #6c757d;
+            font-weight: normal;
+        }
+        
+        .tooltip table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+        }
+        
+        .tooltip table td {
+            padding: 0.35rem 0;
+            border-bottom: 1px solid #f5f5f5;
+            vertical-align: top;
+        }
+        
+        .tooltip table td:first-child {
+            font-weight: 600;
+            width: 40%;
+            color: var(--primary-color);
+        }
+        
+        .tooltip-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .tooltip-button {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .tooltip-button:hover {
+            background-color: #e9ecef;
+        }
+        
+        .tooltip-button svg {
+            width: 12px;
+            height: 12px;
+        }
+        
+        /* Footer Styles */
+        .footer {
+            grid-area: footer;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            padding: 1rem 2rem;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .indicator-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--success-color);
+        }
+        
+        .indicator-dot.warning {
+            background-color: var(--warning-color);
+        }
+        
+        .indicator-dot.danger {
+            background-color: var(--danger-color);
+        }
+        
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #6c757d;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        
+        .empty-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .app-container {
+                grid-template-areas:
+                    "header"
+                    "main"
+                    "footer";
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 280px;
+                z-index: 1000;
+                box-shadow: 2px 0 20px rgba(0,0,0,0.2);
+            }
+            
+            .sidebar.show {
+                display: block;
+            }
+            
+            .mobile-menu-button {
+                display: block;
+            }
+        }
+        
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+        
+        /* Scrollbar Styles */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">🏭</div>
+                <div class="logo-text">
+                    <h1>Advanced PFD Viewer</h1>
+                    <p>Industrial Process Visualization System</p>
+                </div>
+            </div>
+            <div class="user-controls">
+                <button class="control-button mobile-menu-button" id="menu-toggle">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                    Menu
+                </button>
+                <button class="control-button">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Login
+                </button>
+            </div>
+        </header>
+        
+        <aside class="sidebar" id="sidebar">
+            <div class="search-box">
+                <input type="text" placeholder="Search processes..." id="process-search">
+            </div>
+            
+            <div class="sidebar-section">
+                <h3>
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    Process Categories
+                </h3>
+                
+                <div class="process-categories">
+                    <div class="category-header" data-category="petrochemical">
+                        <span>Petrochemical</span>
+                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <ul class="process-list" id="petrochemical-list">
+                        <!-- Filled by JavaScript -->
+                    </ul>
+                    
+                    <div class="category-header" data-category="refining">
+                        <span>Oil Refining</span>
+                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <ul class="process-list" id="refining-list">
+                        <!-- Filled by JavaScript -->
+                    </ul>
+                    
+                    <div class="category-header" data-category="chemical">
+                        <span>Chemical</span>
+                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <ul class="process-list" id="chemical-list">
+                        <!-- Filled by JavaScript -->
+                    </ul>
+                    
+                    <div class="category-header" data-category="pharmaceutical">
+                        <span>Pharmaceutical</span>
+                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <ul class="process-list" id="pharmaceutical-list">
+                        <!-- Filled by JavaScript -->
+                    </ul>
+                    
+                    <div class="category-header" data-category="food">
+                        <span>Food & Beverage</span>
+                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <ul class="process-list" id="food-list">
+                        <!-- Filled by JavaScript -->
+                    </ul>
+                    
+                    <div class="category-header" data-category="power">
+                        <span>Power Generation</span>
+                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <ul class="process-list" id="power-list">
+                        <!-- Filled by JavaScript -->
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3>
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                    </svg>
+                    Quick Access
+                </h3>
+                <ul class="process-list">
+                    <li class="process-item" data-process="ammonia">Ammonia Production</li>
+                    <li class="process-item" data-process="ethylene">Ethylene Cracker</li>
+                    <li class="process-item" data-process="atmospheric-distillation">Atmospheric Distillation</li>
+                    <li class="process-item" data-process="penicillin">Penicillin Fermentation</li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3>
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    Help & Resources
+                </h3>
+                <ul class="process-list">
+                    <li class="process-item">User Guide</li>
+                    <li class="process-item">Tutorial Videos</li>
+                    <li class="process-item">Contact Support</li>
+                </ul>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <div class="pfd-header">
+                <div class="pfd-title">
+                    <h2 id="pfd-title">Select a Process</h2>
+                    <p id="pfd-description">Choose a process from the sidebar to view its flow diagram</p>
+                </div>
+                <div class="pfd-controls">
+                    <button class="control-button" id="zoom-in">
+                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            <line x1="11" y1="8" x2="11" y2="14"></line>
+                            <line x1="8" y1="11" x2="14" y2="11"></line>
+                        </svg>
+                        Zoom In
+                    </button>
+                    <button class="control-button" id="zoom-out">
+                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            <line x1="8" y1="11" x2="14" y2="11"></line>
+                        </svg>
+                        Zoom Out
+                    </button>
+                    <button class="control-button" id="reset-view">
+                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2.5 2v6h6M2.5 22v-6h6M21.5 22v-6h-6M21.5 2v6h-6"></path>
+                        </svg>
+                        Reset View
+                    </button>
+                    <button class="control-button" id="export-pdf">
+                        <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Export PDF
+                    </button>
+                </div>
+            </div>
+            
+            <div class="pfd-container">
+                <div class="pfd-diagram" id="pfd-diagram">
+                    <div class="empty-state">
+                        <div class="empty-icon">🏭</div>
+                        <h3 class="empty-title">No Process Selected</h3>
+                        <p>Select a process from the sidebar to view its detailed flow diagram, equipment specifications, and operational parameters.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="footer">
+            <div class="status-bar">
+                <div class="status-indicator">
+                    <div class="indicator-dot"></div>
+                    <span id="status-message">Ready</span>
+                </div>
+                <span id="selected-process">No process selected</span>
+            </div>
+            <div>
+                <span id="current-time"></span> | 
+                <span>PFD Viewer v2.4.1</span>
+            </div>
+        </footer>
+    </div>
+    
+    <div class="tooltip" id="tooltip"></div>
+    
+    <script>
+        // Process database with 45+ processes
+        const processDatabase = {
+            // Petrochemical Processes
+            "ammonia": {
+                id: "ammonia",
+                name: "Ammonia Production (Haber Process)",
+                category: "petrochemical",
+                description: "The Haber process combines nitrogen from the air with hydrogen derived mainly from natural gas into ammonia. The process converts atmospheric nitrogen to ammonia by a reaction with hydrogen using a metal catalyst under high temperatures and pressures.",
+                equipment: [
+                    {
+                        id: "R-101",
+                        type: "reactor",
+                        name: "Primary Reformer",
+                        position: { x: 20, y: 100 },
+                        size: { width: 80, height: 120 },
+                        parameters: {
+                            "Temperature": "850°C",
+                            "Pressure": "35 bar",
+                            "Conversion": "65%",
+                            "Catalyst": "Nickel-based"
+                        }
+                    },
+                    {
+                        id: "E-201",
+                        type: "exchanger",
+                        name: "Waste Heat Boiler",
+                        position: { x: 150, y: 120 },
+                        size: { width: 100, height: 80 },
+                        parameters: {
+                            "Type": "Shell & Tube",
+                            "Duty": "15 MW",
+                            "Area": "450 m²",
+                            "Coolant": "Boiler Feed Water"
+                        }
+                    },
+                    {
+                        id: "C-301",
+                        type: "compressor",
+                        name: "Syngas Compressor",
+                        position: { x: 300, y: 100 },
+                        size: { width: 60, height: 100 },
+                        parameters: {
+                            "Type": "Centrifugal",
+                            "Stages": "3",
+                            "Power": "8.5 MW",
+                            "Speed": "10,500 rpm"
+                        }
+                    },
+                    {
+                        id: "V-401",
+                        type: "vessel",
+                        name: "Ammonia Separator",
+                        position: { x: 420, y: 80 },
+                        size: { width: 90, height: 140 },
+                        parameters: {
+                            "Volume": "45 m³",
+                            "Design Pressure": "200 bar",
+                            "Material": "SA-387 Gr.11",
+                            "Operation": "Continuous"
+                        }
+                    },
+                    {
+                        id: "P-501",
+                        type: "pump",
+                        name: "Ammonia Product Pump",
+                        position: { x: 550, y: 120 },
+                        size: { width: 50, height: 70 },
+                        parameters: {
+                            "Type": "Centrifugal",
+                            "Flow Rate": "120 m³/h",
+                            "Head": "350 m",
+                            "NPSH": "4.5 m"
+                        }
+                    }
+                ],
+                lines: [
+                    {
+                        from: "R-101",
+                        to: "E-201",
+                        points: [{x: 100, y: 160}, {x: 150, y: 160}],
+                        diameter: 8,
+                        fluid: "Syngas"
+                    },
+                    {
+                        from: "E-201",
+                        to: "C-301",
+                        points: [{x: 250, y: 160}, {x: 300, y: 150}],
+                        diameter: 8,
+                        fluid: "Syngas"
+                    },
+                    {
+                        from: "C-301",
+                        to: "V-401",
+                        points: [{x: 360, y: 150}, {x: 420, y: 150}],
+                        diameter: 6,
+                        fluid: "Compressed Syngas"
+                    }
+                ]
+            },
+            "ethylene": {
+                id: "ethylene",
+                name: "Ethylene Cracker",
+                category: "petrochemical",
+                description: "Ethylene is produced by steam cracking of hydrocarbon feedstocks in furnaces at high temperatures. The cracked gas is then compressed and separated in a series of distillation columns.",
+                equipment: [
+                    {
+                        id: "F-101",
+                        type: "furnace",
+                        name: "Cracking Furnace",
+                        position: { x: 50, y: 80 },
+                        size: { width: 100, height: 150 },
+                        parameters: {
+                            "Temperature": "850°C",
+                            "Pressure": "1.5 bar",
+                            "Feed": "Naphtha/ethane",
+                            "Steam Ratio": "0.3-0.5"
+                        }
+                    },
+                    {
+                        id: "E-201",
+                        type: "exchanger",
+                        name: "Quench Cooler",
+                        position: { x: 200, y: 100 },
+                        size: { width: 80, height: 100 },
+                        parameters: {
+                            "Type": "Direct Contact",
+                            "Duty": "25 MW",
+                            "Coolant": "Oil/Water"
+                        }
+                    },
+                    {
+                        id: "C-301",
+                        type: "compressor",
+                        name: "Cracked Gas Compressor",
+                        position: { x: 350, y: 90 },
+                        size: { width: 70, height: 120 },
+                        parameters: {
+                            "Type": "Centrifugal",
+                            "Stages": "5",
+                            "Power": "15 MW",
+                            "Discharge Pressure": "35 bar"
+                        }
+                    },
+                    {
+                        id: "T-401",
+                        type: "tower",
+                        name: "Deethanizer",
+                        position: { x: 500, y: 50 },
+                        size: { width: 60, height: 200 },
+                        parameters: {
+                            "Height": "45 m",
+                            "Diameter": "3.5 m",
+                            "Trays": "40",
+                            "Top Temp": "-30°C",
+                            "Bottom Temp": "85°C"
+                        }
+                    }
+                ],
+                lines: [
+                    {
+                        from: "F-101",
+                        to: "E-201",
+                        points: [{x: 150, y: 155}, {x: 200, y: 150}],
+                        diameter: 10,
+                        fluid: "Cracked Gas"
+                    },
+                    {
+                        from: "E-201",
+                        to: "C-301",
+                        points: [{x: 280, y: 150}, {x: 350, y: 150}],
+                        diameter: 10,
+                        fluid: "Quenched Gas"
+                    }
+                ]
+            },
+            // Oil Refining Processes (10 examples)
+            "atmospheric-distillation": {
+                id: "atmospheric-distillation",
+                name: "Atmospheric Distillation",
+                category: "refining",
+                description: "The first step in crude oil refining where crude is heated and separated into fractions by boiling point in an atmospheric pressure distillation column.",
+                equipment: [
+                    {
+                        id: "H-101",
+                        type: "heater",
+                        name: "Crude Heater",
+                        position: { x: 50, y: 100 },
+                        size: { width: 100, height: 120 },
+                        parameters: {
+                            "Type": "Fired Heater",
+                            "Duty": "45 MW",
+                            "Outlet Temp": "365°C",
+                            "Fuel": "Refinery Gas"
+                        }
+                    },
+                    {
+                        id: "T-201",
+                        type: "tower",
+                        name: "Atmospheric Column",
+                        position: { x: 220, y: 50 },
+                        size: { width: 80, height: 250 },
+                        parameters: {
+                            "Height": "55 m",
+                            "Diameter": "8 m",
+                            "Trays": "50",
+                            "Top Temp": "120°C",
+                            "Bottom Temp": "350°C"
+                        }
+                    },
+                    {
+                        id: "E-301",
+                        type: "exchanger",
+                        name: "Crude Preheat Train",
+                        position: { x: 350, y: 150 },
+                        size: { width: 120, height: 80 },
+                        parameters: {
+                            "Type": "Plate & Frame",
+                            "Duty": "28 MW",
+                            "Area": "1,200 m²"
+                        }
+                    }
+                ]
+            },
+            "vacuum-distillation": {
+                id: "vacuum-distillation",
+                name: "Vacuum Distillation",
+                category: "refining",
+                description: "Further fractionation of atmospheric residue under reduced pressure to separate heavier components without thermal cracking."
+            },
+            "hydrotreating": {
+                id: "hydrotreating",
+                name: "Hydrotreating",
+                category: "refining",
+                description: "Process to remove sulfur, nitrogen, and other impurities from petroleum fractions by reacting them with hydrogen."
+            },
+            "catalytic-reforming": {
+                id: "catalytic-reforming",
+                name: "Catalytic Reforming",
+                category: "refining",
+                description: "Process to convert low-octane naphthas into high-octane reformate for gasoline blending."
+            },
+            "fluid-catalytic-cracking": {
+                id: "fluid-catalytic-cracking",
+                name: "Fluid Catalytic Cracking (FCC)",
+                category: "refining",
+                description: "Converts heavy gas oils into lighter, more valuable products like gasoline and olefin gases."
+            },
+            "hydrocracking": {
+                id: "hydrocracking",
+                name: "Hydrocracking",
+                category: "refining",
+                description: "High-pressure process that cracks heavy oils into lighter products in the presence of hydrogen."
+            },
+            "alkylation": {
+                id: "alkylation",
+                name: "Alkylation",
+                category: "refining",
+                description: "Combines light olefins with isobutane to produce high-octane alkylate for gasoline blending."
+            },
+            "isomerization": {
+                id: "isomerization",
+                name: "Isomerization",
+                category: "refining",
+                description: "Converts straight-chain paraffins to branched-chain isomers to improve gasoline octane."
+            },
+            "delayed-coking": {
+                id: "delayed-coking",
+                name: "Delayed Coking",
+                category: "refining",
+                description: "Thermal cracking process that converts heavy residues into lighter products and petroleum coke."
+            },
+            "sulfur-recovery": {
+                id: "sulfur-recovery",
+                name: "Sulfur Recovery (Claus Process)",
+                category: "refining",
+                description: "Converts hydrogen sulfide from acid gas streams to elemental sulfur."
+            },
+            
+            // Chemical Processes (10 examples)
+            "chlor-alkali": {
+                id: "chlor-alkali",
+                name: "Chlor-Alkali Process",
+                category: "chemical",
+                description: "Electrolysis of brine to produce chlorine, hydrogen, and sodium hydroxide."
+            },
+            "sulfuric-acid": {
+                id: "sulfuric-acid",
+                name: "Sulfuric Acid (Contact Process)",
+                category: "chemical",
+                description: "Production of sulfuric acid from sulfur via catalytic oxidation of sulfur dioxide."
+            },
+            "nitric-acid": {
+                id: "nitric-acid",
+                name: "Nitric Acid (Ostwald Process)",
+                category: "chemical",
+                description: "Catalytic oxidation of ammonia to produce nitric acid."
+            },
+            "urea": {
+                id: "urea",
+                name: "Urea Production",
+                category: "chemical",
+                description: "Reaction of ammonia and carbon dioxide to produce urea fertilizer."
+            },
+            "methanol": {
+                id: "methanol",
+                name: "Methanol Synthesis",
+                category: "chemical",
+                description: "Catalytic conversion of synthesis gas (CO + H2) to methanol."
+            },
+            "formaldehyde": {
+                id: "formaldehyde",
+                name: "Formaldehyde Production",
+                category: "chemical",
+                description: "Catalytic oxidation of methanol to produce formaldehyde."
+            },
+            "vinyl-chloride": {
+                id: "vinyl-chloride",
+                name: "Vinyl Chloride Monomer",
+                category: "chemical",
+                description: "Production of VCM through ethylene chlorination or ethane oxychlorination."
+            },
+            "polyethylene": {
+                id: "polyethylene",
+                name: "Polyethylene Production",
+                category: "chemical",
+                description: "Polymerization of ethylene to produce various grades of polyethylene."
+            },
+            "polypropylene": {
+                id: "polypropylene",
+                name: "Polypropylene Production",
+                category: "chemical",
+                description: "Polymerization of propylene using Ziegler-Natta or metallocene catalysts."
+            },
+            "styrene": {
+                id: "styrene",
+                name: "Styrene Production",
+                category: "chemical",
+                description: "Dehydrogenation of ethylbenzene to produce styrene monomer."
+            },
+            
+            // Pharmaceutical Processes (8 examples)
+            "penicillin": {
+                id: "penicillin",
+                name: "Penicillin Fermentation",
+                category: "pharmaceutical",
+                description: "Biological production of penicillin antibiotics through fungal fermentation."
+            },
+            "aspirin": {
+                id: "aspirin",
+                name: "Aspirin Synthesis",
+                category: "pharmaceutical",
+                description: "Acetylation of salicylic acid to produce acetylsalicylic acid (aspirin)."
+            },
+            "paracetamol": {
+                id: "paracetamol",
+                name: "Paracetamol Production",
+                category: "pharmaceutical",
+                description: "Multi-step synthesis of paracetamol from phenol or nitrobenzene."
+            },
+            "vitamin-c": {
+                id: "vitamin-c",
+                name: "Vitamin C Synthesis",
+                category: "pharmaceutical",
+                description: "Reichstein process for ascorbic acid production from glucose."
+            },
+            "insulin": {
+                id: "insulin",
+                name: "Insulin Production",
+                category: "pharmaceutical",
+                description: "Recombinant DNA technology for human insulin production."
+            },
+            "sterile-injectables": {
+                id: "sterile-injectables",
+                name: "Sterile Injectables",
+                category: "pharmaceutical",
+                description: "Aseptic processing of sterile parenteral drugs."
+            },
+            "tablet-compression": {
+                id: "tablet-compression",
+                name: "Tablet Compression",
+                category: "pharmaceutical",
+                description: "Manufacturing process for pharmaceutical tablets."
+            },
+            "lyophilization": {
+                id: "lyophilization",
+                name: "Lyophilization (Freeze Drying)",
+                category: "pharmaceutical",
+                description: "Process to stabilize biological products by removing water under vacuum."
+            },
+            
+            // Food & Beverage Processes (8 examples)
+            "beer-brewing": {
+                id: "beer-brewing",
+                name: "Beer Brewing",
+                category: "food",
+                description: "Traditional brewing process from mashing to fermentation and packaging."
+            },
+            "sugar-refining": {
+                id: "sugar-refining",
+                name: "Sugar Refining",
+                category: "food",
+                description: "Processing of raw sugar cane or beets into refined white sugar."
+            },
+            "vegetable-oil": {
+                id: "vegetable-oil",
+                name: "Vegetable Oil Extraction",
+                category: "food",
+                description: "Mechanical and solvent extraction of oils from seeds and nuts."
+            },
+            "dairy-processing": {
+                id: "dairy-processing",
+                name: "Dairy Processing",
+                category: "food",
+                description: "Pasteurization, homogenization and processing of milk products."
+            },
+            "baking": {
+                id: "baking",
+                name: "Commercial Baking",
+                category: "food",
+                description: "Industrial-scale bread and pastry production processes."
+            },
+            "canning": {
+                id: "canning",
+                name: "Food Canning",
+                category: "food",
+                description: "Thermal processing and packaging of food in hermetically sealed containers."
+            },
+            "distillation": {
+                id: "distillation",
+                name: "Spirit Distillation",
+                category: "food",
+                description: "Production of alcoholic spirits through fermentation and distillation."
+            },
+            "water-treatment": {
+                id: "water-treatment",
+                name: "Bottled Water Treatment",
+                category: "food",
+                description: "Filtration and purification processes for bottled water production."
+            },
+            
+            // Power Generation Processes (8 examples)
+            "coal-power": {
+                id: "coal-power",
+                name: "Coal-Fired Power Plant",
+                category: "power",
+                description: "Steam generation from coal combustion to drive turbines."
+            },
+            "combined-cycle": {
+                id: "combined-cycle",
+                name: "Combined Cycle Gas Turbine",
+                category: "power",
+                description: "Gas turbine with heat recovery steam generator for improved efficiency."
+            },
+            "nuclear-power": {
+                id: "nuclear-power",
+                name: "Nuclear Power Plant",
+                category: "power",
+                description: "Pressurized or boiling water reactor systems for nuclear power generation."
+            },
+            "wte": {
+                id: "wte",
+                name: "Waste-to-Energy",
+                category: "power",
+                description: "Incineration of municipal solid waste with energy recovery."
+            },
+            "solar-thermal": {
+                id: "solar-thermal",
+                name: "Solar Thermal Power",
+                category: "power",
+                description: "Concentrated solar power with thermal energy storage."
+            },
+            "geothermal": {
+                id: "geothermal",
+                name: "Geothermal Power",
+                category: "power",
+                description: "Electricity generation from underground heat sources."
+            },
+            "hydroelectric": {
+                id: "hydroelectric",
+                name: "Hydroelectric Power",
+                category: "power",
+                description: "Electricity generation from flowing or falling water."
+            },
+            "ccs": {
+                id: "ccs",
+                name: "Carbon Capture & Storage",
+                category: "power",
+                description: "Processes to capture CO2 from power plant flue gases for storage."
+            }
+        };
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize the application
+            initApp();
+            
+            // Update current time
+            function updateTime() {
+                const now = new Date();
+                document.getElementById('current-time').textContent = now.toLocaleString();
+            }
+            setInterval(updateTime, 1000);
+            updateTime();
+            
+            // Mobile menu toggle
+            document.getElementById('menu-toggle').addEventListener('click', function() {
+                document.getElementById('sidebar').classList.toggle('show');
+            });
+            
+            // Initialize category toggles
+            document.querySelectorAll('.category-header').forEach(header => {
+                header.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    const list = document.getElementById(`${category}-list`);
+                    list.classList.toggle('show');
+                    
+                    // Rotate the arrow icon
+                    const arrow = this.querySelector('svg');
+                    arrow.style.transform = list.classList.contains('show') ? 'rotate(180deg)' : 'rotate(0)';
+                });
+            });
+            
+            // Process selection handler
+            document.querySelectorAll('.process-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const processId = this.getAttribute('data-process');
+                    if (!processId) return;
+                    
+                    selectProcess(processId);
+                    
+                    // Close sidebar on mobile
+                    if (window.innerWidth < 992) {
+                        document.getElementById('sidebar').classList.remove('show');
+                    }
+                });
+            });
+            
+            // Search functionality
+            document.getElementById('process-search').addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                document.querySelectorAll('.process-item').forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        item.style.display = 'block';
+                        
+                        // Expand parent category if match found
+                        const categoryList = item.closest('.process-list');
+                        if (categoryList) {
+                            categoryList.classList.add('show');
+                            const header = categoryList.previousElementSibling;
+                            const arrow = header.querySelector('svg');
+                            arrow.style.transform = 'rotate(180deg)';
+                        }
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+            
+            // View control buttons
+            document.getElementById('zoom-in').addEventListener('click', function() {
+                // In a real app, this would zoom the diagram
+                document.getElementById('status-message').textContent = 'Zoom level increased';
+            });
+            
+            document.getElementById('zoom-out').addEventListener('click', function() {
+                // In a real app, this would zoom out the diagram
+                document.getElementById('status-message').textContent = 'Zoom level decreased';
+            });
+            
+            document.getElementById('reset-view').addEventListener('click', function() {
+                // In a real app, this would reset the view
+                document.getElementById('status-message').textContent = 'View reset to default';
+            });
+            
+            document.getElementById('export-pdf').addEventListener('click', function() {
+                document.getElementById('status-message').textContent = 'Preparing PDF export...';
+                setTimeout(() => {
+                    document.getElementById('status-message').textContent = 'PDF export ready (simulated)';
+                    alert('In a real application, this would generate and download a PDF of the current PFD view.');
+                }, 1500);
+            });
+            
+            // Tooltip handling
+            const tooltip = document.getElementById('tooltip');
+            
+            function showTooltip(event, content) {
+                tooltip.innerHTML = content;
+                tooltip.style.display = 'block';
+                
+                // Position the tooltip
+                const x = event.clientX + 10;
+                const y = event.clientY + 10;
+                
+                tooltip.style.left = `${x}px`;
+                tooltip.style.top = `${y}px`;
+            }
+            
+            function hideTooltip() {
+                tooltip.style.display = 'none';
+            }
+            
+            // Initialize the process lists in the sidebar
+            function initApp() {
+                // Populate process categories
+                const categories = {
+                    petrochemical: ['ammonia', 'ethylene', 'propylene', 'butadiene', 'benzene', 'xylene', 'p-xylene', 'styrene', 'vinyl-chloride'],
+                    refining: ['atmospheric-distillation', 'vacuum-distillation', 'hydrotreating', 'catalytic-reforming', 'fluid-catalytic-cracking', 
+                              'hydrocracking', 'alkylation', 'isomerization', 'delayed-coking', 'sulfur-recovery'],
+                    chemical: ['chlor-alkali', 'sulfuric-acid', 'nitric-acid', 'urea', 'methanol', 'formaldehyde', 'polyethylene', 'polypropylene'],
+                    pharmaceutical: ['penicillin', 'aspirin', 'paracetamol', 'vitamin-c', 'insulin', 'sterile-injectables', 'tablet-compression', 'lyophilization'],
+                    food: ['beer-brewing', 'sugar-refining', 'vegetable-oil', 'dairy-processing', 'baking', 'canning', 'distillation', 'water-treatment'],
+                    power: ['coal-power', 'combined-cycle', 'nuclear-power', 'wte', 'solar-thermal', 'geothermal', 'hydroelectric', 'ccs']
+                };
+                
+                // Add processes to their categories
+                for (const [category, processes] of Object.entries(categories)) {
+                    const list = document.getElementById(`${category}-list`);
+                    
+                    processes.forEach(processId => {
+                        const process = processDatabase[processId];
+                        if (process) {
+                            const item = document.createElement('li');
+                            item.className = 'process-item';
+                            item.setAttribute('data-process', processId);
+                            item.textContent = process.name;
+                            list.appendChild(item);
+                            
+                            // Add click handler
+                            item.addEventListener('click', function() {
+                                selectProcess(processId);
+                            });
+                        }
+                    });
+                }
+                
+                // Add click handlers to all process items
+                document.querySelectorAll('.process-item[data-process]').forEach(item => {
+                    item.addEventListener('click', function() {
+                        const processId = this.getAttribute('data-process');
+                        selectProcess(processId);
+                    });
+                });
+            }
+            
+            // Select and display a process
+            function selectProcess(processId) {
+                const process = processDatabase[processId];
+                if (!process) return;
+                
+                // Update UI
+                document.getElementById('pfd-title').textContent = process.name;
+                document.getElementById('pfd-description').textContent = process.description;
+                document.getElementById('selected-process').textContent = process.name;
+                document.getElementById('status-message').textContent = `Loaded ${process.name}`;
+                
+                // Highlight selected process in sidebar
+                document.querySelectorAll('.process-item').forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('data-process') === processId) {
+                        item.classList.add('active');
+                        
+                        // Scroll into view
+                        item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        
+                        // Expand category if needed
+                        const categoryList = item.closest('.process-list');
+                        if (categoryList && !categoryList.classList.contains('show')) {
+                            categoryList.classList.add('show');
+                            const header = categoryList.previousElementSibling;
+                            const arrow = header.querySelector('svg');
+                            arrow.style.transform = 'rotate(180deg)';
+                        }
+                    }
+                });
+                
+                // Render the PFD
+                renderPFD(process);
+            }
+            
+            // Render the process flow diagram
+            function renderPFD(process) {
+                const diagram = document.getElementById('pfd-diagram');
+                diagram.innerHTML = '';
+                
+                if (!process.equipment) {
+                    diagram.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">🔍</div>
+                            <h3 class="empty-title">Detailed Diagram Not Available</h3>
+                            <p>The detailed flow diagram for ${process.name} is not available in this demonstration. In a full implementation, this would show the complete process flow.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Create equipment elements
+                process.equipment.forEach(item => {
+                    const equipment = document.createElement('div');
+                    equipment.className = 'equipment';
+                    equipment.style.left = `${item.position.x}px`;
+                    equipment.style.top = `${item.position.y}px`;
+                    equipment.style.width = `${item.size.width}px`;
+                    equipment.style.height = `${item.size.height}px`;
+                    
+                    // Set color based on equipment type
+                    let color = '#3498db'; // default blue
+                    let icon = '⚙️';
+                    
+                    switch(item.type) {
+                        case 'reactor':
+                            color = '#9b59b6';
+                            icon = '🧪';
+                            break;
+                        case 'tower':
+                            color = '#9b59b6';
+                            icon = '🗼';
+                            break;
+                        case 'exchanger':
+                            color = '#e67e22';
+                            icon = '🔥';
+                            break;
+                        case 'heater':
+                        case 'furnace':
+                            color = '#e74c3c';
+                            icon = '🔥';
+                            break;
+                        case 'compressor':
+                        case 'pump':
+                            color = '#2ecc71';
+                            icon = '⚡';
+                            break;
+                        case 'vessel':
+                            color = '#34495e';
+                            icon = '🛢️';
+                            break;
+                    }
+                    
+                    equipment.style.borderColor = color;
+                    
+                    // Add icon and label
+                    equipment.innerHTML = `
+                        <div class="equipment-icon">${icon}</div>
+                        <div class="equipment-label">${item.name}</div>
+                    `;
+                    
+                    // Create tooltip content
+                    let tooltipContent = `<h4>${item.name} <span class="tooltip-id">${item.id}</span></h4>`;
+                    tooltipContent += `<p><strong>Type:</strong> ${item.type.charAt(0).toUpperCase() + item.type.slice(1)}</p>`;
+                    tooltipContent += `<table>`;
+                    
+                    for (const [key, value] of Object.entries(item.parameters)) {
+                        tooltipContent += `<tr><td>${key}</td><td>${value}</td></tr>`;
+                    }
+                    
+                    tooltipContent += `</table>`;
+                    
+                    tooltipContent += `
+                        <div class="tooltip-actions">
+                            <button class="tooltip-button">
+                                <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                Inspect
+                            </button>
+                            <button class="tooltip-button">
+                                <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                </svg>
+                                Edit
+                            </button>
+                        </div>
+                    `;
+                    
+                    // Add event listeners for tooltip
+                    equipment.addEventListener('mouseenter', (e) => {
+                        showTooltip(e, tooltipContent);
+                        document.getElementById('status-message').textContent = `Viewing ${item.id}: ${item.name}`;
+                    });
+                    
+                    equipment.addEventListener('mouseleave', hideTooltip);
+                    equipment.addEventListener('mousemove', (e) => {
+                        tooltip.style.left = `${e.clientX + 10}px`;
+                        tooltip.style.top = `${e.clientY + 10}px`;
+                    });
+                    
+                    diagram.appendChild(equipment);
+                });
+                
+                // Add process lines if available
+                if (process.lines) {
+                    process.lines.forEach(line => {
+                        // Create line element
+                        const lineElement = document.createElement('div');
+                        lineElement.className = 'process-line';
+                        
+                        // Calculate line dimensions and position
+                        const start = line.points[0];
+                        const end = line.points[line.points.length - 1];
+                        const length = Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2));
+                        const angle = Math.atan2(end.y - start.y, end.x - start.x) * 180 / Math.PI;
+                        
+                        lineElement.style.width = `${length}px`;
+                        lineElement.style.height = `${line.diameter}px`;
+                        lineElement.style.left = `${start.x}px`;
+                        lineElement.style.top = `${start.y - line.diameter/2}px`;
+                        lineElement.style.transform = `rotate(${angle}deg)`;
+                        lineElement.style.transformOrigin = '0 0';
+                        lineElement.style.backgroundColor = '#666';
+                        
+                        diagram.appendChild(lineElement);
+                        
+                        // Add arrow at the end
+                        const arrow = document.createElement('div');
+                        arrow.className = 'process-line-arrow';
+                        arrow.style.left = `${end.x - 6}px`;
+                        arrow.style.top = `${end.y - 6}px`;
+                        arrow.style.borderWidth = '6px 0 6px 8px';
+                        arrow.style.borderColor = `transparent transparent transparent #666`;
+                        
+                        diagram.appendChild(arrow);
+                    });
+                }
+            }
+            
+            // Sample interaction for demonstration
+            setTimeout(() => {
+                document.getElementById('status-message').textContent = 'Select a process from the sidebar to begin';
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
