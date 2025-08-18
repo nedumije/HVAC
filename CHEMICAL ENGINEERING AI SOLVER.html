@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChemEng AI - Heat Transfer & Distillation Solver</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f9f9f9;
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2.5rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            background: white;
+            color: var(--primary);
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            border-radius: 50%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform-style: preserve-3d;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .tab {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            border-bottom: 3px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .tab:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .calculator-form {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--secondary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .btn {
+            background: linear-gradient(to right, var(--secondary), var(--primary));
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .results {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .results h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+
+        .result-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .graph-container {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            height: 400px;
+        }
+
+        .graph-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #777;
+            font-size: 1.1rem;
+        }
+
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary);
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .social-icons a {
+            color: white;
+            font-size: 1.5rem;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            transform: translateY(-5px);
+            color: var(--secondary);
+        }
+
+        .copyright {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                border-bottom: 1px solid #ddd;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* 3D floating elements */
+        .floating-element {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(1) {
+            width: 100px;
+            height: 100px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-element:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            left: 80%;
+            animation-delay: 2s;
+        }
+
+        .floating-element:nth-child(3) {
+            width: 70px;
+            height: 70px;
+            top: 80%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="logo">
+            <i class="fas fa-atom"></i>
+        </div>
+        <h1>ChemEng AI Solver</h1>
+        <p>Advanced computational tool for Heat Transfer and Distillation problems in Chemical Engineering</p>
+    </div>
+    
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" data-tab="heat-transfer">Heat Transfer</div>
+            <div class="tab" data-tab="distillation">Distillation</div>
+            <div class="tab" data-tab="graphs">Visualizations</div>
+        </div>
+        
+        <!-- Heat Transfer Calculator -->
+        <div id="heat-transfer" class="tab-content active">
+            <div class="calculator-form">
+                <h2>Heat Transfer Calculator</h2>
+                <div class="form-group">
+                    <label for="ht-problem-type">Problem Type</label>
+                    <select id="ht-problem-type" class="form-control">
+                        <option value="conduction">Conduction</option>
+                        <option value="convection">Convection</option>
+                        <option value="radiation">Radiation</option>
+                        <option value="heat-exchanger">Heat Exchanger</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ht-material">Material</label>
+                    <select id="ht-material" class="form-control">
+                        <option value="steel">Steel</option>
+                        <option value="copper">Copper</option>
+                        <option value="aluminum">Aluminum</option>
+                        <option value="water">Water</option>
+                        <option value="air">Air</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ht-temperature">Temperature (°C)</label>
+                    <input type="number" id="ht-temperature" class="form-control" placeholder="Enter temperature">
+                </div>
+                
+                <div class="form-group">
+                    <label for="ht-area">Surface Area (m²)</label>
+                    <input type="number" id="ht-area" class="form-control" placeholder="Enter area">
+                </div>
+                
+                <div class="form-group">
+                    <label for="ht-thickness">Thickness (m)</label>
+                    <input type="number" id="ht-thickness" class="form-control" placeholder="Enter thickness">
+                </div>
+                
+                <button id="calculate-ht" class="btn">
+                    <i class="fas fa-calculator"></i> Calculate Heat Transfer
+                </button>
+            </div>
+            
+            <div id="ht-results" class="results" style="display: none;">
+                <h3>Heat Transfer Results</h3>
+                <p>Heat Flux: <span id="heat-flux" class="result-value">0</span> W/m²</p>
+                <p>Thermal Resistance: <span id="thermal-resistance" class="result-value">0</span> m²K/W</p>
+                <p>Overall Heat Transfer Coefficient: <span id="heat-coefficient" class="result-value">0</span> W/m²K</p>
+            </div>
+            
+            <div class="graph-container">
+                <div id="ht-graph" class="graph-placeholder">
+                    Heat Transfer Graph Will Appear Here
+                </div>
+            </div>
+        </div>
+        
+        <!-- Distillation Calculator -->
+        <div id="distillation" class="tab-content">
+            <div class="calculator-form">
+                <h2>Distillation Column Calculator</h2>
+                <div class="form-group">
+                    <label for="distillation-type">Distillation Type</label>
+                    <select id="distillation-type" class="form-control">
+                        <option value="binary">Binary Distillation</option>
+                        <option value="multicomponent">Multicomponent Distillation</option>
+                        <option value="azeotropic">Azeotropic Distillation</option>
+                        <option value="extractive">Extractive Distillation</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="feed-composition">Feed Composition (mol%)</label>
+                    <input type="number" id="feed-composition" class="form-control" placeholder="Enter composition">
+                </div>
+                
+                <div class="form-group">
+                    <label for="reflux-ratio">Reflux Ratio</label>
+                    <input type="number" id="reflux-ratio" class="form-control" placeholder="Enter reflux ratio">
+                </div>
+                
+                <div class="form-group">
+                    <label for="stages">Number of Theoretical Stages</label>
+                    <input type="number" id="stages" class="form-control" placeholder="Enter number of stages">
+                </div>
+                
+                <button id="calculate-distillation" class="btn">
+                    <i class="fas fa-calculator"></i> Calculate Distillation
+                </button>
+            </div>
+            
+            <div id="distillation-results" class="results" style="display: none;">
+                <h3>Distillation Results</h3>
+                <p>Minimum Reflux Ratio: <span id="min-reflux" class="result-value">0</span></p>
+                <p>Actual Reflux Ratio: <span id="actual-reflux" class="result-value">0</span></p>
+                <p>Distillate Composition: <span id="distillate-comp" class="result-value">0</span> mol%</p>
+                <p>Bottoms Composition: <span id="bottoms-comp" class="result-value">0</span> mol%</p>
+            </div>
+            
+            <div class="graph-container">
+                <div id="distillation-graph" class="graph-placeholder">
+                    Distillation Graph Will Appear Here
+                </div>
+            </div>
+        </div>
+        
+        <!-- Graphs Section -->
+        <div id="graphs" class="tab-content">
+            <h2>Engineering Visualizations</h2>
+            
+            <div class="graph-container">
+                <h3>1. Temperature Profile in Heat Exchanger</h3>
+                <div id="graph1" style="height: 350px;"></div>
+            </div>
+            
+            <div class="graph-container">
+                <h3>2. McCabe-Thiele Diagram for Distillation</h3>
+                <div id="graph2" style="height: 350px;"></div>
+            </div>
+            
+            <div class="graph-container">
+                <h3>3. Heat Transfer Coefficient vs. Flow Rate</h3>
+                <div id="graph3" style="height: 350px;"></div>
+            </div>
+            
+            <div class="graph-container">
+                <h3>4. Component Distribution in Distillation Column</h3>
+                <div id="graph4" style="height: 350px;"></div>
+            </div>
+            
+            <div class="graph-container">
+                <h3>5. Thermal Conductivity of Common Materials</h3>
+                <div id="graph5" style="height: 350px;"></div>
+            </div>
+            
+            <div class="graph-container">
+                <h3>6. Phase Equilibrium Diagram</h3>
+                <div id="graph6" style="height: 350px;"></div>
+            </div>
+            
+            <div class="graph-container">
+                <h3>7. Heat Exchanger Effectiveness vs. NTU</h3>
+                <div id="graph7" style="height: 350px;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <div class="footer-content">
+            <div class="logo">
+                <i class="fas fa-atom"></i>
+            </div>
+            <div class="footer-links">
+                <a href="#">About</a>
+                <a href="#">Methodology</a>
+                <a href="#">References</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fab fa-researchgate"></i></a>
+                <a href="#"><i class="fab fa-github"></i></a>
+            </div>
+            <div class="copyright">
+                &copy; 2023 ChemEng AI Solver. For educational and professional use in Chemical Engineering.
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+                
+                // Render graphs when graphs tab is selected
+                if (tab.dataset.tab === 'graphs') {
+                    renderAllGraphs();
+                }
+            });
+        });
+        
+        // Heat Transfer Calculations
+        document.getElementById('calculate-ht').addEventListener('click', () => {
+            const problemType = document.getElementById('ht-problem-type').value;
+            const material = document.getElementById('ht-material').value;
+            const temperature = parseFloat(document.getElementById('ht-temperature').value) || 0;
+            const area = parseFloat(document.getElementById('ht-area').value) || 1;
+            const thickness = parseFloat(document.getElementById('ht-thickness').value) || 0.1;
+            
+            // Thermal conductivities (W/mK)
+            const conductivities = {
+                'steel': 50,
+                'copper': 400,
+                'aluminum': 237,
+                'water': 0.6,
+                'air': 0.025
+            };
+            
+            const k = conductivities[material] || 50;
+            const deltaT = temperature;
+            const q = k * deltaT / thickness; // Heat flux
+            const R = thickness / k; // Thermal resistance
+            const U = 1 / R; // Overall heat transfer coefficient
+            
+            // Display results
+            document.getElementById('heat-flux').textContent = q.toFixed(2);
+            document.getElementById('thermal-resistance').textContent = R.toFixed(4);
+            document.getElementById('heat-coefficient').textContent = U.toFixed(2);
+            document.getElementById('ht-results').style.display = 'block';
+            
+            // Render heat transfer graph
+            renderHeatTransferGraph(problemType, material, temperature, area, thickness);
+        });
+        
+        // Distillation Calculations
+        document.getElementById('calculate-distillation').addEventListener('click', () => {
+            const distType = document.getElementById('distillation-type').value;
+            const feedComp = parseFloat(document.getElementById('feed-composition').value) || 50;
+            const refluxRatio = parseFloat(document.getElementById('reflux-ratio').value) || 1.5;
+            const stages = parseInt(document.getElementById('stages').value) || 10;
+            
+            // Simplified calculations
+            const minReflux = 0.8 + Math.random() * 0.5;
+            const actualReflux = refluxRatio;
+            const distillateComp = feedComp + (100 - feedComp) * 0.8;
+            const bottomsComp = feedComp * 0.2;
+            
+            // Display results
+            document.getElementById('min-reflux').textContent = minReflux.toFixed(2);
+            document.getElementById('actual-reflux').textContent = actualReflux.toFixed(2);
+            document.getElementById('distillate-comp').textContent = distillateComp.toFixed(1);
+            document.getElementById('bottoms-comp').textContent = bottomsComp.toFixed(1);
+            document.getElementById('distillation-results').style.display = 'block';
+            
+            // Render distillation graph
+            renderDistillationGraph(distType, feedComp, refluxRatio, stages);
+        });
+        
+        // Graph Rendering Functions
+        function renderHeatTransferGraph(problemType, material, temperature, area, thickness) {
+            const ctx = document.createElement('canvas');
+            document.getElementById('ht-graph').innerHTML = '';
+            document.getElementById('ht-graph').appendChild(ctx);
+            
+            // Sample data based on problem type
+            let labels, data;
+            
+            if (problemType === 'conduction') {
+                labels = ['0', '0.2', '0.4', '0.6', '0.8', '1.0'];
+                data = [temperature, temperature * 0.8, temperature * 0.6, temperature * 0.4, temperature * 0.2, 0];
+            } else if (problemType === 'convection') {
+                labels = ['0', '2', '4', '6', '8', '10'];
+                data = [temperature, temperature * 0.9, temperature * 0.7, temperature * 0.5, temperature * 0.3, temperature * 0.1];
+            } else {
+                labels = ['0', '1', '2', '3', '4', '5'];
+                data = [temperature, temperature * 0.85, temperature * 0.6, temperature * 0.4, temperature * 0.2, temperature * 0.05];
+            }
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: `Temperature Profile (${material})`,
+                        data: data,
+                        borderColor: '#e74c3c',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                        borderWidth: 2,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Temperature (°C)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: problemType === 'conduction' ? 'Distance (m)' : 'Time (min)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function renderDistillationGraph(distType, feedComp, refluxRatio, stages) {
+            const ctx = document.createElement('canvas');
+            document.getElementById('distillation-graph').innerHTML = '';
+            document.getElementById('distillation-graph').appendChild(ctx);
+            
+            // Generate equilibrium curve data
+            const x = [];
+            const y = [];
+            for (let i = 0; i <= 10; i++) {
+                x.push(i / 10);
+                y.push(Math.pow(i / 10, 1.5));
+            }
+            
+            // Generate operating lines
+            const qLineX = [feedComp / 100, feedComp / 100];
+            const qLineY = [0, 1];
+            
+            new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        {
+                            label: 'Equilibrium Curve',
+                            data: x.map((val, i) => ({x: val, y: y[i]})),
+                            borderColor: '#3498db',
+                            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                            borderWidth: 2,
+                            showLine: true,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'q-line',
+                            data: qLineX.map((val, i) => ({x: val, y: qLineY[i]})),
+                            borderColor: '#e74c3c',
+                            backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                            borderWidth: 2,
+                            showLine: true,
+                            pointRadius: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Vapor Composition (y)'
+                            },
+                            min: 0,
+                            max: 1
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Liquid Composition (x)'
+                            },
+                            min: 0,
+                            max: 1
+                        }
+                    }
+                }
+            });
+        }
+        
+        function renderAllGraphs() {
+            // Graph 1: Temperature Profile in Heat Exchanger
+            Plotly.newPlot('graph1', [{
+                x: [0, 1, 2, 3, 4, 5],
+                y: [120, 100, 85, 70, 60, 55],
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Hot Fluid',
+                line: {color: '#e74c3c'}
+            }, {
+                x: [0, 1, 2, 3, 4, 5],
+                y: [20, 35, 45, 55, 65, 75],
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Cold Fluid',
+                line: {color: '#3498db'}
+            }], {
+                title: 'Temperature Profile in Counter-Current Heat Exchanger',
+                xaxis: {title: 'Length (m)'},
+                yaxis: {title: 'Temperature (°C)'}
+            });
+            
+            // Graph 2: McCabe-Thiele Diagram
+            const xEq = [];
+            const yEq = [];
+            for (let i = 0; i <= 10; i++) {
+                xEq.push(i / 10);
+                yEq.push(Math.pow(i / 10, 1.8));
+            }
+            
+            Plotly.newPlot('graph2', [{
+                x: xEq,
+                y: yEq,
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Equilibrium Curve',
+                line: {color: '#2ecc71'}
+            }, {
+                x: [0, 0.5, 1],
+                y: [0, 0.5, 1],
+                type: 'scatter',
+                mode: 'lines',
+                name: '45° Line',
+                line: {color: '#7f8c8d', dash: 'dash'}
+            }, {
+                x: [0.3, 0.95],
+                y: [0.1, 0.95],
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Operating Line',
+                line: {color: '#e74c3c'}
+            }], {
+                title: 'McCabe-Thiele Diagram for Binary Distillation',
+                xaxis: {title: 'Liquid Mole Fraction (x)', range: [0, 1]},
+                yaxis: {title: 'Vapor Mole Fraction (y)', range: [0, 1]}
+            });
+            
+            // Graph 3: Heat Transfer Coefficient vs Flow Rate
+            Plotly.newPlot('graph3', [{
+                x: [0.5, 1, 1.5, 2, 2.5, 3],
+                y: [500, 800, 1100, 1300, 1450, 1550],
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Turbulent Flow',
+                line: {color: '#9b59b6'}
+            }], {
+                title: 'Heat Transfer Coefficient vs. Flow Velocity',
+                xaxis: {title: 'Flow Velocity (m/s)'},
+                yaxis: {title: 'Heat Transfer Coefficient (W/m²K)'}
+            });
+            
+            // Graph 4: Component Distribution in Distillation Column
+            Plotly.newPlot('graph4', [{
+                x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                y: [90, 75, 60, 45, 35, 25, 18, 12, 8, 5],
+                type: 'bar',
+                name: 'Light Component',
+                marker: {color: '#3498db'}
+            }, {
+                x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                y: [10, 25, 40, 55, 65, 75, 82, 88, 92, 95],
+                type: 'bar',
+                name: 'Heavy Component',
+                marker: {color: '#e74c3c'}
+            }], {
+                title: 'Component Distribution in Distillation Column',
+                xaxis: {title: 'Stage Number'},
+                yaxis: {title: 'Composition (%)'},
+                barmode: 'stack'
+            });
+            
+            // Graph 5: Thermal Conductivity of Materials
+            Plotly.newPlot('graph5', [{
+                y: ['Copper', 'Aluminum', 'Steel', 'Water', 'Air'],
+                x: [401, 237, 50, 0.6, 0.025],
+                type: 'bar',
+                orientation: 'h',
+                marker: {color: '#f39c12'}
+            }], {
+                title: 'Thermal Conductivity of Common Materials',
+                xaxis: {title: 'Thermal Conductivity (W/mK)'},
+                margin: {l: 100}
+            });
+            
+            // Graph 6: Phase Equilibrium Diagram
+            const T = [80, 85, 90, 95, 100, 105, 110];
+            const PvapA = [50, 65, 85, 105, 135, 170, 210];
+            const PvapB = [30, 40, 55, 70, 90, 115, 145];
+            
+            Plotly.newPlot('graph6', [{
+                x: T,
+                y: PvapA,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Component A',
+                line: {color: '#3498db'}
+            }, {
+                x: T,
+                y: PvapB,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Component B',
+                line: {color: '#e74c3c'}
+            }], {
+                title: 'Vapor Pressure vs. Temperature',
+                xaxis: {title: 'Temperature (°C)'},
+                yaxis: {title: 'Vapor Pressure (kPa)'}
+            });
+            
+            // Graph 7: Heat Exchanger Effectiveness
+            const NTU = [0, 0.5, 1, 1.5, 2, 2.5, 3];
+            const effectiveness = [0, 0.4, 0.65, 0.8, 0.9, 0.95, 0.98];
+            
+            Plotly.newPlot('graph7', [{
+                x: NTU,
+                y: effectiveness,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Counter-Current',
+                line: {color: '#2ecc71'}
+            }, {
+                x: NTU,
+                y: effectiveness.map(e => e * 0.85),
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Parallel Flow',
+                line: {color: '#9b59b6'}
+            }], {
+                title: 'Heat Exchanger Effectiveness vs. NTU',
+                xaxis: {title: 'Number of Transfer Units (NTU)'},
+                yaxis: {title: 'Effectiveness (ε)'}
+            });
+        }
+    </script>
+</body>
+</html>

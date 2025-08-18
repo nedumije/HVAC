@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConfideAI - Anonymous Confession Board</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --dark: #2d3436;
+            --light: #f5f6fa;
+            --accent: #fd79a8;
+            --success: #00b894;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9f9f9;
+            color: var(--dark);
+            overflow-x: hidden;
+            perspective: 1000px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transform-style: preserve-3d;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(255,255,255,0.05)" d="M0,0 L100,0 L100,100 L0,100 Z" /></svg>');
+            transform: translateZ(-1px);
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            background: white;
+            color: var(--primary);
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            border-radius: 50%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform-style: preserve-3d;
+            animation: spin 20s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .confession-form {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+        }
+        
+        .confession-form:hover {
+            transform: translateY(-5px) rotateX(5deg);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #fafafa;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+            background-color: white;
+        }
+        
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+        
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .btn {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(108, 92, 231, 0.6);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn i {
+            margin-right: 0.5rem;
+        }
+        
+        .confessions-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .confession-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .confession-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--primary);
+        }
+        
+        .confession-card:hover {
+            transform: translateY(-5px) rotateY(5deg);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .confession-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .confession-content {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .ai-response {
+            background: #f8f9fa;
+            border-left: 3px solid var(--accent);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin-top: 1rem;
+            position: relative;
+        }
+        
+        .ai-response::before {
+            content: 'AI Response';
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            background: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+        }
+        
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--secondary);
+        }
+        
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .social-icons a {
+            color: white;
+            font-size: 1.5rem;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            transform: translateY(-5px);
+            color: var(--secondary);
+        }
+        
+        .copyright {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        /* 3D floating elements */
+        .floating-element {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+            transform-style: preserve-3d;
+        }
+        
+        .floating-element:nth-child(1) {
+            width: 100px;
+            height: 100px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .floating-element:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            left: 80%;
+            animation-delay: 2s;
+        }
+        
+        .floating-element:nth-child(3) {
+            width: 70px;
+            height: 70px;
+            top: 80%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .confessions-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+        
+        /* Loading animation */
+        .loader {
+            display: none;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Confetti animation */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: var(--accent);
+            opacity: 0;
+            z-index: 1000;
+            animation: confetti 3s ease-in-out;
+        }
+        
+        @keyframes confetti {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="floating-element"></div>
+        <div class="logo">
+            <i class="fas fa-user-secret"></i>
+        </div>
+        <h1>ConfideAI</h1>
+        <p>Share your thoughts anonymously and receive compassionate AI responses</p>
+    </div>
+    
+    <div class="container">
+        <form id="confessionForm" class="confession-form">
+            <div class="form-group">
+                <label for="confessionType">What type of confession is this?</label>
+                <select id="confessionType" class="form-control" required>
+                    <option value="" disabled selected>Select confession type</option>
+                    <option value="guilt">Guilt or Regret</option>
+                    <option value="secret">Deep Secret</option>
+                    <option value="love">Love or Crush</option>
+                    <option value="family">Family Issues</option>
+                    <option value="friendship">Friendship Problems</option>
+                    <option value="work">Work/School Stress</option>
+                    <option value="embarrassing">Embarrassing Moment</option>
+                    <option value="fear">Fear or Phobia</option>
+                    <option value="addiction">Addiction Struggle</option>
+                    <option value="childhood">Childhood Memory</option>
+                    <option value="mistake">Big Mistake</option>
+                    <option value="achievement">Secret Achievement</option>
+                    <option value="fantasy">Wild Fantasy</option>
+                    <option value="behavior">Strange Behavior</option>
+                    <option value="belief">Unpopular Belief</option>
+                    <option value="habit">Weird Habit</option>
+                    <option value="dream">Recurring Dream</option>
+                    <option value="lie">Persistent Lie</option>
+                    <option value="obsession">Secret Obsession</option>
+                    <option value="identity">Identity Question</option>
+                    <option value="trauma">Past Trauma</option>
+                    <option value="desire">Forbidden Desire</option>
+                    <option value="crime">Petty Crime</option>
+                    <option value="jealousy">Jealousy</option>
+                    <option value="betrayal">Betrayal</option>
+                    <option value="self-harm">Self-Harm</option>
+                    <option value="paranoia">Paranoia</option>
+                    <option value="grief">Unresolved Grief</option>
+                    <option value="sexuality">Sexuality</option>
+                    <option value="spiritual">Spiritual Crisis</option>
+                    <option value="appearance">Appearance Insecurity</option>
+                    <option value="intrusive">Intrusive Thought</option>
+                    <option value="manipulation">Manipulation</option>
+                    <option value="cheating">Academic Cheating</option>
+                    <option value="parenting">Parenting Struggle</option>
+                    <option value="marriage">Marriage Problem</option>
+                    <option value="finance">Financial Secret</option>
+                    <option value="health">Health Concern</option>
+                    <option value="online">Online Behavior</option>
+                    <option value="social">Social Anxiety</option>
+                    <option value="existential">Existential Dread</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="emotion">Primary Emotion You're Feeling</label>
+                <select id="emotion" class="form-control" required>
+                    <option value="" disabled selected>Select primary emotion</option>
+                    <option value="anger">Anger</option>
+                    <option value="anxiety">Anxiety</option>
+                    <option value="shame">Shame</option>
+                    <option value="guilt">Guilt</option>
+                    <option value="fear">Fear</option>
+                    <option value="sadness">Sadness</option>
+                    <option value="loneliness">Loneliness</option>
+                    <option value="jealousy">Jealousy</option>
+                    <option value="envy">Envy</option>
+                    <option value="disgust">Disgust</option>
+                    <option value="contempt">Contempt</option>
+                    <option value="embarrassment">Embarrassment</option>
+                    <option value="remorse">Remorse</option>
+                    <option value="regret">Regret</option>
+                    <option value="frustration">Frustration</option>
+                    <option value="resentment">Resentment</option>
+                    <option value="betrayal">Betrayal</option>
+                    <option value="hurt">Hurt</option>
+                    <option value="disappointment">Disappointment</option>
+                    <option value="despair">Despair</option>
+                    <option value="hopelessness">Hopelessness</option>
+                    <option value="confusion">Confusion</option>
+                    <option value="conflict">Conflict</option>
+                    <option value="overwhelm">Overwhelm</option>
+                    <option value="stress">Stress</option>
+                    <option value="nervousness">Nervousness</option>
+                    <option value="insecurity">Insecurity</option>
+                    <option value="vulnerability">Vulnerability</option>
+                    <option value="emptiness">Emptiness</option>
+                    <option value="numbness">Numbness</option>
+                    <option value="disconnection">Disconnection</option>
+                    <option value="longing">Longing</option>
+                    <option value="yearning">Yearning</option>
+                    <option value="desire">Desire</option>
+                    <option value="lust">Lust</option>
+                    <option value="attraction">Attraction</option>
+                    <option value="infatuation">Infatuation</option>
+                    <option value="obsession">Obsession</option>
+                    <option value="compulsion">Compulsion</option>
+                    <option value="addiction">Addiction</option>
+                    <option value="mania">Mania</option>
+                    <option value="euphoria">Euphoria</option>
+                    <option value="excitement">Excitement</option>
+                    <option value="anticipation">Anticipation</option>
+                    <option value="relief">Relief</option>
+                    <option value="gratitude">Gratitude</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="intensity">How intense is this feeling?</label>
+                <select id="intensity" class="form-control" required>
+                    <option value="" disabled selected>Select intensity level</option>
+                    <option value="1">1 - Barely noticeable</option>
+                    <option value="2">2 - Mild</option>
+                    <option value="3">3 - Moderate</option>
+                    <option value="4">4 - Strong</option>
+                    <option value="5">5 - Very strong</option>
+                    <option value="6">6 - Intense</option>
+                    <option value="7">7 - Very intense</option>
+                    <option value="8">8 - Overwhelming</option>
+                    <option value="9">9 - Almost unbearable</option>
+                    <option value="10">10 - Completely consuming</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="confession">Your Anonymous Confession</label>
+                <textarea id="confession" class="form-control" placeholder="Type your confession here... (minimum 50 characters)" required minlength="50"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="responseStyle">How would you like the AI to respond?</label>
+                <select id="responseStyle" class="form-control" required>
+                    <option value="" disabled selected>Select response style</option>
+                    <option value="compassionate">Compassionate Friend</option>
+                    <option value="therapist">Therapist</option>
+                    <option value="wise">Wise Elder</option>
+                    <option value="nonjudgmental">Non-judgmental Listener</option>
+                    <option value="humorous">Humorous Take</option>
+                    <option value="direct">Direct Truth</option>
+                    <option value="philosophical">Philosophical</option>
+                    <option value="spiritual">Spiritual Guide</option>
+                    <option value="scientific">Scientific Perspective</option>
+                    <option value="artistic">Artistic Interpretation</option>
+                    <option value="poetic">Poetic Response</option>
+                    <option value="motivational">Motivational Coach</option>
+                    <option value="stoic">Stoic Wisdom</option>
+                    <option value="buddhist">Buddhist Perspective</option>
+                    <option value="existential">Existential View</option>
+                    <option value="optimistic">Optimistic Outlook</option>
+                    <option value="realistic">Realistic Assessment</option>
+                    <option value="parental">Parental Advice</option>
+                    <option value="sibling">Like a Sibling</option>
+                    <option value="grandparent">Grandparent's Wisdom</option>
+                    <option value="shrink">Like a Shrink</option>
+                    <option value="professor">Professor's Analysis</option>
+                    <option value="comedian">Comedian's Take</option>
+                    <option value="skeptic">Skeptical View</option>
+                    <option value="devil">Devil's Advocate</option>
+                    <option value="angel">Angel's Perspective</option>
+                    <option value="alien">Alien Observer</option>
+                    <option value="future">Future Self</option>
+                    <option value="past">Past Self</option>
+                    <option value="inner-child">Inner Child</option>
+                    <option value="higher-self">Higher Self</option>
+                    <option value="shaman">Shamanic View</option>
+                    <option value="detective">Detective's Analysis</option>
+                    <option value="journalist">Journalistic Approach</option>
+                    <option value="historian">Historical Context</option>
+                    <option value="sociologist">Sociological View</option>
+                    <option value="psychologist">Psychological Analysis</option>
+                    <option value="neuroscientist">Neuroscientific Explanation</option>
+                    <option value="biologist">Biological Perspective</option>
+                    <option value="physicist">Physics Metaphor</option>
+                    <option value="cheerleader">Cheerleader</option>
+                    <option value="coach">Tough Love Coach</option>
+                    <option value="robot">Pure Logic</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn">
+                <i class="fas fa-paper-plane"></i> Submit Confession
+            </button>
+            
+            <div id="loader" class="loader" style="display: none;"></div>
+        </form>
+        
+        <h2>Recent Confessions</h2>
+        <div class="confessions-container" id="confessionsContainer">
+            <!-- Sample confession cards will be added here by JavaScript -->
+        </div>
+    </div>
+    
+    <div class="footer">
+        <div class="footer-content">
+            <div class="logo">
+                <i class="fas fa-user-secret"></i>
+            </div>
+            <div class="footer-links">
+                <a href="#">About</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">FAQ</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-reddit"></i></a>
+            </div>
+            <div class="copyright">
+                &copy; 2023 ConfideAI. All rights reserved. This is an anonymous service - we never store personal data.
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Sample AI responses for demonstration
+        const aiResponses = [
+            "It takes courage to share this. Remember that everyone struggles with similar feelings at times.",
+            "What you're describing is a very human experience. Be gentle with yourself as you work through this.",
+            "That sounds really challenging. Have you considered talking to someone you trust about this?",
+            "Your feelings are valid. Sometimes just expressing them can be the first step toward healing.",
+            "Many people share similar experiences. You're not alone in feeling this way.",
+            "This sounds like it's been weighing on you. Acknowledging it is an important step.",
+            "What would you say to a friend who shared this with you? Try offering yourself that same compassion.",
+            "Emotions are like waves - they come and go. This feeling won't last forever.",
+            "It's okay to not have all the answers right now. Growth often happens in uncertain spaces.",
+            "Thank you for sharing this vulnerable part of yourself. That takes real strength."
+        ];
+        
+        // Sample confession types for demonstration
+        const confessionTypes = {
+            "guilt": "Guilt or Regret",
+            "secret": "Deep Secret",
+            "love": "Love or Crush",
+            "family": "Family Issues",
+            "friendship": "Friendship Problems",
+            "work": "Work/School Stress",
+            "embarrassing": "Embarrassing Moment",
+            "fear": "Fear or Phobia"
+        };
+        
+        // Sample emotions for demonstration
+        const emotions = {
+            "anger": "Anger",
+            "anxiety": "Anxiety",
+            "shame": "Shame",
+            "guilt": "Guilt",
+            "fear": "Fear",
+            "sadness": "Sadness",
+            "loneliness": "Loneliness",
+            "jealousy": "Jealousy"
+        };
+        
+        // Sample response styles for demonstration
+        const responseStyles = {
+            "compassionate": "Compassionate Friend",
+            "therapist": "Therapist",
+            "wise": "Wise Elder",
+            "nonjudgmental": "Non-judgmental Listener",
+            "humorous": "Humorous Take"
+        };
+        
+        // Generate sample confessions on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            generateSampleConfessions();
+            
+            // Form submission handler
+            document.getElementById('confessionForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitConfession();
+            });
+        });
+        
+        function generateSampleConfessions() {
+            const container = document.getElementById('confessionsContainer');
+            
+            // Clear existing content (except the first child if it's a "no confessions" message)
+            if (container.firstChild && container.firstChild.classList && container.firstChild.classList.contains('no-confessions')) {
+                container.removeChild(container.firstChild);
+            }
+            
+            // Create 3 sample confessions
+            for (let i = 0; i < 3; i++) {
+                const typeKeys = Object.keys(confessionTypes);
+                const emotionKeys = Object.keys(emotions);
+                const styleKeys = Object.keys(responseStyles);
+                
+                const randomType = typeKeys[Math.floor(Math.random() * typeKeys.length)];
+                const randomEmotion = emotionKeys[Math.floor(Math.random() * emotionKeys.length)];
+                const randomStyle = styleKeys[Math.floor(Math.random() * styleKeys.length)];
+                
+                const confessionContent = [
+                    "I've been hiding something from everyone in my life...",
+                    "I can't believe I did this, but I need to get it off my chest...",
+                    "There's something about me that no one knows...",
+                    "I've been feeling so alone with this secret...",
+                    "I did something I deeply regret..."
+                ][Math.floor(Math.random() * 5)];
+                
+                const randomResponse = aiResponses[Math.floor(Math.random() * aiResponses.length)];
+                
+                const card = document.createElement('div');
+                card.className = 'confession-card';
+                card.innerHTML = `
+                    <div class="confession-meta">
+                        <span>${confessionTypes[randomType]}</span>
+                        <span>${emotions[randomEmotion]}</span>
+                    </div>
+                    <div class="confession-content">
+                        ${confessionContent}
+                    </div>
+                    <div class="ai-response">
+                        ${randomResponse}
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            }
+        }
+        
+        function submitConfession() {
+            const form = document.getElementById('confessionForm');
+            const loader = document.getElementById('loader');
+            const submitButton = form.querySelector('button[type="submit"]');
+            
+            // Get form values
+            const confessionType = document.getElementById('confessionType').value;
+            const emotion = document.getElementById('emotion').value;
+            const intensity = document.getElementById('intensity').value;
+            const confession = document.getElementById('confession').value;
+            const responseStyle = document.getElementById('responseStyle').value;
+            
+            // Validate
+            if (!confessionType || !emotion || !intensity || !confession || !responseStyle) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            if (confession.length < 50) {
+                alert('Your confession should be at least 50 characters');
+                return;
+            }
+            
+            // Show loading
+            submitButton.disabled = true;
+            loader.style.display = 'block';
+            
+            // Simulate API call with timeout
+            setTimeout(function() {
+                // Hide loading
+                submitButton.disabled = false;
+                loader.style.display = 'none';
+                
+                // Create new confession card
+                const container = document.getElementById('confessionsContainer');
+                const randomResponse = aiResponses[Math.floor(Math.random() * aiResponses.length)];
+                
+                const card = document.createElement('div');
+                card.className = 'confession-card';
+                card.innerHTML = `
+                    <div class="confession-meta">
+                        <span>${document.getElementById('confessionType').options[document.getElementById('confessionType').selectedIndex].text}</span>
+                        <span>${document.getElementById('emotion').options[document.getElementById('emotion').selectedIndex].text}</span>
+                    </div>
+                    <div class="confession-content">
+                        ${confession}
+                    </div>
+                    <div class="ai-response">
+                        ${randomResponse}
+                    </div>
+                `;
+                
+                // Add to top of container
+                container.insertBefore(card, container.firstChild);
+                
+                // Reset form
+                form.reset();
+                
+                // Create confetti effect
+                createConfetti();
+                
+                // Scroll to new confession
+                card.scrollIntoView({ behavior: 'smooth' });
+                
+            }, 2000);
+        }
+        
+        function createConfetti() {
+            const colors = ['#6c5ce7', '#a29bfe', '#fd79a8', '#00b894', '#fdcb6e'];
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                
+                // Random properties
+                const size = Math.random() * 10 + 5;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const left = Math.random() * 100;
+                const animationDuration = Math.random() * 3 + 2;
+                const delay = Math.random() * 5;
+                
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${size}px`;
+                confetti.style.backgroundColor = color;
+                confetti.style.left = `${left}%`;
+                confetti.style.animationDuration = `${animationDuration}s`;
+                confetti.style.animationDelay = `${delay}s`;
+                
+                document.body.appendChild(confetti);
+                
+                // Remove after animation
+                setTimeout(() => {
+                    confetti.remove();
+                }, (animationDuration + delay) * 1000);
+            }
+        }
+    </script>
+</body>
+</html>
