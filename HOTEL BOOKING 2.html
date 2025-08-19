@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxury Stays | East Midlands Premier Hotels</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a4da2;
+            --primary-dark: #08367a;
+            --secondary: #c29b40;
+            --secondary-dark: #a78332;
+            --accent: #e63946;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --success: #28a745;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --transition: all 0.3s ease;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--dark);
+            background-color: #f9f9f9;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, h4, h5 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            font-size: 28px;
+            margin-left: 10px;
+        }
+        
+        .logo-icon {
+            font-size: 32px;
+            color: var(--secondary);
+        }
+        
+        .header-contact {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .header-contact div {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-main {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        .nav-links li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 5px 0;
+            position: relative;
+        }
+        
+        .nav-links li a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--secondary);
+            transition: var(--transition);
+        }
+        
+        .nav-links li a:hover:after {
+            width: 100%;
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid white;
+            color: white;
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn-large {
+            padding: 15px 30px;
+            font-size: 18px;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero h2 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        /* Booking Widget */
+        .booking-widget {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 40px;
+            box-shadow: var(--shadow-hover);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .booking-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+        
+        .form-group input, .form-group select {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(10, 77, 162, 0.1);
+        }
+        
+        /* Section Styles */
+        section {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .section-title h2 {
+            font-size: 36px;
+            color: var(--primary);
+            position: relative;
+            display: inline-block;
+            padding-bottom: 15px;
+        }
+        
+        .section-title h2:after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 3px;
+            background-color: var(--secondary);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .section-title p {
+            max-width: 700px;
+            margin: 15px auto 0;
+            color: var(--gray);
+        }
+        
+        /* Locations Grid */
+        .locations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        
+        .location-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .location-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .location-img {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .location-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--secondary);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .location-info {
+            padding: 20px;
+        }
+        
+        .location-info h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .location-info p {
+            color: var(--gray);
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .location-features {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .location-feature {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            color: var(--gray);
+        }
+        
+        /* Features Section */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .feature-icon {
+            font-size: 40px;
+            color: var(--primary);
+            margin-bottom: 20px;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(10, 77, 162, 0.1);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+        }
+        
+        /* Testimonials */
+        .testimonials-container {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .testimonial {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            margin: 20px;
+            position: relative;
+        }
+        
+        .testimonial:before {
+            content: '"';
+            font-family: 'Playfair Display', serif;
+            font-size: 80px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--light-gray);
+            line-height: 1;
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 20px;
+            font-size: 18px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .testimonial-rating {
+            color: var(--warning);
+            margin-bottom: 15px;
+        }
+        
+        /* New Sections */
+        /* Interactive Map Section */
+        .map-section {
+            background-color: var(--light);
+        }
+        
+        .map-container {
+            height: 500px;
+            background-color: #e9ecef;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .map-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            z-index: 10;
+            max-width: 300px;
+        }
+        
+        .map-overlay h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .region-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        
+        .region-btn {
+            padding: 8px 10px;
+            background-color: var(--light);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+        
+        .region-btn.active, .region-btn:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        /* Loyalty Program Section */
+        .loyalty-section {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+        }
+        
+        .loyalty-container {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+        
+        .loyalty-content {
+            flex: 1;
+        }
+        
+        .loyalty-visual {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .loyalty-card {
+            width: 300px;
+            height: 180px;
+            background: linear-gradient(45deg, #c29b40, #e6c87c);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            box-shadow: var(--shadow-hover);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .loyalty-card:after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            top: -50px;
+            right: -50px;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .benefit-item {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+        
+        .benefit-icon {
+            color: var(--secondary);
+            font-size: 24px;
+            margin-top: 5px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 70px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+        
+        .footer-column h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3:after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 2px;
+            background-color: var(--secondary);
+            bottom: 0;
+            left: 0;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links a {
+            color: #ddd;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-links a:hover {
+            color: var(--secondary);
+            padding-left: 5px;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .header-top {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-main {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h2 {
+                font-size: 36px;
+            }
+            
+            .loyalty-container {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .booking-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero {
+                padding: 60px 0;
+            }
+            
+            section {
+                padding: 60px 0;
+            }
+            
+            .region-selector {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animated {
+            animation: fadeIn 1s ease-out;
+        }
+        
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--success);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: var(--shadow-hover);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 3000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 5px;
+            background-color: var(--light-gray);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 2000;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background-color: var(--secondary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        /* Theme Selector */
+        .theme-selector {
+            position: fixed;
+            top: 50%;
+            right: -35px;
+            transform: translateY(-50%) rotate(-90deg);
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 15px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 100;
+        }
+        
+        .theme-selector:hover {
+            right: 0;
+        }
+        
+        .theme-options {
+            position: fixed;
+            top: 50%;
+            right: -200px;
+            transform: translateY(-50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-hover);
+            transition: var(--transition);
+            z-index: 99;
+            width: 200px;
+        }
+        
+        .theme-options.show {
+            right: 50px;
+        }
+        
+        .theme-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin: 10px 0;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+        }
+        
+        .theme-option.active {
+            border-color: var(--dark);
+        }
+        
+        /* Dark Mode */
+        body.dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .feature-card,
+        body.dark-mode .location-card,
+        body.dark-mode .testimonial,
+        body.dark-mode .booking-widget {
+            background-color: #1e1e1e;
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .form-group label {
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .form-group input,
+        body.dark-mode .form-group select {
+            background-color: #2d2d2d;
+            border-color: #444;
+            color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Theme Selector -->
+    <div class="theme-selector" id="themeSelector">
+        <i class="fas fa-palette"></i> Themes
+    </div>
+    
+    <div class="theme-options" id="themeOptions">
+        <h4>Choose Theme</h4>
+        <div class="theme-option active" style="background-color: #0a4da2;" data-theme="default"></div>
+        <div class="theme-option" style="background-color: #2a6b3a;" data-theme="forest"></div>
+        <div class="theme-option" style="background-color: #7b3a8c;" data-theme="royal"></div>
+        <div class="theme-option" style="background-color: #aa3c3c;" data-theme="crimson"></div>
+        <div class="theme-option" id="darkModeToggle" style="background: linear-gradient(45deg, #121212, #2d2d2d); border: 2px solid #fff;"></div>
+    </div>
+
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">
+                    <i class="fas fa-hotel logo-icon"></i>
+                    <h1>East Midlands Premier</h1>
+                </div>
+                <div class="header-contact">
+                    <div><i class="fas fa-phone"></i> 01664 123456</div>
+                    <div><i class="fas fa-envelope"></i> info@eastmidlandspremier.com</div>
+                </div>
+            </div>
+            <div class="nav-main">
+                <ul class="nav-links">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Locations</a></li>
+                    <li><a href="#">Special Offers</a></li>
+                    <li><a href="#">Luxury Suites</a></li>
+                    <li><a href="#">Dining</a></li>
+                    <li><a href="#">Events</a></li>
+                    <li><a href="#">Gallery</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+                <div class="user-actions">
+                    <button class="btn btn-outline"><i class="fas fa-user"></i> Sign In</button>
+                    <button class="btn btn-primary"><i class="fas fa-bookmark"></i> My Bookings</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2>Discover Luxury in the Heart of England</h2>
+                <p>Experience unparalleled comfort across 45 exquisite locations in the East Midlands</p>
+                <button class="btn btn-primary btn-large"><i class="fas fa-video"></i> Virtual Tour</button>
+                
+                <!-- Booking Widget -->
+                <div class="booking-widget">
+                    <div class="booking-form">
+                        <div class="form-group">
+                            <label for="destination">Destination</label>
+                            <select id="destination">
+                                <option value="">Select a location</option>
+                                <option value="derby">Derby</option>
+                                <option value="nottingham">Nottingham</option>
+                                <option value="leicester">Leicester</option>
+                                <option value="lincoln">Lincoln</option>
+                                <option value="northampton">Northampton</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="check-in">Check In</label>
+                            <input type="date" id="check-in">
+                        </div>
+                        <div class="form-group">
+                            <label for="check-out">Check Out</label>
+                            <input type="date" id="check-out">
+                        </div>
+                        <div class="form-group">
+                            <label for="guests">Guests</label>
+                            <select id="guests">
+                                <option value="1">1 Guest</option>
+                                <option value="2" selected>2 Guests</option>
+                                <option value="3">3 Guests</option>
+                                <option value="4">4 Guests</option>
+                                <option value="5">5+ Guests</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <button class="btn btn-primary" style="padding: 12px 15px;">Check Availability</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Locations Section -->
+    <section>
+        <div class="container">
+            <div class="section-title">
+                <h2>Popular Destinations</h2>
+                <p>Explore our most sought-after locations across the East Midlands</p>
+            </div>
+            
+            <div class="locations-grid">
+                <div class="location-card animated">
+                    <div class="location-img" style="background-image: url('https://images.unsplash.com/photo-1519677100203-a0e668c92439?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');">
+                        <div class="location-badge">BEST SELLER</div>
+                    </div>
+                    <div class="location-info">
+                        <h3>Nottingham City Centre</h3>
+                        <p>Luxury accommodation in the heart of Nottingham, steps away from historic landmarks.</p>
+                        <div class="location-features">
+                            <div class="location-feature"><i class="fas fa-wifi"></i> Free WiFi</div>
+                            <div class="location-feature"><i class="fas fa-parking"></i> Parking</div>
+                            <div class="location-feature"><i class="fas fa-utensils"></i> Restaurant</div>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 15px;">View Hotels</button>
+                    </div>
+                </div>
+                
+                <div class="location-card animated">
+                    <div class="location-img" style="background-image: url('https://images.unsplash.com/photo-1591822059946-2b360a7d0cff?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');">
+                        <div class="location-badge">ROMANTIC</div>
+                    </div>
+                    <div class="location-info">
+                        <h3>Peak District Retreat</h3>
+                        <p>Escape to the serene beauty of the Peak District with our premium countryside hotels.</p>
+                        <div class="location-features">
+                            <div class="location-feature"><i class="fas fa-spa"></i> Spa</div>
+                            <div class="location-feature"><i class="fas fa-hiking"></i> Activities</div>
+                            <div class="location-feature"><i class="fas fa-fire"></i> Fireplace</div>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 15px;">View Hotels</button>
+                    </div>
+                </div>
+                
+                <div class="location-card animated">
+                    <div class="location-img" style="background-image: url('https://images.unsplash.com/photo-1581888227590-8c6fde7a1b3c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');">
+                        <div class="location-badge">LUXURY</div>
+                    </div>
+                    <div class="location-info">
+                        <h3>Leicester Luxury</h3>
+                        <p>Modern elegance meets historical charm in our Leicester boutique hotels.</p>
+                        <div class="location-features">
+                            <div class="location-feature"><i class="fas fa-concierge-bell"></i> Concierge</div>
+                            <div class="location-feature"><i class="fas fa-swimming-pool"></i> Pool</div>
+                            <div class="location-feature"><i class="fas fa-tshirt"></i> Laundry</div>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 15px;">View Hotels</button>
+                    </div>
+                </div>
+                
+                <div class="location-card animated">
+                    <div class="location-img" style="background-image: url('https://images.unsplash.com/photo-1590490360182-c33d9746e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');">
+                        <div class="location-badge">HISTORIC</div>
+                    </div>
+                    <div class="location-info">
+                        <h3>Lincoln Historic</h3>
+                        <p>Experience timeless luxury with breathtaking views of Lincoln Cathedral.</p>
+                        <div class="location-features">
+                            <div class="location-feature"><i class="fas fa-landmark"></i> Historic</div>
+                            <div class="location-feature"><i class="fas fa-mountain"></i> Views</div>
+                            <div class="location-feature"><i class="fas fa-cocktail"></i> Bar</div>
+                        </div>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 15px;">View Hotels</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Map Section (New) -->
+    <section class="map-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Explore Our Locations</h2>
+                <p>Use our interactive map to find the perfect hotel in your desired location</p>
+            </div>
+            
+            <div class="map-container">
+                <div class="map-overlay">
+                    <h3>East Midlands Regions</h3>
+                    <div class="region-selector">
+                        <button class="region-btn active">All Regions</button>
+                        <button class="region-btn">Derbyshire</button>
+                        <button class="region-btn">Nottinghamshire</button>
+                        <button class="region-btn">Leicestershire</button>
+                        <button class="region-btn">Lincolnshire</button>
+                        <button class="region-btn">Northamptonshire</button>
+                    </div>
+                </div>
+                <!-- Map would be implemented with a library like Leaflet or Google Maps in production -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section style="background-color: #f1f6fe;">
+        <div class="container">
+            <div class="section-title">
+                <h2>Why Choose Us</h2>
+                <p>Experience the difference with our premium amenities and services</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card animated">
+                    <div class="feature-icon">
+                        <i class="fas fa-concierge-bell"></i>
+                    </div>
+                    <h3>24/7 Concierge Service</h3>
+                    <p>Our dedicated staff is available around the clock to cater to your every need.</p>
+                </div>
+                
+                <div class="feature-card animated">
+                    <div class="feature-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3>Gourmet Dining</h3>
+                    <p>Enjoy exquisite culinary experiences at our award-winning restaurants.</p>
+                </div>
+                
+                <div class="feature-card animated">
+                    <div class="feature-icon">
+                        <i class="fas fa-spa"></i>
+                    </div>
+                    <h3>Luxury Spa</h3>
+                    <p>Relax and rejuvenate with our premium spa treatments and facilities.</p>
+                </div>
+                
+                <div class="feature-card animated">
+                    <div class="feature-icon">
+                        <i class="fas fa-swimming-pool"></i>
+                    </div>
+                    <h3>Heated Pools</h3>
+                    <p>Year-round swimming in our indoor and outdoor heated pools.</p>
+                </div>
+                
+                <div class="feature-card animated">
+                    <div class="feature-icon">
+                        <i class="fas fa-dumbbell"></i>
+                    </div>
+                    <h3>Fitness Centers</h3>
+                    <p>State-of-the-art fitness facilities with personal training available.</p>
+                </div>
+                
+                <div class="feature-card animated">
+                    <div class="feature-icon">
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                    <h3>High-Speed WiFi</h3>
+                    <p>Complimentary high-speed internet access throughout all properties.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Loyalty Program Section (New) -->
+    <section class="loyalty-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Premier Loyalty Program</h2>
+                <p>Join our exclusive loyalty program and enjoy exceptional benefits</p>
+            </div>
+            
+            <div class="loyalty-container">
+                <div class="loyalty-content">
+                    <h3>Earn Points With Every Stay</h3>
+                    <p>Our loyalty program rewards you for choosing East Midlands Premier. Enjoy these exclusive benefits:</p>
+                    
+                    <div class="benefits-grid">
+                        <div class="benefit-item">
+                            <div class="benefit-icon"><i class="fas fa-gift"></i></div>
+                            <div>
+                                <h4>Free Nights</h4>
+                                <p>Redeem points for complimentary stays</p>
+                            </div>
+                        </div>
+                        
+                        <div class="benefit-item">
+                            <div class="benefit-icon"><i class="fas fa-arrow-up"></i></div>
+                            <div>
+                                <h4>Room Upgrades</h4>
+                                <p>Priority room upgrades when available</p>
+                            </div>
+                        </div>
+                        
+                        <div class="benefit-item">
+                            <div class="benefit-icon"><i class="fas fa-clock"></i></div>
+                            <div>
+                                <h4>Late Checkout</h4>
+                                <p>Enjoy late checkout on request</p>
+                            </div>
+                        </div>
+                        
+                        <div class="benefit-item">
+                            <div class="benefit-icon"><i class="fas fa-glass-cheers"></i></div>
+                            <div>
+                                <h4>Welcome Amenities</h4>
+                                <p>Special welcome gifts upon arrival</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-primary" style="margin-top: 30px;">Join Now</button>
+                </div>
+                
+                <div class="loyalty-visual">
+                    <div class="loyalty-card">
+                        <h3>Premier Club</h3>
+                        <p>Member: John Smith</p>
+                        <p>Status: Gold Tier</p>
+                        <p>Points: 12,500</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section>
+        <div class="container">
+            <div class="section-title">
+                <h2>Guest Experiences</h2>
+                <p>Hear what our valued guests have to say about their stay</p>
+            </div>
+            
+            <div class="testimonials-container">
+                <div class="testimonial">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"The attention to detail at the Nottingham property was exceptional. From the luxurious bedding to the personalized welcome note, every aspect exceeded my expectations."</p>
+                    <p class="testimonial-author">- Sarah Johnson, Business Executive</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>East Midlands Premier</h3>
+                    <p>Luxury hotel experiences across 45 locations in the East Midlands region of the UK.</p>
+                    <div style="margin-top: 20px;">
+                        <i class="fab fa-facebook-f" style="margin-right: 15px; font-size: 20px;"></i>
+                        <i class="fab fa-twitter" style="margin-right: 15px; font-size: 20px;"></i>
+                        <i class="fab fa-instagram" style="margin-right: 15px; font-size: 20px;"></i>
+                        <i class="fab fa-linkedin-in" style="font-size: 20px;"></i>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Gift Cards</a></li>
+                        <li><a href="#">Magazine</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Cancellation Policy</a></li>
+                        <li><a href="#">Safety Measures</a></li>
+                        <li><a href="#">Accessibility</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Newsletter</h3>
+                    <p>Subscribe to our newsletter for exclusive offers and updates.</p>
+                    <form style="margin-top: 20px;">
+                        <input type="email" placeholder="Your email address" style="padding: 12px 15px; width: 100%; border: none; border-radius: 5px; margin-bottom: 10px;">
+                        <button class="btn btn-primary" style="width: 100%;">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023 East Midlands Premier Hotels. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Welcome to East Midlands Premier!</span>
+    </div>
+
+    <script>
+        // Enhanced Mini Database for Hotels
+        const hotelDatabase = {
+            locations: [
+                { id: 1, name: "Nottingham City Centre", hotels: 12, image: "nottingham.jpg", region: "Nottinghamshire" },
+                { id: 2, name: "Derby Riverside", hotels: 8, image: "derby.jpg", region: "Derbyshire" },
+                { id: 3, name: "Leicester Historic", hotels: 9, image: "leicester.jpg", region: "Leicestershire" },
+                { id: 4, name: "Lincoln Cathedral View", hotels: 5, image: "lincoln.jpg", region: "Lincolnshire" },
+                { id: 5, name: "Northampton Luxury", hotels: 7, image: "northampton.jpg", region: "Northamptonshire" },
+                { id: 6, name: "Peak District Escape", hotels: 6, image: "peak.jpg", region: "Derbyshire" },
+                { id: 7, name: "Sherwood Forest Lodge", hotels: 4, image: "sherwood.jpg", region: "Nottinghamshire" },
+                { id: 8, name: "Stamford Countryside", hotels: 3, image: "stamford.jpg", region: "Lincolnshire" }
+            ],
+            hotels: [
+                { id: 101, name: "The Nottingham Grand", location: "Nottingham", price: 159, rating: 4.8, features: ["Spa", "Fine Dining", "Pool"], region: "Nottinghamshire" },
+                { id: 102, name: "Derby Manor Hotel", location: "Derby", price: 139, rating: 4.5, features: ["Free WiFi", "Parking", "Breakfast Included"], region: "Derbyshire" },
+                { id: 103, name: "Leicester Royal", location: "Leicester", price: 149, rating: 4.7, features: ["City Center", "Fitness Center", "Bar"], region: "Leicestershire" },
+                { id: 104, name: "Lincoln Cathedral Hotel", location: "Lincoln", price: 169, rating: 4.9, features: ["Historic", "Views", "Fine Dining"], region: "Lincolnshire" },
+                { id: 105, name: "Northampton Plaza", location: "Northampton", price: 129, rating: 4.3, features: ["Business Center", "Restaurant", "Parking"], region: "Northamptonshire" }
+            ],
+            bookings: [],
+            users: [],
+            loyaltyTiers: [
+                { name: "Standard", points: 0, benefits: ["Welcome drink"] },
+                { name: "Silver", points: 2000, benefits: ["Welcome drink", "Late checkout"] },
+                { name: "Gold", points: 5000, benefits: ["Welcome drink", "Late checkout", "Room upgrade"] },
+                { name: "Platinum", points: 10000, benefits: ["All previous", "Free spa access", "Airport transfer"] }
+            ]
+        };
+
+        // Interactive Features
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set minimum date for check-in to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('check-in').setAttribute('min', today);
+            
+            // Initialize testimonial carousel
+            let currentTestimonial = 0;
+            const testimonials = [
+                {
+                    text: "\"The attention to detail at the Nottingham property was exceptional. From the luxurious bedding to the personalized welcome note, every aspect exceeded my expectations.\"",
+                    author: "Sarah Johnson, Business Executive",
+                    rating: 5
+                },
+                {
+                    text: "\"We held our annual conference at the Derby location and the facilities were outstanding. The staff went above and beyond to ensure everything ran smoothly.\"",
+                    author: "Michael Thompson, Event Planner",
+                    rating: 4
+                },
+                {
+                    text: "\"Our romantic getaway at the Peak District retreat was magical. The views were breathtaking and the dining experience was unforgettable.\"",
+                    author: "Emma and James Wilson, Couple",
+                    rating: 5
+                }
+            ];
+            
+            function showTestimonial(index) {
+                const testimonialElement = document.querySelector('.testimonial');
+                let stars = '';
+                for (let i = 0; i < testimonials[index].rating; i++) {
+                    stars += '<i class="fas fa-star"></i>';
+                }
+                
+                testimonialElement.innerHTML = `
+                    <div class="testimonial-rating">${stars}</div>
+                    <p class="testimonial-text">${testimonials[index].text}</p>
+                    <p class="testimonial-author">- ${testimonials[index].author}</p>
+                `;
+            }
+            
+            // Rotate testimonials every 5 seconds
+            setInterval(() => {
+                currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+                showTestimonial(currentTestimonial);
+            }, 5000);
+            
+            // Add interaction to location cards
+            const locationCards = document.querySelectorAll('.location-card');
+            locationCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.15)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.08)';
+                });
+            });
+            
+            // Simulate booking form submission
+            const bookingForm = document.querySelector('.booking-form');
+            bookingForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                showToast('Searching for available hotels...');
+            });
+            
+            // Region selector functionality
+            const regionButtons = document.querySelectorAll('.region-btn');
+            regionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    regionButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    showToast(`Showing hotels in ${this.textContent}`);
+                });
+            });
+            
+            // Toast notification function
+            function showToast(message) {
+                const toast = document.getElementById('toast');
+                const toastMessage = document.getElementById('toastMessage');
+                
+                toastMessage.textContent = message;
+                toast.classList.add('show');
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+            
+            // Show welcome toast
+            setTimeout(() => {
+                showToast('Welcome to East Midlands Premier!');
+            }, 1000);
+            
+            // Progress bar on scroll
+            window.addEventListener('scroll', function() {
+                const winHeight = window.innerHeight;
+                const docHeight = document.documentElement.scrollHeight;
+                const winScroll = window.pageYOffset;
+                const scrolled = (winScroll / (docHeight - winHeight)) * 100;
+                document.getElementById('progressBar').style.width = scrolled + '%';
+            });
+            
+            // Theme selector functionality
+            const themeSelector = document.getElementById('themeSelector');
+            const themeOptions = document.getElementById('themeOptions');
+            
+            themeSelector.addEventListener('click', function() {
+                themeOptions.classList.toggle('show');
+            });
+            
+            const themeButtons = document.querySelectorAll('.theme-option');
+            themeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    if (this.id === 'darkModeToggle') {
+                        document.body.classList.toggle('dark-mode');
+                        showToast('Dark mode ' + (document.body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
+                        return;
+                    }
+                    
+                    themeButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const theme = this.getAttribute('data-theme');
+                    document.documentElement.style.setProperty('--primary', this.style.backgroundColor);
+                    showToast(`Theme changed to ${theme}`);
+                });
+            });
+            
+            // Animate elements on scroll
+            const animatedElements = document.querySelectorAll('.animated');
+            
+            function checkScroll() {
+                animatedElements.forEach(element => {
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const screenPosition = window.innerHeight / 1.3;
+                    
+                    if (elementPosition < screenPosition) {
+                        element.style.opacity = 1;
+                        element.style.transform = 'translateY(0)';
+                    }
+                });
+            }
+            
+            // Set initial state for animated elements
+            animatedElements.forEach(element => {
+                element.style.opacity = 0;
+                element.style.transform = 'translateY(20px)';
+                element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            });
+            
+            window.addEventListener('scroll', checkScroll);
+            checkScroll(); // Check on load
+        });
+    </script>
+</body>
+</html>
