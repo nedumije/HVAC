@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrendVibe | Teen Fashion Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ff4d8d;
+            --secondary: #4361ee;
+            --accent: #ffdb27;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --success: #06d6a0;
+            --warning: #ffd166;
+            --danger: #ef476f;
+            --gray: #8d99ae;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+        
+        .logo span {
+            color: var(--accent);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+        }
+        
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .header-icons {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .header-icons i {
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .header-icons i:hover {
+            transform: scale(1.2);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80') no-repeat center center/cover;
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding: 2rem;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 5rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--dark);
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--primary);
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-img {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .feature-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .feature-card:hover .feature-img img {
+            transform: scale(1.1);
+        }
+        
+        .feature-content {
+            padding: 1.5rem;
+        }
+        
+        .feature-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+        
+        /* Combo Section */
+        .combo-section {
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            padding: 5rem 2rem;
+        }
+        
+        .combo-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .combo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .combo-box {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .combo-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            text-align: center;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent);
+        }
+        
+        .combo-select {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 8px;
+            border: 2px solid var(--gray);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .combo-select:focus {
+            border-color: var(--secondary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 2rem;
+        }
+        
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-col h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+        
+        .footer-col p {
+            margin-bottom: 1rem;
+        }
+        
+        .footer-col ul {
+            list-style: none;
+        }
+        
+        .footer-col ul li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-col ul li a {
+            color: var(--light);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-col ul li a:hover {
+            color: var(--primary);
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                gap: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-tshirt"></i>
+                <h1>Trend<span>Vibe</span></h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Sneakers</a></li>
+                    <li><a href="#">Thrift Hauls</a></li>
+                    <li><a href="#">Trending</a></li>
+                    <li><a href="#">Shop</a></li>
+                </ul>
+            </nav>
+            <div class="header-icons">
+                <i class="fas fa-search"></i>
+                <i class="fas fa-shopping-bag"></i>
+                <i class="fas fa-user"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Express Your Style with Confidence</h1>
+            <p>Discover the latest teen fashion trends, exclusive sneaker drops, and unique thrift hauls all in one place.</p>
+            <a href="#" class="btn">Explore Now</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <h2 class="section-title">What's Trending</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-img">
+                    <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="Sneakers">
+                </div>
+                <div class="feature-content">
+                    <h3>Hot Sneaker Drops</h3>
+                    <p>Get the latest info on upcoming sneaker releases and where to cop them.</p>
+                    <a href="#" class="btn">See Drops</a>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-img">
+                    <img src="https://images.unsplash.com/photo-1520006403909-838d6b92c22e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="Thrift Hauls">
+                </div>
+                <div class="feature-content">
+                    <h3>Thrift Haul of the Week</h3>
+                    <p>Check out the best thrift finds and learn how to style secondhand pieces.</p>
+                    <a href="#" class="btn">View Hauls</a>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-img">
+                    <img src="https://images.unsplash.com/photo-1485231188357-9a890b77b0bb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="Street Style">
+                </div>
+                <div class="feature-content">
+                    <h3>Street Style Inspiration</h3>
+                    <p>Get inspired by the coolest street style looks from fashion capitals worldwide.</p>
+                    <a href="#" class="btn">Get Inspired</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Combo Section -->
+    <section class="combo-section">
+        <div class="combo-container">
+            <h2 class="section-title">Create Your Style</h2>
+            <div class="combo-grid">
+                <!-- Combo Box 1 -->
+                <div class="combo-box">
+                    <h3 class="combo-title">Sneaker Type</h3>
+                    <select class="combo-select" id="sneaker-type">
+                        <option value="">Select Sneaker Type</option>
+                        <option value="athletic">Athletic</option>
+                        <option value="lifestyle">Lifestyle</option>
+                        <option value="skate">Skate Shoes</option>
+                        <option value="designer">Designer Collab</option>
+                        <option value="limited">Limited Edition</option>
+                        <option value="retro">Retro Classic</option>
+                        <option value="chunky">Chunky Sneakers</option>
+                        <option value="minimalist">Minimalist</option>
+                        <option value="high-top">High-Top</option>
+                        <option value="low-top">Low-Top</option>
+                        <option value="slip-on">Slip-On</option>
+                        <option value="platform">Platform</option>
+                    </select>
+                    
+                    <h3 class="combo-title">Sneaker Brand</h3>
+                    <select class="combo-select" id="sneaker-brand">
+                        <option value="">Select Brand</option>
+                        <option value="nike">Nike</option>
+                        <option value="adidas">Adidas</option>
+                        <option value="jordan">Jordan</option>
+                        <option value="newbalance">New Balance</option>
+                        <option value="puma">Puma</option>
+                        <option value="converse">Converse</option>
+                        <option value="vans">Vans</option>
+                        <option value="reebok">Reebok</option>
+                        <option value="asics">Asics</option>
+                        <option value="fila">Fila</option>
+                        <option value="saucony">Saucony</option>
+                        <option value="yeezy">Yeezy</option>
+                    </select>
+                </div>
+                
+                <!-- Combo Box 2 -->
+                <div class="combo-box">
+                    <h3 class="combo-title">Top Style</h3>
+                    <select class="combo-select" id="top-style">
+                        <option value="">Select Top Style</option>
+                        <option value="tshirt">T-Shirt</option>
+                        <option value="crop">Crop Top</option>
+                        <option value="button">Button-Down</option>
+                        <option value="tank">Tank Top</option>
+                        <option value="sweater">Sweater</option>
+                        <option value="hoodie">Hoodie</option>
+                        <option value="blouse">Blouse</option>
+                        <option value="longsleeve">Long Sleeve</option>
+                        <option value="polo">Polo Shirt</option>
+                        <option value="henley">Henley</option>
+                        <option value="tube">Tube Top</option>
+                        <option value="offshoulder">Off-Shoulder</option>
+                    </select>
+                    
+                    <h3 class="combo-title">Top Brand</h3>
+                    <select class="combo-select" id="top-brand">
+                        <option value="">Select Top Brand</option>
+                        <option value="nike">Nike</option>
+                        <option value="adidas">Adidas</option>
+                        <option value="champion">Champion</option>
+                        <option value="supreme">Supreme</option>
+                        <option value="urban">Urban Outfitters</option>
+                        <option value="zara">Zara</option>
+                        <option value="h&m">H&M</option>
+                        <option value="forever">Forever 21</option>
+                        <option value="brandy">Brandy Melville</option>
+                        <option value="thrift">Thrifted</option>
+                        <option value="vintage">Vintage</option>
+                        <option value="independent">Independent</option>
+                    </select>
+                </div>
+                
+                <!-- Combo Box 3 -->
+                <div class="combo-box">
+                    <h3 class="combo-title">Bottom Style</h3>
+                    <select class="combo-select" id="bottom-style">
+                        <option value="">Select Bottom Style</option>
+                        <option value="jeans">Jeans</option>
+                        <option value="cargo">Cargo Pants</option>
+                        <option value="sweatpants">Sweatpants</option>
+                        <option value="leggings">Leggings</option>
+                        <option value="shorts">Shorts</option>
+                        <option value="skirt">Skirt</option>
+                        <option value="joggers">Joggers</option>
+                        <option value="wideleg">Wide-Leg</option>
+                        <option value="pleated">Pleated</option>
+                        <option value="leather">Leather Pants</option>
+                        <option value="denim">Denim Shorts</option>
+                        <option value="cycling">Cycling Shorts</option>
+                    </select>
+                    
+                    <h3 class="combo-title">Bottom Brand</h3>
+                    <select class="combo-select" id="bottom-brand">
+                        <option value="">Select Bottom Brand</option>
+                        <option value="levis">Levi's</option>
+                        <option value="nike">Nike</option>
+                        <option value="adidas">Adidas</option>
+                        <option value="pacsun">PacSun</option>
+                        <option value="american">American Eagle</option>
+                        <option value="zara">Zara</option>
+                        <option value="h&m">H&M</option>
+                        <option value="forever">Forever 21</option>
+                        <option value="brandy">Brandy Melville</option>
+                        <option value="thrift">Thrifted</option>
+                        <option value="vintage">Vintage</option>
+                        <option value="independent">Independent</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="#" class="btn">Generate Outfit Combo</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>TrendVibe</h3>
+                <p>Your ultimate destination for teen fashion trends, sneaker news, and thrift haul inspiration.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Sneaker Releases</a></li>
+                    <li><a href="#">Thrift Hauls</a></li>
+                    <li><a href="#">Style Guides</a></li>
+                    <li><a href="#">Trend Forecast</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Shipping & Returns</a></li>
+                    <li><a href="#">Size Guide</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Newsletter</h3>
+                <p>Subscribe to get updates on latest drops and trends</p>
+                <form>
+                    <input type="email" placeholder="Your Email" class="combo-select" style="margin-bottom: 1rem;">
+                    <button type="submit" class="btn">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 TrendVibe. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Interactive features for the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Select all dropdowns
+            const selects = document.querySelectorAll('.combo-select');
+            
+            // Add interaction to each dropdown
+            selects.forEach(select => {
+                select.addEventListener('change', function() {
+                    this.style.borderColor = '#4361ee';
+                    this.style.backgroundColor = '#f0f4ff';
+                    
+                    // If a selection is made, enable the generate outfit button
+                    const outfitBtn = document.querySelector('.btn');
+                    let selectedCount = 0;
+                    
+                    selects.forEach(s => {
+                        if (s.value !== '') selectedCount++;
+                    });
+                    
+                    if (selectedCount > 0) {
+                        outfitBtn.style.opacity = '1';
+                        outfitBtn.style.cursor = 'pointer';
+                    }
+                });
+            });
+            
+            // Add hover effect to feature cards
+            const featureCards = document.querySelectorAll('.feature-card');
+            featureCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.querySelector('.btn').style.transform = 'translateY(-3px)';
+                    this.querySelector('.btn').style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.2)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.querySelector('.btn').style.transform = 'translateY(0)';
+                    this.querySelector('.btn').style.boxShadow = 'none';
+                });
+            });
+            
+            // Add animation to header on scroll
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('header');
+                if (window.scrollY > 50) {
+                    header.style.background = 'linear-gradient(135deg, var(--primary), var(--secondary))';
+                    header.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+                } else {
+                    header.style.background = 'linear-gradient(135deg, var(--primary), var(--secondary))';
+                    header.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

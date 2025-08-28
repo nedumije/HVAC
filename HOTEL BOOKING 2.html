@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Luxury Stays | East Midlands Premier Hotels</title>
+    <!-- FONTS & ICONS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css">
     <style>
         :root {
             --primary: #0a4da2;
@@ -24,6 +24,10 @@
             --transition: all 0.3s ease;
             --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
             --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.15);
+            --header-height: 80px;
+        }
+        html {
+            scroll-behavior: smooth;
         }
         * {
             margin: 0;
@@ -40,6 +44,7 @@
         h1, h2, h3, h4, h5 {
             font-family: 'Playfair Display', serif;
             font-weight: 700;
+            letter-spacing: 0.5px;
         }
         .container {
             width: 100%;
@@ -47,21 +52,23 @@
             margin: 0 auto;
             padding: 0 15px;
         }
+        /* 1. Sticky, auto-hiding Header & Animated Mobile Menu */
         header {
             background: linear-gradient(to right, var(--primary), var(--primary-dark));
             color: white;
-            padding: 15px 0;
             position: sticky;
             top: 0;
             z-index: 1000;
             box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            transition: top 0.4s;
         }
         .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 10px;
+            padding: 12px 0 8px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            min-height: 40px;
         }
         .logo {
             display: flex;
@@ -77,30 +84,36 @@
         }
         .header-contact {
             display: flex;
-            gap: 20px;
+            gap: 18px;
         }
         .header-contact div {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 7px;
+            font-size: 15px;
         }
+        /* NAV */
         .nav-main {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-top: 10px;
+            padding: 8px 0;
+            position: relative;
         }
         .nav-links {
             display: flex;
             list-style: none;
-            gap: 25px;
+            gap: 28px;
+        }
+        .nav-links li {
+            position: relative;
         }
         .nav-links li a {
             color: white;
             text-decoration: none;
             font-weight: 500;
             transition: var(--transition);
-            padding: 5px 0;
+            padding: 6px 0;
             position: relative;
         }
         .nav-links li a:after {
@@ -108,21 +121,22 @@
             position: absolute;
             width: 0;
             height: 2px;
-            bottom: 0;
+            bottom: -2px;
             left: 0;
             background-color: var(--secondary);
             transition: var(--transition);
         }
-        .nav-links li a:hover:after {
+        .nav-links li a:hover:after,
+        .nav-links li a.active:after {
             width: 100%;
         }
         .user-actions {
             display: flex;
-            gap: 15px;
+            gap: 16px;
             align-items: center;
         }
         .btn {
-            padding: 10px 20px;
+            padding: 9px 18px;
             border-radius: 5px;
             border: none;
             cursor: pointer;
@@ -131,6 +145,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            font-size: 15px;
         }
         .btn-primary {
             background-color: var(--secondary);
@@ -148,16 +163,56 @@
         .btn-outline:hover {
             background-color: rgba(255, 255, 255, 0.1);
         }
-        .btn-large {
-            padding: 15px 30px;
-            font-size: 18px;
+        /* Hamburger Icon */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
         }
+        .hamburger span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background: white;
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+        @media (max-width: 900px) {
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: linear-gradient(to right, var(--primary), var(--primary-dark));
+                flex-direction: column;
+                gap: 0;
+                overflow: hidden;
+                max-height: 0;
+                transition: max-height 0.35s;
+            }
+            .nav-links.open {
+                max-height: 400px;
+                border-bottom: 2px solid var(--secondary);
+            }
+            .nav-links li {
+                margin: 0;
+                padding: 16px 0;
+                text-align: center;
+            }
+            .hamburger {
+                display: flex;
+            }
+        }
+        /* 2. Hero Section with Typewriter Effect */
         .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
+            background: linear-gradient(rgba(0,0,0, 0.6), rgba(0,0,0, 0.6)), url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80');
             background-size: cover;
             background-position: center;
             color: white;
-            padding: 100px 0;
+            padding: 110px 0 88px 0;
             text-align: center;
             position: relative;
         }
@@ -167,9 +222,12 @@
             position: relative;
             z-index: 2;
         }
-        .hero h2 {
+        .hero-typewriter {
             font-size: 48px;
-            margin-bottom: 20px;
+            font-weight: bold;
+            margin-bottom: 18px;
+            min-height: 60px;
+            letter-spacing: 1px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
         .hero p {
@@ -177,19 +235,64 @@
             margin-bottom: 30px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
+        @media (max-width: 600px) {
+            .hero-typewriter {
+                font-size: 30px;
+                min-height: 36px;
+            }
+            .hero {
+                padding: 70px 0 40px 0;
+            }
+        }
+        /* 3. Animated Counters */
+        .counters {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin: 30px 0 0 0;
+        }
+        .counter-box {
+            text-align: center;
+            background: rgba(255,255,255,0.14);
+            border-radius: 9px;
+            padding: 18px 28px;
+            box-shadow: var(--shadow);
+        }
+        .counter-number {
+            font-size: 38px;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+        .counter-label {
+            color: #fff;
+            font-size: 16px;
+            margin-top: 5px;
+            letter-spacing: 1px;
+        }
+        @media (max-width: 600px) {
+            .counters {
+                flex-direction: column;
+                gap: 18px;
+            }
+            .counter-box {
+                padding: 12px 0;
+            }
+        }
+        /* 4. Booking Widget with Date Picker and Validation */
         .booking-widget {
             background-color: white;
             border-radius: 10px;
-            padding: 25px;
-            margin-top: 40px;
+            padding: 24px 20px 24px 20px;
+            margin: 40px auto 0 auto;
             box-shadow: var(--shadow-hover);
             position: relative;
             z-index: 2;
+            max-width: 700px;
         }
         .booking-form {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 14px;
         }
         .form-group {
             display: flex;
@@ -201,351 +304,27 @@
             color: var(--dark);
         }
         .form-group input, .form-group select, .form-group textarea {
-            padding: 12px 15px;
-            border: 1px solid #ddd;
+            padding: 11px 14px;
+            border: 1.2px solid #ddd;
             border-radius: 5px;
-            font-size: 16px;
+            font-size: 15px;
             transition: var(--transition);
         }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             border-color: var(--primary);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(10, 77, 162, 0.1);
+            box-shadow: 0 0 0 3px rgba(10, 77, 162, 0.09);
         }
-        section {
-            padding: 80px 0;
-        }
-        .section-title {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-        .section-title h2 {
-            font-size: 36px;
-            color: var(--primary);
-            position: relative;
-            display: inline-block;
-            padding-bottom: 15px;
-        }
-        .section-title h2:after {
-            content: '';
-            position: absolute;
-            width: 60px;
-            height: 3px;
-            background-color: var(--secondary);
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        .section-title p {
-            max-width: 700px;
-            margin: 15px auto 0;
-            color: var(--gray);
-        }
-        .locations-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 25px;
-        }
-        .location-card {
-            background-color: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            position: relative;
-        }
-        .location-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-hover);
-        }
-        .location-img {
-            height: 180px;
-            background-size: cover;
-            background-position: center;
-            position: relative;
-        }
-        .location-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background-color: var(--secondary);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .location-info {
-            padding: 20px;
-        }
-        .location-info h3 {
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
-        .location-info p {
-            color: var(--gray);
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
-        .location-features {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid var(--light-gray);
-        }
-        .location-feature {
-            display: flex;
-            align-items: center;
-            gap: 5px;
+        .form-hint {
+            color: #e63946;
             font-size: 13px;
-            color: var(--gray);
+            min-height: 17px;
+            margin-top: 2px;
         }
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 30px;
-        }
-        .feature-card {
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            text-align: center;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-hover);
-        }
-        .feature-icon {
-            font-size: 40px;
-            color: var(--primary);
-            margin-bottom: 20px;
-            width: 80px;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: rgba(10, 77, 162, 0.1);
-            border-radius: 50%;
-            margin: 0 auto 20px;
-        }
-        .testimonials-container {
-            position: relative;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        .testimonial {
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            text-align: center;
-            margin: 20px;
-            position: relative;
-        }
-        .testimonial:before {
-            content: '"';
-            font-family: 'Playfair Display', serif;
-            font-size: 80px;
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            color: var(--light-gray);
-            line-height: 1;
-        }
-        .testimonial-text {
-            font-style: italic;
-            margin-bottom: 20px;
-            font-size: 18px;
-            position: relative;
-            z-index: 2;
-        }
-        .testimonial-author {
-            font-weight: 600;
-            color: var(--primary);
-        }
-        .testimonial-rating {
-            color: var(--warning);
-            margin-bottom: 15px;
-        }
-        .map-section {
-            background-color: var(--light);
-        }
-        .map-container {
-            height: 500px;
-            background-color: #e9ecef;
-            border-radius: 8px;
-            overflow: hidden;
-            position: relative;
-        }
-        .map-overlay {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            z-index: 10;
-            max-width: 300px;
-        }
-        .map-overlay h3 {
-            margin-bottom: 15px;
-            color: var(--primary);
-        }
-        .region-selector {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-        .region-btn {
-            padding: 8px 10px;
-            background-color: var(--light);
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: var(--transition);
-            font-size: 14px;
-        }
-        .region-btn.active, .region-btn:hover {
-            background-color: var(--primary);
-            color: white;
-        }
-        .loyalty-section {
-            background: linear-gradient(to right, var(--primary), var(--primary-dark));
-            color: white;
-        }
-        .loyalty-container {
-            display: flex;
-            gap: 40px;
-            align-items: center;
-        }
-        .loyalty-content {
-            flex: 1;
-        }
-        .loyalty-visual {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-        }
-        .loyalty-card {
-            width: 300px;
-            height: 180px;
-            background: linear-gradient(45deg, #c29b40, #e6c87c);
-            border-radius: 15px;
-            padding: 20px;
-            color: white;
-            box-shadow: var(--shadow-hover);
-            position: relative;
-            overflow: hidden;
-        }
-        .loyalty-card:after {
-            content: '';
-            position: absolute;
-            width: 200px;
-            height: 200px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            top: -50px;
-            right: -50px;
-        }
-        .benefits-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-        .benefit-item {
-            display: flex;
-            gap: 15px;
-            align-items: flex-start;
-        }
-        .benefit-icon {
-            color: var(--secondary);
-            font-size: 24px;
-            margin-top: 5px;
-        }
-        footer {
-            background-color: var(--dark);
-            color: white;
-            padding: 70px 0 20px;
-        }
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 50px;
-        }
-        .footer-column h3 {
-            font-size: 20px;
-            margin-bottom: 20px;
-            position: relative;
-            padding-bottom: 10px;
-        }
-        .footer-column h3:after {
-            content: '';
-            position: absolute;
-            width: 40px;
-            height: 2px;
-            background-color: var(--secondary);
-            bottom: 0;
-            left: 0;
-        }
-        .footer-links {
-            list-style: none;
-        }
-        .footer-links li {
-            margin-bottom: 12px;
-        }
-        .footer-links a {
-            color: #ddd;
-            text-decoration: none;
-            transition: var(--transition);
-        }
-        .footer-links a:hover {
-            color: var(--secondary);
-            padding-left: 5px;
-        }
-        .footer-bottom {
-            text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-content {
-            background-color: white;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 500px;
-            padding: 30px;
-            position: relative;
-        }
-        .close-modal {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--gray);
-        }
+        /* 5. Promotions Banner */
         .promotions-section {
             background-color: var(--light);
-            padding: 20px 0;
+            padding: 20px 0 17px 0;
         }
         .promotions-banner {
             text-align: center;
@@ -553,272 +332,275 @@
         }
         .promotion-slide {
             display: none;
-            padding: 20px;
+            padding: 22px 0 8px 0;
         }
         .promotion-slide.active {
             display: block;
+            animation: fadeIn 1s;
         }
         .promotion-slide h3 {
             font-size: 24px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .promotion-slide p {
             color: var(--gray);
         }
-        .accessibility-toolbar {
-            position: fixed;
-            top: 100px;
-            right: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            z-index: 100;
+        /* 6. Gallery with Slideshow & Lightbox */
+        .gallery-section {
+            padding: 55px 0 40px 0;
+            background: #fff;
         }
-        .weather-widget {
-            background-color: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            box-shadow: var(--shadow);
+        .section-title {
             text-align: center;
+            margin-bottom: 45px;
         }
-        .weather-widget h4 {
-            margin-bottom: 10px;
+        .section-title h2 {
+            font-size: 34px;
+            color: var(--primary);
+            position: relative;
+            display: inline-block;
+            padding-bottom: 13px;
         }
-        .event-calendar {
+        .section-title h2:after {
+            content: '';
+            position: absolute;
+            width: 53px;
+            height: 3px;
+            background-color: var(--secondary);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 14px;
         }
-        .event-card {
-            background-color: white;
-            padding: 20px;
+        .gallery-img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
             border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.25s;
+        }
+        .gallery-img:hover {
+            transform: scale(1.03);
+            box-shadow: var(--shadow-hover);
+        }
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.93);
+            z-index: 2500;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .lightbox.show {
+            display: flex;
+        }
+        .lightbox-img {
+            max-width: 91vw;
+            max-height: 86vh;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: var(--shadow-hover);
+        }
+        .lightbox-controls {
+            color: #fff;
+            font-size: 32px;
+            cursor: pointer;
+            margin: 0 20px;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+        .lightbox-controls:hover {
+            opacity: 1;
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 22px;
+            right: 40px;
+            color: #fff;
+            font-size: 38px;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+        .lightbox-close:hover {
+            opacity: 1;
+        }
+        /* 7. Testimonials Slider */
+        .testimonials-section {
+            background: var(--light);
+            padding: 50px 0 35px 0;
+        }
+        .testimonials-container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .testimonial {
+            background: white;
+            padding: 30px 24px 24px 24px;
+            border-radius: 9px;
             box-shadow: var(--shadow);
             text-align: center;
+            margin: 12px 18px;
+            position: absolute;
+            opacity: 0;
+            transition: opacity 0.4s;
+            width: 80%;
+            left: 10%;
+            z-index: 1;
         }
-        .event-card h4 {
+        .testimonial.active {
+            position: relative;
+            opacity: 1;
+            z-index: 2;
+        }
+        .testimonial:before {
+            content: '"';
+            font-family: 'Playfair Display', serif;
+            font-size: 68px;
+            position: absolute;
+            top: 10px; left: 18px;
+            color: var(--light-gray);
+            line-height: 1;
+        }
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 18px;
+            font-size: 18px;
+            position: relative;
+            z-index: 2;
+        }
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 2px;
+        }
+        .testimonial-rating {
+            color: var(--warning);
             margin-bottom: 10px;
+        }
+        .testimonial-nav {
+            text-align: center;
+            margin-top: 24px;
+        }
+        .testimonial-dot {
+            display: inline-block;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: var(--light-gray);
+            margin: 0 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .testimonial-dot.active {
+            background: var(--secondary);
+        }
+        /* 8. FAQ Accordion */
+        .faq-section {
+            padding: 50px 0 35px 0;
+            background: #fff;
         }
         .faq-container {
             max-width: 800px;
             margin: 0 auto;
         }
         .faq-item {
-            margin-bottom: 15px;
+            margin-bottom: 17px;
             border-bottom: 1px solid var(--light-gray);
+            background: #f7f7f7;
+            border-radius: 7px;
+            overflow: hidden;
+            transition: box-shadow 0.25s;
         }
         .faq-question {
             cursor: pointer;
-            padding: 15px;
-            background-color: var(--light);
-            border-radius: 5px;
+            padding: 16px;
+            font-weight: 600;
+            background: #f2f6fa;
+            outline: none;
+            border: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .faq-answer {
             display: none;
-            padding: 15px;
+            padding: 13px 16px 13px 16px;
+            color: var(--gray);
+            background: #fff;
         }
         .faq-item.active .faq-answer {
             display: block;
+            animation: fadeIn 0.7s;
+        }
+        .faq-item.active .faq-question {
+            background: #e5eef8;
+        }
+        /* 9. Review Star Rating Widget */
+        .review-section {
+            padding: 45px 0 30px 0;
+            background: var(--light);
         }
         .review-form {
             max-width: 600px;
             margin: 0 auto;
         }
+        .star-rating {
+            display: flex;
+            gap: 7px;
+            font-size: 28px;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+        .star {
+            color: #ccc;
+            transition: color 0.2s;
+        }
+        .star.selected,
+        .star.hovered {
+            color: var(--warning);
+        }
         .review-form textarea {
             width: 100%;
-            padding: 12px;
+            padding: 11px;
             border: 1px solid #ddd;
             border-radius: 5px;
             resize: vertical;
+            font-size: 15px;
         }
-        .comparison-tool {
-            text-align: center;
-        }
-        .comparison-table {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        .comparison-column {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-        }
-        .points-calculator {
-            max-width: 600px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-        }
-        #pointsResult {
-            margin-top: 15px;
-            font-weight: 600;
-        }
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-        .gallery-img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-        .lightbox {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-        .lightbox-img {
-            max-width: 90%;
-            max-height: 90%;
-        }
-        .app-links {
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
+        /* 10. Back to Top Button and Progress */
         .back-to-top {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            display: none;
-            z-index: 100;
-        }
-        .social-feed {
-            max-width: 300px;
-        }
-        .social-post {
-            background-color: var(--light);
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
-        .language-selector {
-            margin-left: 15px;
-        }
-        .language-selector select {
-            padding: 8px;
-            border-radius: 5px;
-            border: 1px solid white;
-            background-color: transparent;
-            color: white;
-        }
-        .chat-widget {
-            position: fixed;
-            bottom: 20px;
-            right: 80px;
-            z-index: 100;
-        }
-        .chat-box {
-            display: none;
-            width: 300px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            margin-top: 10px;
-        }
-        .chat-header {
-            background-color: var(--primary);
-            color: white;
-            padding: 10px;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-        }
-        .chat-messages {
-            max-height: 200px;
-            overflow-y: auto;
-            padding: 10px;
-        }
-        .chat-input {
-            width: 100%;
-            padding: 10px;
+            bottom: 30px;
+            right: 22px;
+            background: var(--primary);
+            color: #fff;
             border: none;
-            border-top: 1px solid #ddd;
-        }
-        #sendChat {
-            width: 100%;
-            border-radius: 0 0 8px 8px;
-        }
-        @media (max-width: 992px) {
-            .header-top {
-                flex-direction: column;
-                gap: 15px;
-            }
-            .nav-main {
-                flex-direction: column;
-                gap: 20px;
-            }
-            .nav-links {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            .hero h2 {
-                font-size: 36px;
-            }
-            .loyalty-container {
-                flex-direction: column;
-            }
-        }
-        @media (max-width: 768px) {
-            .booking-form {
-                grid-template-columns: 1fr;
-            }
-            .hero {
-                padding: 60px 0;
-            }
-            section {
-                padding: 60px 0;
-            }
-            .region-selector {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animated {
-            animation: fadeIn 1s ease-out;
-        }
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: var(--success);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 5px;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            font-size: 27px;
+            cursor: pointer;
             box-shadow: var(--shadow-hover);
-            display: flex;
+            display: none;
             align-items: center;
-            gap: 10px;
-            z-index: 3000;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: var(--transition);
+            justify-content: center;
+            z-index: 100;
+            transition: background 0.2s;
         }
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
+        .back-to-top:hover {
+            background: var(--secondary);
         }
         .progress-container {
             width: 100%;
-            height: 5px;
+            height: 4px;
             background-color: var(--light-gray);
             position: fixed;
             top: 0;
@@ -831,112 +613,115 @@
             width: 0%;
             transition: width 0.3s ease;
         }
-        .theme-selector {
+        /* 11. Floating WhatsApp Button */
+        .whatsapp-float {
             position: fixed;
-            top: 50%;
-            right: -35px;
-            transform: translateY(-50%) rotate(-90deg);
-            background-color: var(--primary);
-            color: white;
-            padding: 10px 15px;
-            border-top-left-radius: 5px;
-            border-top-right-radius: 5px;
+            bottom: 105px;
+            right: 22px;
+            z-index: 100;
+            background: #25d366;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            font-size: 29px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-hover);
             cursor: pointer;
-            transition: var(--transition);
+            transition: background 0.2s;
+        }
+        .whatsapp-float:hover {
+            background: #22b45a;
+        }
+        /* 12. Cookie Consent Bar */
+        .cookie-consent {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #222;
+            color: #fff;
+            padding: 15px 0 13px 0;
+            text-align: center;
+            z-index: 3000;
+            font-size: 16px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .cookie-consent button {
+            background: var(--secondary);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 18px;
+            margin-left: 16px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: background 0.2s;
+        }
+        .cookie-consent button:hover {
+            background: var(--secondary-dark);
+        }
+        /* 13. Accessibility Toolbar */
+        .accessibility-toolbar {
+            position: fixed;
+            top: 110px;
+            right: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
             z-index: 100;
         }
-        .theme-selector:hover {
-            right: 0;
+        /* 14. Language Switcher */
+        .language-selector {
+            margin-left: 13px;
         }
-        .theme-options {
-            position: fixed;
-            top: 50%;
-            right: -200px;
-            transform: translateY(-50%);
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: var(--shadow-hover);
-            transition: var(--transition);
-            z-index: 99;
-            width: 200px;
+        .language-selector select {
+            padding: 7px;
+            border-radius: 5px;
+            border: 1px solid white;
+            background-color: transparent;
+            color: white;
         }
-        .theme-options.show {
-            right: 50px;
-        }
-        .theme-option {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            margin: 10px 0;
+        /* 15. Section Smooth Scroll */
+        .scroll-link {
             cursor: pointer;
-            border: 2px solid white;
-            box-shadow: 0 0 5px rgba(0,0,0,0.2);
         }
-        .theme-option.active {
-            border-color: var(--dark);
+        @media (max-width: 992px) {
+            .header-top {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .nav-main {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
         }
-        body.dark-mode {
-            background-color: #121212;
-            color: #e0e0e0;
+        @media (max-width: 768px) {
+            .booking-form {
+                grid-template-columns: 1fr;
+            }
+            .hero {
+                padding: 60px 0 36px 0;
+            }
+            .section-title h2 {
+                font-size: 25px;
+            }
         }
-        body.dark-mode .feature-card,
-        body.dark-mode .location-card,
-        body.dark-mode .testimonial,
-        body.dark-mode .booking-widget,
-        body.dark-mode .promotions-banner,
-        body.dark-mode .weather-widget,
-        body.dark-mode .event-card,
-        body.dark-mode .faq-item,
-        body.dark-mode .review-form textarea,
-        body.dark-mode .comparison-column,
-        body.dark-mode .social-post,
-        body.dark-mode .chat-box,
-        body.dark-mode .modal-content {
-            background-color: #1e1e1e;
-            color: #e0e0e0;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: translateY(0);}
         }
-        body.dark-mode .form-group label {
-            color: #e0e0e0;
-        }
-        body.dark-mode .form-group input,
-        body.dark-mode .form-group select,
-        body.dark-mode .form-group textarea {
-            background-color: #2d2d2d;
-            border-color: #444;
-            color: #e0e0e0;
-        }
-        body.dark-mode .faq-question {
-            background-color: #2d2d2d;
-        }
-        body.dark-mode .chat-header {
-            background-color: var(--primary-dark);
-        }
-        body.high-contrast {
-            background-color: #000;
-            color: #fff;
-        }
-        body.high-contrast .booking-widget,
-        body.high-contrast .feature-card,
-        body.high-contrast .location-card,
-        body.high-contrast .testimonial,
-        body.high-contrast .modal-content,
-        body.high-contrast .weather-widget,
-        body.high-contrast .event-card,
-        body.high-contrast .comparison-column,
-        body.high-contrast .social-post,
-        body.high-contrast .chat-box,
-        body.high-contrast .faq-question {
-            background-color: #000;
-            color: #fff;
-            border: 1px solid #fff;
-        }
-        body.high-contrast .form-group input,
-        body.high-contrast .form-group select,
-        body.high-contrast .form-group textarea {
-            background-color: #000;
-            color: #fff;
-            border-color: #fff;
+        .animated {
+            animation: fadeIn 1s ease-out;
         }
     </style>
 </head>
@@ -946,30 +731,96 @@
         <div class="progress-bar" id="progressBar"></div>
     </div>
 
-    <!-- Theme Selector -->
-    <div class="theme-selector" id="themeSelector">
-        <i class="fas fa-palette"></i> Themes
-    </div>
-    <div class="theme-options" id="themeOptions">
-        <h4>Choose Theme</h4>
-        <div class="theme-option active" style="background-color: #0a4da2;" data-theme="default"></div>
-        <div class="theme-option" style="background-color: #2a6b3a;" data-theme="forest"></div>
-        <div class="theme-option" style="background-color: #7b3a8c;" data-theme="royal"></div>
-        <div class="theme-option" style="background-color: #aa3c3c;" data-theme="crimson"></div>
-        <div class="theme-option" id="darkModeToggle" style="background: linear-gradient(45deg, #121212, #2d2d2d); border: 2px solid #fff;"></div>
+    <!-- Cookie Consent -->
+    <div class="cookie-consent" id="cookieConsent">
+        <span>This website uses cookies to ensure you get the best experience.</span>
+        <button id="acceptCookies">Got it!</button>
     </div>
 
     <!-- Accessibility Toolbar -->
-    <div class="accessibility-toolbar">
+    <div class="accessibility-toolbar" aria-label="Accessibility Tools">
         <button class="btn btn-outline" id="increaseFont"><i class="fas fa-plus"></i> Font Size</button>
         <button class="btn btn-outline" id="highContrast"><i class="fas fa-adjust"></i> High Contrast</button>
         <button class="btn btn-outline" id="screenReader"><i class="fas fa-assistive-listening-systems"></i> Screen Reader</button>
     </div>
 
+    <!-- Header Section -->
+    <header id="mainHeader">
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">
+                    <i class="fas fa-hotel logo-icon"></i>
+                    <h1>East Midlands Premier</h1>
+                </div>
+                <div class="header-contact">
+                    <div><i class="fas fa-phone"></i> 01664 123456</div>
+                    <div><i class="fas fa-envelope"></i> info@eastmidlandspremier.com</div>
+                    <div class="language-selector">
+                        <select id="languageSelect" aria-label="Select language">
+                            <option value="en">English</option>
+                            <option value="fr">Français</option>
+                            <option value="de">Deutsch</option>
+                            <option value="es">Español</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-main">
+                <button class="hamburger" id="hamburger" aria-label="Open navigation">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#hero" class="scroll-link active">Home</a></li>
+                    <li><a href="#booking" class="scroll-link">Book Now</a></li>
+                    <li><a href="#gallery" class="scroll-link">Gallery</a></li>
+                    <li><a href="#testimonials" class="scroll-link">Testimonials</a></li>
+                    <li><a href="#faq" class="scroll-link">FAQs</a></li>
+                    <li><a href="#review" class="scroll-link">Reviews</a></li>
+                </ul>
+                <div class="user-actions">
+                    <button class="btn btn-outline" aria-label="Sign in"><i class="fas fa-sign-in-alt"></i> Sign in</button>
+                    <button class="btn btn-primary" aria-label="Book now">Book Now</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section with Typewriter and Counters -->
+    <section class="hero" id="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-typewriter" id="heroTypewriter"></div>
+                <p>Discover a new level of comfort and luxury across the East Midlands.<br>
+                   Book your stay today and enjoy exclusive member benefits!</p>
+                <a href="#booking" class="btn btn-primary scroll-link">Reserve Your Suite</a>
+                <div class="counters">
+                    <div class="counter-box">
+                        <div class="counter-number" data-count="10">0</div>
+                        <div class="counter-label">Locations</div>
+                    </div>
+                    <div class="counter-box">
+                        <div class="counter-number" data-count="120">0</div>
+                        <div class="counter-label">Rooms</div>
+                    </div>
+                    <div class="counter-box">
+                        <div class="counter-number" data-count="98">0</div>
+                        <div class="counter-label">5★ Reviews (%)</div>
+                    </div>
+                    <div class="counter-box">
+                        <div class="counter-number" data-count="7">0</div>
+                        <div class="counter-label">Awards</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Promotions Banner -->
     <section class="promotions-section">
         <div class="container">
-            <div class="promotions-banner">
+            <div class="promotions-banner" id="promotionsBanner">
                 <div class="promotion-slide active">
                     <h3>Winter Getaway - 20% Off</h3>
                     <p>Book by December 31st for exclusive discounts!</p>
@@ -980,1149 +831,470 @@
                     <p>Enjoy a free spa treatment with your stay!</p>
                     <button class="btn btn-primary">Discover More</button>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Header Section -->
-    <header>
-        <div class="container">
-            <div class="header-top">
-                <div class="logo">
-                    <i class="fas fa-hotel logo-icon"></i>
-                    <h1>East Midlands Premier</h1>
-                </div>
-                <div class="header-contact">
-                    <div><i class="fas fa-phone"></i> 01664 123456</div>
-                    <div><i class="fas fa-envelope"></i> info@eastmidlandspremier.com</div>
-                </div>
-            </div>
-            <div class="nav-main">
-                <ul class="nav-links">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Locations</a></li>
-                    <li><a href="#">Special Offers</a></li>
-                    <li><a href="#">Luxury Suites</a></li>
-                    <li><a href="#">Dining</a></li>
-                    <li><a href="#">Events</a></li>
-                    <li><a href="#">Gallery</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-                <div class="user-actions">
-                    <button class="btn btn-outline"><i class="fas fa-user"></i> Sign In</button>
-                    <button class="btn btn-primary"><i class="fas fa-bookmark"></i> My Bookings</button>
-                    <div class="language-selector">
-                        <select id="language">
-                            <option value="en">English</option>
-                            <option value="fr">Français</option>
-                            <option value="es">Español</option>
-                            <option value="de">Deutsch</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h2>Discover Luxury in the Heart of England</h2>
-                <p>Experience unparalleled comfort across 45 exquisite locations in the East Midlands</p>
-                <button class="btn btn-primary btn-large"><i class="fas fa-video"></i> Virtual Tour</button>
-                
-                <!-- Booking Widget -->
-                <div class="booking-widget">
-                    <div class="booking-form">
-                        <div class="form-group">
-                            <label for="destination">Destination</label>
-                            <select id="destination" aria-label="Select destination">
-                                <option value="">Select a location</option>
-                                <option value="derby">Derby</option>
-                                <option value="nottingham">Nottingham</option>
-                                <option value="leicester">Leicester</option>
-                                <option value="lincoln">Lincoln</option>
-                                <option value="northampton">Northampton</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="check-in">Check In</label>
-                            <input type="date" id="check-in" aria-label="Check-in date">
-                        </div>
-                        <div class="form-group">
-                            <label for="check-out">Check Out</label>
-                            <input type="date" id="check-out" aria-label="Check-out date">
-                        </div>
-                        <div class="form-group">
-                            <label for="guests">Guests</label>
-                            <select id="guests" aria-label="Number of guests">
-                                <option value="1">1 Guest</option>
-                                <option value="2" selected>2 Guests</option>
-                                <option value="3">3 Guests</option>
-                                <option value="4">4 Guests</option>
-                                <option value="5">5+ Guests</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="room-type">Room Type</label>
-                            <select id="room-type" aria-label="Room type">
-                                <option value="">Select Room Type</option>
-                                <option value="standard">Standard</option>
-                                <option value="deluxe">Deluxe</option>
-                                <option value="suite">Suite</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="price-range">Price Range</label>
-                            <select id="price-range" aria-label="Price range">
-                                <option value="">Any</option>
-                                <option value="100-150">£100-£150</option>
-                                <option value="150-200">£150-£200</option>
-                                <option value="200+">£200+</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>&nbsp;</label>
-                            <button class="btn btn-primary" style="padding: 12px 15px;">Check Availability</button>
-                        </div>
-                    </div>
-                    <div class="weather-widget">
-                        <h4>Weather in <span id="weatherLocation">Nottingham</span></h4>
-                        <p><i class="fas fa-thermometer-half"></i> <span id="weatherTemp">15°C</span></p>
-                        <p><i class="fas fa-cloud"></i> <span id="weatherCondition">Partly Cloudy</span></p>
-                    </div>
+                <div class="promotion-slide">
+                    <h3>Family Suite Offer</h3>
+                    <p>Kids stay free this summer!</p>
+                    <button class="btn btn-primary">See Details</button>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Featured Locations Section -->
-    <section>
-        <div class="container">
-            <div class="section-title">
-                <h2>Popular Destinations</h2>
-                <p>Explore our most sought-after locations across the East Midlands</p>
+    <!-- Booking Widget -->
+    <section class="booking-widget" id="booking">
+        <form class="booking-form" id="bookingForm" novalidate>
+            <div class="form-group">
+                <label for="name">Name*</label>
+                <input type="text" id="name" name="name" required aria-required="true" autocomplete="name">
+                <div class="form-hint" id="nameHint"></div>
             </div>
-            <div class="locations-grid">
-                <div class="location-card animated">
-                    <div class="location-img" style="background-image: url('https://images.unsplash.com/photo-1519677100203-a0e668c92439?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');">
-                        <div class="location-badge">BEST SELLER</div>
-                    </div>
-                    <div class="location-info">
-                        <h3>Nottingham City Centre</h3>
-                        <p>Luxury accommodation in the heart of Nottingham, steps away from historic landmarks.</p>
-                        <div class="location-features">
-                            <div class="location-feature"><i class="fas fa-wifi"></i> Free WiFi</div>
-                            <div class="location-feature"><i class="fas fa-parking"></i> Parking</div>
-                            <div class="location-feature"><i class="fas fa-utensils"></i> Restaurant</div>
-                        </div>
-                        <button class="btn btn-primary" style="width: 100%; margin-top: 15px;">View Hotels</button>
-                    </div>
-                </div>
-                <div class="location-card animated">
-                    <div class="location-img" style="background-image: url('https://images.unsplash.com/photo-1591822059946-2b360a7d0cff?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');">
-                        <div class="location-badge">ROMANTIC</div>
-                    </div>
-                    <div class="location-info">
-                        <h3>Peak District Retreat</h3>
-                        <p>Escape to the serene beauty of the Peak District with our premium countryside hotels.</p>
-                        <div class="location-features">
-                            <div class="location-feature"><i class="fas fa-spa"></i> Spa</div>
-                            <div class="location-feature"><i class="fas fa-hiking"></i> Activities</div>
-                            <div class="location-feature"><i class="fas fa-fire"></i> Fireplace</div>
-                        </div>
-                        <button class="btn btn-primary" style="width: 100%; margin-top: 15px;">View Hotels</button>
-                    </div>
-                </div>
-                <div class="location-card animated">
-                    <div class="location-img" style="background-image: url('https://images.unsplash.com/photo-1581888227590-8c6fde7a1b3c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');">
-                        <div class="location-badge">LUXURY</div>
-                    </div>
-                    <div class="location-info">
-                        <h3>Leicester Luxury</h3>
-                        <p>Modern elegance meets historical charm in our Leicester boutique hotels.</p>
-                        <div class="location-features">
-                            <div class="location-feature"><i class="fas fa-concierge-bell"></i> Concierge</div>
-                            <div class="location-feature"><i class="fas fa-swimming-pool"></i> Pool</div>
-                            <div class="location-feature"><i class="fas fa-tshirt"></i> Laundry</div>
-                        </div>
-                        <button class="btn btn-primary" style="width: 100%; margin-top: 15px;">View Hotels</button>
-                    </div>
-                </div>
-                <div class="location-card animated">
-                    <div class="location-img" style="background-image: url('https://images.unsplash.com/photo-1590490360182-c33d9746e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80');">
-                        <div class="location-badge">HISTORIC</div>
-                    </div>
-                    <div class="location-info">
-                        <h3>Lincoln Historic</h3>
-                        <p>Experience timeless luxury with breathtaking views of Lincoln Cathedral.</p>
-                        <div class="location-features">
-                            <div class="location-feature"><i class="fas fa-landmark"></i> Historic</div>
-                            <div class="location-feature"><i class="fas fa-mountain"></i> Views</div>
-                            <div class="location-feature"><i class="fas fa-cocktail"></i> Bar</div>
-                        </div>
-                        <button class="btn btn-primary" style="width: 100%; margin-top: 15px;">View Hotels</button>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label for="email">Email*</label>
+                <input type="email" id="email" name="email" required aria-required="true" autocomplete="email">
+                <div class="form-hint" id="emailHint"></div>
             </div>
-        </div>
-    </section>
-
-    <!-- Interactive Map Section -->
-    <section class="map-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>Explore Our Locations</h2>
-                <p>Use our interactive map to find the perfect hotel in your desired location</p>
-            </div>
-            <div class="map-container" id="mapContainer"></div>
-            <div class="map-overlay">
-                <h3>East Midlands Regions</h3>
-                <div class="region-selector">
-                    <button class="region-btn active">All Regions</button>
-                    <button class="region-btn">Derbyshire</button>
-                    <button class="region-btn">Nottinghamshire</button>
-                    <button class="region-btn">Leicestershire</button>
-                    <button class="region-btn">Lincolnshire</button>
-                    <button class="region-btn">Northamptonshire</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section style="background-color: #f1f6fe;">
-        <div class="container">
-            <div class="section-title">
-                <h2>Why Choose Us</h2>
-                <p>Experience the difference with our premium amenities and services</p>
-            </div>
-            <div class="features-grid">
-                <div class="feature-card animated">
-                    <div class="feature-icon"><i class="fas fa-concierge-bell"></i></div>
-                    <h3>24/7 Concierge Service</h3>
-                    <p>Our dedicated staff is available around the clock to cater to your every need.</p>
-                </div>
-                <div class="feature-card animated">
-                    <div class="feature-icon"><i class="fas fa-utensils"></i></div>
-                    <h3>Gourmet Dining</h3>
-                    <p>Enjoy exquisite culinary experiences at our award-winning restaurants.</p>
-                </div>
-                <div class="feature-card animated">
-                    <div class="feature-icon"><i class="fas fa-spa"></i></div>
-                    <h3>Luxury Spa</h3>
-                    <p>Relax and rejuvenate with our premium spa treatments and facilities.</p>
-                </div>
-                <div class="feature-card animated">
-                    <div class="feature-icon"><i class="fas fa-swimming-pool"></i></div>
-                    <h3>Heated Pools</h3>
-                    <p>Year-round swimming in our indoor and outdoor heated pools.</p>
-                </div>
-                <div class="feature-card animated">
-                    <div class="feature-icon"><i class="fas fa-dumbbell"></i></div>
-                    <h3>Fitness Centers</h3>
-                    <p>State-of-the-art fitness facilities with personal training available.</p>
-                </div>
-                <div class="feature-card animated">
-                    <div class="feature-icon"><i class="fas fa-wifi"></i></div>
-                    <h3>High-Speed WiFi</h3>
-                    <p>Complimentary high-speed internet access throughout all properties.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Room Comparison Tool -->
-    <section class="comparison-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>Compare Rooms</h2>
-                <p>Select up to three rooms to compare features and pricing</p>
-            </div>
-            <div class="comparison-tool">
-                <select class="room-selector" aria-label="Select room type">
-                    <option value="">Select Room</option>
-                    <option value="standard">Standard Room</option>
-                    <option value="deluxe">Deluxe Room</option>
-                    <option value="suite">Suite</option>
+            <div class="form-group">
+                <label for="roomType">Room Type*</label>
+                <select id="roomType" name="roomType" required aria-required="true">
+                    <option value="">Select</option>
+                    <option value="Single">Single</option>
+                    <option value="Double">Double</option>
+                    <option value="Suite">Suite</option>
                 </select>
-                <select class="room-selector" aria-label="Select room type">
-                    <option value="">Select Room</option>
-                    <option value="standard">Standard Room</option>
-                    <option value="deluxe">Deluxe Room</option>
-                    <option value="suite">Suite</option>
-                </select>
-                <select class="room-selector" aria-label="Select room type">
-                    <option value="">Select Room</option>
-                    <option value="standard">Standard Room</option>
-                    <option value="deluxe">Deluxe Room</option>
-                    <option value="suite">Suite</option>
-                </select>
-                <button class="btn btn-primary" id="compareRooms">Compare</button>
-                <div id="comparisonTable" class="comparison-table"></div>
+                <div class="form-hint" id="roomHint"></div>
+            </div>
+            <div class="form-group">
+                <label for="checkIn">Check-In*</label>
+                <input type="date" id="checkIn" name="checkIn" required aria-required="true" min="">
+                <div class="form-hint" id="checkinHint"></div>
+            </div>
+            <div class="form-group">
+                <label for="checkOut">Check-Out*</label>
+                <input type="date" id="checkOut" name="checkOut" required aria-required="true" min="">
+                <div class="form-hint" id="checkoutHint"></div>
+            </div>
+            <div class="form-group">
+                <label for="requests">Special Requests</label>
+                <textarea id="requests" name="requests" rows="2" placeholder="Let us know any special requests..."></textarea>
+            </div>
+            <div class="form-group" style="grid-column: 1 / -1; text-align:right;">
+                <button class="btn btn-primary btn-large" type="submit">Book Now</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery-section" id="gallery">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Gallery</h2>
+                <p>Peek inside our luxury stays and facilities.</p>
+            </div>
+            <div class="gallery-grid" id="galleryGrid">
+                <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="Lobby" class="gallery-img">
+                <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80" alt="Suite" class="gallery-img">
+                <img src="https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=600&q=80" alt="Dining Hall" class="gallery-img">
+                <img src="https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?auto=format&fit=crop&w=600&q=80" alt="Pool" class="gallery-img">
+                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80" alt="Spa" class="gallery-img">
+                <img src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80" alt="Garden" class="gallery-img">
+            </div>
+        </div>
+        <!-- Lightbox -->
+        <div class="lightbox" id="lightbox">
+            <span class="lightbox-close" id="lightboxClose">&times;</span>
+            <img id="lightboxImg" class="lightbox-img" src="" alt="Gallery item">
+            <div>
+                <span class="lightbox-controls" id="lightboxPrev"><i class="fas fa-chevron-left"></i></span>
+                <span class="lightbox-controls" id="lightboxNext"><i class="fas fa-chevron-right"></i></span>
             </div>
         </div>
     </section>
 
-    <!-- Loyalty Program Section -->
-    <section class="loyalty-section">
+    <!-- Testimonials Slider -->
+    <section class="testimonials-section" id="testimonials">
         <div class="container">
             <div class="section-title">
-                <h2>Premier Loyalty Program</h2>
-                <p>Join our exclusive loyalty program and enjoy exceptional benefits</p>
+                <h2>What Our Guests Say</h2>
             </div>
-            <div class="loyalty-container">
-                <div class="loyalty-content">
-                    <h3>Earn Points With Every Stay</h3>
-                    <p>Our loyalty program rewards you for choosing East Midlands Premier. Enjoy these exclusive benefits:</p>
-                    <div class="benefits-grid">
-                        <div class="benefit-item">
-                            <div class="benefit-icon"><i class="fas fa-gift"></i></div>
-                            <div>
-                                <h4>Free Nights</h4>
-                                <p>Redeem points for complimentary stays</p>
-                            </div>
-                        </div>
-                        <div class="benefit-item">
-                            <div class="benefit-icon"><i class="fas fa-arrow-up"></i></div>
-                            <div>
-                                <h4>Room Upgrades</h4>
-                                <p>Priority room upgrades when available</p>
-                            </div>
-                        </div>
-                        <div class="benefit-item">
-                            <div class="benefit-icon"><i class="fas fa-clock"></i></div>
-                            <div>
-                                <h4>Late Checkout</h4>
-                                <p>Enjoy late checkout on request</p>
-                            </div>
-                        </div>
-                        <div class="benefit-item">
-                            <div class="benefit-icon"><i class="fas fa-glass-cheers"></i></div>
-                            <div>
-                                <h4>Welcome Amenities</h4>
-                                <p>Special welcome gifts upon arrival</p>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="btn btn-primary" style="margin-top: 30px;">Join Now</button>
+            <div class="testimonials-container" id="testimonialsSlider">
+                <div class="testimonial active">
+                    <div class="testimonial-rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <div class="testimonial-text">Absolutely spectacular! The staff went above and beyond to make our anniversary special.</div>
+                    <div class="testimonial-author">– Sarah & Mike, Nottingham</div>
                 </div>
-                <div class="loyalty-visual">
-                    <div class="loyalty-card">
-                        <h3>Premier Club</h3>
-                        <p>Member: John Smith</p>
-                        <p>Status: Gold Tier</p>
-                        <p>Points: 12,500</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Loyalty Points Calculator -->
-    <section class="points-calculator-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>Loyalty Points Calculator</h2>
-                <p>Estimate your points for your next stay</p>
-            </div>
-            <form class="points-calculator">
-                <div class="form-group">
-                    <label for="stay-duration">Nights</label>
-                    <input type="number" id="stay-duration" min="1" value="1" aria-label="Number of nights">
-                </div>
-                <div class="form-group">
-                    <label for="room-rate">Room Rate (£)</label>
-                    <input type="number" id="room-rate" min="0" value="150" aria-label="Room rate in pounds">
-                </div>
-                <button class="btn btn-primary" type="submit">Calculate Points</button>
-                <p id="pointsResult"></p>
-            </form>
-        </div>
-    </section>
-
-    <!-- Event Calendar Section -->
-    <section class="event-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>Upcoming Events</h2>
-                <p>Join us for exciting events at our properties</p>
-            </div>
-            <div class="event-calendar">
-                <div class="event-card animated">
-                    <h4>Wine Tasting Evening</h4>
-                    <p>Nottingham - Nov 15, 2025</p>
-                    <button class="btn btn-primary">Learn More</button>
-                </div>
-                <div class="event-card animated">
-                    <h4>Winter Gala</h4>
-                    <p>Leicester - Dec 20, 2025</p>
-                    <button class="btn btn-primary">Learn More</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Local Attractions Section -->
-    <section class="attractions-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>Explore Local Attractions</h2>
-                <p>Discover the best attractions near our hotels</p>
-            </div>
-            <div class="locations-grid">
-                <div class="location-card animated">
-                    <div class="location-img" style="background-image: url('https://images.unsplash.com/photo-1508057198894-247b23fe5ade');"></div>
-                    <div class="location-info">
-                        <h3>Nottingham Castle</h3>
-                        <p>Explore the historic Nottingham Castle, just minutes from our city centre hotels.</p>
-                        <button class="btn btn-primary" style="width: 100%; margin-top: 15px;">Learn More</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Photo Gallery Section -->
-    <section class="gallery-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>Photo Gallery</h2>
-                <p>Explore our luxurious properties through stunning images</p>
-            </div>
-            <div class="gallery-grid">
-                <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945" class="gallery-img" alt="Luxury Hotel Room" loading="lazy">
-                <img src="https://images.unsplash.com/photo-1519677100203-a0e668c92439" class="gallery-img" alt="Hotel Exterior" loading="lazy">
-            </div>
-        </div>
-    </section>
-
-    <!-- Sustainability Section -->
-    <section class="sustainability-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>Our Commitment to Sustainability</h2>
-                <p>We strive to reduce our environmental impact through sustainable practices</p>
-            </div>
-            <div class="features-grid">
-                <div class="feature-card animated">
-                    <div class="feature-icon"><i class="fas fa-leaf"></i></div>
-                    <h3>Eco-Friendly Materials</h3>
-                    <p>Using sustainable materials in our hotels</p>
-                </div>
-                <div class="feature-card animated">
-                    <div class="feature-icon"><i class="fas fa-solar-panel"></i></div>
-                    <h3>Renewable Energy</h3>
-                    <p>Powering our properties with solar and wind energy</p>
-                </div>
-                <div class="feature-card animated">
-                    <div class="feature-icon"><i class="fas fa-recycle"></i></div>
-                    <h3>Zero Waste</h3>
-                    <p>Comprehensive recycling and waste reduction programs</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials Section -->
-    <section>
-        <div class="container">
-            <div class="section-title">
-                <h2>Guest Experiences</h2>
-                <p>Hear what our valued guests have to say about their stay</p>
-            </div>
-            <div class="testimonials-container">
                 <div class="testimonial">
-                    <div class="testimonial-rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <p class="testimonial-text">"The attention to detail at the Nottingham property was exceptional. From the luxurious bedding to the personalized welcome note, every aspect exceeded my expectations."</p>
-                    <p class="testimonial-author">- Sarah Johnson, Business Executive</p>
+                    <div class="testimonial-rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <div class="testimonial-text">The room was immaculate and the spa package was pure bliss. We’ll be back!</div>
+                    <div class="testimonial-author">– Jess P., Leicester</div>
                 </div>
+                <div class="testimonial">
+                    <div class="testimonial-rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
+                    <div class="testimonial-text">Family suite was great for the kids. Lovely staff and delicious breakfast.</div>
+                    <div class="testimonial-author">– The Browns, Derby</div>
+                </div>
+            </div>
+            <div class="testimonial-nav" id="testimonialNav">
+                <!-- JS will insert dots -->
             </div>
         </div>
     </section>
 
-    <!-- Guest Review Form -->
-    <section class="review-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>Share Your Experience</h2>
-                <p>We value your feedback. Submit your review below.</p>
-            </div>
-            <form class="review-form">
-                <div class="form-group">
-                    <label for="review-text">Your Review</label>
-                    <textarea id="review-text" rows="5" placeholder="Tell us about your stay" aria-label="Your review"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="review-rating">Rating</label>
-                    <select id="review-rating" aria-label="Review rating">
-                        <option value="5">5 Stars</option>
-                        <option value="4">4 Stars</option>
-                        <option value="3">3 Stars</option>
-                        <option value="2">2 Stars</option>
-                        <option value="1">1 Star</option>
-                    </select>
-                </div>
-                <button class="btn btn-primary" type="submit">Submit Review</button>
-            </form>
-        </div>
-    </section>
-
-    <!-- FAQ Section -->
-    <section class="faq-section">
+    <!-- FAQ Accordion -->
+    <section class="faq-section" id="faq">
         <div class="container">
             <div class="section-title">
                 <h2>Frequently Asked Questions</h2>
-                <p>Find answers to common questions about your stay</p>
             </div>
-            <div class="faq-container">
+            <div class="faq-container" id="faqContainer">
                 <div class="faq-item">
-                    <h4 class="faq-question">What is your cancellation policy?</h4>
-                    <p class="faq-answer">Free cancellation up to 48 hours before arrival.</p>
+                    <button class="faq-question" aria-expanded="false">
+                        What time is check-in and check-out?
+                        <span><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                    <div class="faq-answer">Check-in is from 2pm, check-out is by 11am. Early/late options available on request.</div>
                 </div>
                 <div class="faq-item">
-                    <h4 class="faq-question">Are pets allowed?</h4>
-                    <p class="faq-answer">Select properties are pet-friendly. Check property details.</p>
+                    <button class="faq-question" aria-expanded="false">
+                        Is parking available?
+                        <span><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                    <div class="faq-answer">Yes, we offer complimentary secure parking for all guests.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        Do you allow pets?
+                        <span><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                    <div class="faq-answer">Pets are welcome in selected rooms. Please contact us to arrange.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        What COVID-19 measures are in place?
+                        <span><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                    <div class="faq-answer">Enhanced cleaning, contactless check-in, and flexible booking policies are in effect.</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Mobile App Promotion -->
-    <section class="app-section">
+    <!-- Review Section with Star Widget -->
+    <section class="review-section" id="review">
         <div class="container">
             <div class="section-title">
-                <h2>Book On the Go</h2>
-                <p>Download our mobile app for seamless booking and exclusive deals</p>
+                <h2>Leave a Review</h2>
+                <p>We value your feedback! Rate your stay and share your experience.</p>
             </div>
-            <div class="app-links">
-                <button class="btn btn-primary"><i class="fab fa-apple"></i> App Store</button>
-                <button class="btn btn-primary"><i class="fab fa-google-play"></i> Google Play</button>
-            </div>
+            <form class="review-form" id="reviewForm">
+                <div class="star-rating" id="starRating">
+                    <span class="star" data-value="1"><i class="fas fa-star"></i></span>
+                    <span class="star" data-value="2"><i class="fas fa-star"></i></span>
+                    <span class="star" data-value="3"><i class="fas fa-star"></i></span>
+                    <span class="star" data-value="4"><i class="fas fa-star"></i></span>
+                    <span class="star" data-value="5"><i class="fas fa-star"></i></span>
+                </div>
+                <textarea rows="3" id="reviewText" placeholder="Write your review here..."></textarea>
+                <button class="btn btn-primary" type="submit" style="margin-top:10px;">Submit Review</button>
+                <div class="form-hint" id="reviewHint"></div>
+            </form>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-column">
-                    <h3>East Midlands Premier</h3>
-                    <p>Luxury hotel experiences across 45 locations in the East Midlands region of the UK.</p>
-                    <div style="margin-top: 20px;">
-                        <i class="fab fa-facebook-f" style="margin-right: 15px; font-size: 20px;"></i>
-                        <i class="fab fa-twitter" style="margin-right: 15px; font-size: 20px;"></i>
-                        <i class="fab fa-instagram" style="margin-right: 15px; font-size: 20px;"></i>
-                        <i class="fab fa-linkedin-in" style="font-size: 20px;"></i>
-                    </div>
-                </div>
-                <div class="footer-column">
-                    <h3>Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">Gift Cards</a></li>
-                        <li><a href="#">Magazine</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Support</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Contact Us</a></li>
-                        <li><a href="#">FAQs</a></li>
-                        <li><a href="#">Cancellation Policy</a></li>
-                        <li><a href="#">Safety Measures</a></li>
-                        <li><a href="#">Accessibility</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Newsletter</h3>
-                    <p>Subscribe to our newsletter for exclusive offers and updates.</p>
-                    <form style="margin-top: 20px;">
-                        <input type="email" placeholder="Your email address" style="padding: 12px 15px; width: 100%; border: none; border-radius: 5px; margin-bottom: 10px;" aria-label="Email for newsletter">
-                        <button class="btn btn-primary" style="width: 100%;">Subscribe</button>
-                    </form>
-                </div>
-                <div class="footer-column">
-                    <h3>Social Media</h3>
-                    <div class="social-feed">
-                        <p>Follow us on Instagram for the latest updates</p>
-                        <div class="social-post">Sample Instagram Post</div>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 East Midlands Premier Hotels. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    <!-- Back to Top -->
+    <button class="back-to-top" id="backToTop" aria-label="Back to top"><i class="fas fa-chevron-up"></i></button>
+    <!-- WhatsApp Button -->
+    <a href="https://wa.me/441664123456" class="whatsapp-float" target="_blank" aria-label="Chat with us on WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
 
-    <!-- Modals -->
-    <div class="modal" id="virtualTourModal">
-        <div class="modal-content">
-            <span class="close-modal" id="closeVirtualTour">&times;</span>
-            <h3>Virtual Tour</h3>
-            <div class="virtual-tour-player">
-                <iframe width="100%" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen aria-label="Virtual tour video"></iframe>
-            </div>
-        </div>
-    </div>
-    <div class="modal" id="bookingHistoryModal">
-        <div class="modal-content">
-            <span class="close-modal" id="closeBookingHistory">&times;</span>
-            <h3>Your Booking History</h3>
-            <div id="bookingHistoryList"></div>
-        </div>
-    </div>
-    <div class="modal" id="newsletterModal">
-        <div class="modal-content">
-            <span class="close-modal" id="closeNewsletter">&times;</span>
-            <h3>Thank You!</h3>
-            <p>You've successfully subscribed to our newsletter. Stay tuned for exclusive offers!</p>
-        </div>
-    </div>
-
-    <!-- Back-to-Top Button -->
-    <button class="btn btn-primary back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></button>
-
-    <!-- Chat Widget -->
-    <div class="chat-widget">
-        <button class="btn btn-primary" id="openChat"><i class="fas fa-comment"></i> Chat with Us</button>
-        <div class="chat-box" id="chatBox">
-            <div class="chat-header">Live Support</div>
-            <div class="chat-messages" id="chatMessages"></div>
-            <input type="text" id="chatInput" placeholder="Type your message..." class="chat-input" aria-label="Chat message input">
-            <button class="btn btn-primary" id="sendChat">Send</button>
-        </div>
-    </div>
-
-    <!-- Toast Notification -->
-    <div class="toast" id="toast">
-        <i class="fas fa-check-circle"></i>
-        <span id="toastMessage">Welcome to East Midlands Premier!</span>
-    </div>
-
-    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
     <script>
-        // Mini Database
-        const hotelDatabase = {
-            locations: [
-                { id: 1, name: "Nottingham City Centre", hotels: 12, image: "nottingham.jpg", region: "Nottinghamshire", lat: 52.9548, lng: -1.1581 },
-                { id: 2, name: "Derby Riverside", hotels: 8, image: "derby.jpg", region: "Derbyshire", lat: 52.9225, lng: -1.4746 },
-                { id: 3, name: "Leicester Historic", hotels: 9, image: "leicester.jpg", region: "Leicestershire", lat: 52.6369, lng: -1.1398 },
-                { id: 4, name: "Lincoln Cathedral View", hotels: 5, image: "lincoln.jpg", region: "Lincolnshire", lat: 53.2344, lng: -0.5363 },
-                { id: 5, name: "Northampton Luxury", hotels: 7, image: "northampton.jpg", region: "Northamptonshire", lat: 52.2405, lng: -0.9027 }
-            ],
-            hotels: [
-                { id: 101, name: "The Nottingham Grand", location: "Nottingham", price: 159, rating: 4.8, features: ["Spa", "Fine Dining", "Pool"], region: "Nottinghamshire" },
-                { id: 102, name: "Derby Manor Hotel", location: "Derby", price: 139, rating: 4.5, features: ["Free WiFi", "Parking", "Breakfast Included"], region: "Derbyshire" }
-            ],
-            bookings: [],
-            users: [],
-            loyaltyTiers: [
-                { name: "Standard", points: 0, benefits: ["Welcome drink"] },
-                { name: "Silver", points: 2000, benefits: ["Welcome drink", "Late checkout"] }
-            ]
-        };
+    /* ========== Feature 1: Animated Mobile Menu ========== */
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+    hamburger.addEventListener('click', () => {
+        navLinks.classList.toggle('open');
+    });
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => navLinks.classList.remove('open'));
+    });
 
-        // Currency Converter
-        const currencyRates = { GBP: 1, USD: 1.31, EUR: 1.18 };
-        let currentCurrency = 'GBP';
+    /* ========== Feature 2: Sticky, Auto-hiding Header on Scroll ========== */
+    let lastScrollTop = 0;
+    const header = document.getElementById('mainHeader');
+    window.addEventListener('scroll', () => {
+        let st = window.pageYOffset || document.documentElement.scrollTop;
+        if (st > lastScrollTop && st > 120) {
+            header.style.top = "-85px";
+        } else {
+            header.style.top = "0";
+        }
+        lastScrollTop = st <= 0 ? 0 : st;
+    });
 
-        // Error Handling Utility
-        const handleError = (error, message) => {
-            console.error(message, error);
-            showToast('An error occurred. Please try again.');
-        };
-
-        // Toast Notification
-        const showToast = (message) => {
-            try {
-                const toast = document.getElementById('toast');
-                const toastMessage = document.getElementById('toastMessage');
-                toastMessage.textContent = message;
-                toast.classList.add('show');
-                setTimeout(() => toast.classList.remove('show'), 3000);
-            } catch (error) {
-                handleError(error, 'Toast notification failed');
-            }
-        };
-
-        document.addEventListener('DOMContentLoaded', () => {
-            try {
-                // Set minimum date for check-in
-                const today = new Date().toISOString().split('T')[0];
-                document.getElementById('check-in').setAttribute('min', today);
-
-                // Leaflet Map
-                const map = L.map('mapContainer').setView([52.6369, -1.1398], 8);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                }).addTo(map);
-                hotelDatabase.locations.forEach(location => {
-                    L.marker([location.lat, location.lng]).addTo(map)
-                        .bindPopup(`<b>${location.name}</b><br>${location.hotels} hotels available`);
-                });
-
-                // Testimonial Carousel
-                const testimonials = [
-                    { text: "The attention to detail at the Nottingham property was exceptional.", author: "Sarah Johnson, Business Executive", rating: 5 },
-                    { text: "Our conference at Derby was outstanding.", author: "Michael Thompson, Event Planner", rating: 4 },
-                    { text: "Romantic getaway at Peak District was magical.", author: "Emma and James Wilson, Couple", rating: 5 }
-                ];
-                let currentTestimonial = 0;
-                const showTestimonial = (index) => {
-                    try {
-                        const testimonialElement = document.querySelector('.testimonial');
-                        let stars = Array(testimonials[index].rating).fill('<i class="fas fa-star"></i>').join('');
-                        testimonialElement.innerHTML = `
-                            <div class="testimonial-rating">${stars}</div>
-                            <p class="testimonial-text">${testimonials[index].text}</p>
-                            <p class="testimonial-author">- ${testimonials[index].author}</p>
-                        `;
-                    } catch (error) {
-                        handleError(error, 'Testimonial display failed');
-                    }
-                };
-                setInterval(() => {
-                    currentTestimonial = (currentTestimonial + 1) % testimonials.length;
-                    showTestimonial(currentTestimonial);
-                }, 5000);
-
-                // Location Card Interactions
-                document.querySelectorAll('.location-card').forEach(card => {
-                    card.addEventListener('mouseenter', () => {
-                        card.style.transform = 'translateY(-5px)';
-                        card.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.15)';
-                    });
-                    card.addEventListener('mouseleave', () => {
-                        card.style.transform = 'translateY(0)';
-                        card.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.08)';
-                    });
-                });
-
-                // Booking Form Submission
-                document.querySelector('.booking-form').addEventListener('submit', (e) => {
-                    try {
-                        e.preventDefault();
-                        const destination = document.getElementById('destination').value;
-                        const checkIn = document.getElementById('check-in').value;
-                        const checkOut = document.getElementById('check-out').value;
-                        const guests = document.getElementById('guests').value;
-                        const roomType = document.getElementById('room-type').value;
-                        const priceRange = document.getElementById('price-range').value;
-                        if (!destination || !checkIn || !checkOut) throw new Error('Incomplete booking form');
-                        hotelDatabase.bookings.push({ hotel: destination, date: checkIn });
-                        showToast(`Checking availability for ${destination}, ${roomType}, ${guests} guests`);
-                    } catch (error) {
-                        handleError(error, 'Booking form submission failed');
-                    }
-                });
-
-                // Region Selector
-                document.querySelectorAll('.region-btn').forEach(button => {
-                    button.addEventListener('click', () => {
-                        try {
-                            document.querySelectorAll('.region-btn').forEach(btn => btn.classList.remove('active'));
-                            button.classList.add('active');
-                            showToast(`Showing hotels in ${button.textContent}`);
-                        } catch (error) {
-                            handleError(error, 'Region selector failed');
-                        }
-                    });
-                });
-
-                // Promotions Banner
-                const promotionSlides = document.querySelectorAll('.promotion-slide');
-                let currentSlide = 0;
-                const rotatePromotions = () => {
-                    try {
-                        promotionSlides.forEach(slide => slide.classList.remove('active'));
-                        promotionSlides[currentSlide].classList.add('active');
-                        currentSlide = (currentSlide + 1) % promotionSlides.length;
-                    } catch (error) {
-                        handleError(error, 'Promotions rotation failed');
-                    }
-                };
-                setInterval(rotatePromotions, 5000);
-
-                // Accessibility Toolbar
-                document.getElementById('increaseFont').addEventListener('click', () => {
-                    try {
-                        document.body.style.fontSize = parseInt(getComputedStyle(document.body).fontSize) + 2 + 'px';
-                        showToast('Font size increased');
-                    } catch (error) {
-                        handleError(error, 'Font size adjustment failed');
-                    }
-                });
-                document.getElementById('highContrast').addEventListener('click', () => {
-                    try {
-                        document.body.classList.toggle('high-contrast');
-                        showToast('High contrast mode toggled');
-                    } catch (error) {
-                        handleError(error, 'High contrast toggle failed');
-                    }
-                });
-                document.getElementById('screenReader').addEventListener('click', () => {
-                    showToast('Screen reader mode activated');
-                });
-
-                // Virtual Tour Modal
-                document.querySelector('.btn-large').addEventListener('click', () => {
-                    try {
-                        document.getElementById('virtualTourModal').style.display = 'flex';
-                    } catch (error) {
-                        handleError(error, 'Virtual tour modal failed');
-                    }
-                });
-                document.getElementById('closeVirtualTour').addEventListener('click', () => {
-                    try {
-                        document.getElementById('virtualTourModal').style.display = 'none';
-                    } catch (error) {
-                        handleError(error, 'Close virtual tour modal failed');
-                    }
-                });
-
-                // Booking History Modal
-                document.querySelector('.btn-primary i.fa-bookmark').parentElement.addEventListener('click', () => {
-                    try {
-                        const bookingList = document.getElementById('bookingHistoryList');
-                        bookingList.innerHTML = hotelDatabase.bookings.length
-                            ? hotelDatabase.bookings.map(booking => `<p>${booking.hotel} - ${booking.date}</p>`).join('')
-                            : '<p>No bookings found</p>';
-                        document.getElementById('bookingHistoryModal').style.display = 'flex';
-                    } catch (error) {
-                        handleError(error, 'Booking history modal failed');
-                    }
-                });
-                document.getElementById('closeBookingHistory').addEventListener('click', () => {
-                    try {
-                        document.getElementById('bookingHistoryModal').style.display = 'none';
-                    } catch (error) {
-                        handleError(error, 'Close booking history modal failed');
-                    }
-                });
-
-                // Newsletter Modal
-                document.querySelector('.footer-column form').addEventListener('submit', (e) => {
-                    try {
-                        e.preventDefault();
-                        document.getElementById('newsletterModal').style.display = 'flex';
-                        showToast('Subscribed to newsletter!');
-                    } catch (error) {
-                        handleError(error, 'Newsletter subscription failed');
-                    }
-                });
-                document.getElementById('closeNewsletter').addEventListener('click', () => {
-                    try {
-                        document.getElementById('newsletterModal').style.display = 'none';
-                    } catch (error) {
-                        handleError(error, 'Close newsletter modal failed');
-                    }
-                });
-
-                // Weather Widget
-                const updateWeather = (location) => {
-                    try {
-                        const weatherData = {
-                            nottingham: { temp: '15°C', condition: 'Partly Cloudy' },
-                            leicester: { temp: '17°C', condition: 'Sunny' },
-                            derby: { temp: '14°C', condition: 'Rainy' }
-                        };
-                        const data = weatherData[location.toLowerCase()] || { temp: '15°C', condition: 'Partly Cloudy' };
-                        document.getElementById('weatherLocation').textContent = location.charAt(0).toUpperCase() + location.slice(1);
-                        document.getElementById('weatherTemp').textContent = data.temp;
-                        document.getElementById('weatherCondition').textContent = data.condition;
-                    } catch (error) {
-                        handleError(error, 'Weather update failed');
-                    }
-                };
-                document.getElementById('destination').addEventListener('change', (e) => {
-                    updateWeather(e.target.value);
-                });
-
-                // Guest Review Form
-                document.querySelector('.review-form').addEventListener('submit', (e) => {
-                    try {
-                        e.preventDefault();
-                        const reviewText = document.getElementById('review-text').value;
-                        const rating = document.getElementById('review-rating').value;
-                        if (!reviewText) throw new Error('Review text is required');
-                        testimonials.push({ text: reviewText, author: 'Guest', rating: parseInt(rating) });
-                        showTestimonial(testimonials.length - 1);
-                        showToast('Thank you for your review!');
-                        document.querySelector('.review-form').reset();
-                    } catch (error) {
-                        handleError(error, 'Review submission failed');
-                    }
-                });
-
-                // Room Comparison Tool
-                document.getElementById('compareRooms').addEventListener('click', () => {
-                    try {
-                        const selectedRooms = Array.from(document.querySelectorAll('.room-selector')).map(select => select.value).filter(v => v);
-                        if (selectedRooms.length === 0) throw new Error('No rooms selected');
-                        const comparisonTable = document.getElementById('comparisonTable');
-                        comparisonTable.innerHTML = selectedRooms.map(room => `
-                            <div class="comparison-column">
-                                <h4>${room.charAt(0).toUpperCase() + room.slice(1)}</h4>
-                                <p>Price: ${currentCurrency} ${Math.round((room === 'standard' ? 100 : room === 'deluxe' ? 150 : 200) * currencyRates[currentCurrency])}</p>
-                                <p>Features: ${room === 'standard' ? 'Basic Amenities' : room === 'deluxe' ? 'Spa Access' : 'Full Suite'}</p>
-                            </div>
-                        `).join('');
-                        showToast('Rooms compared successfully');
-                    } catch (error) {
-                        handleError(error, 'Room comparison failed');
-                    }
-                });
-
-                                // Loyalty Points Calculator
-                document.querySelector('.points-calculator').addEventListener('submit', (e) => {
-                    try {
-                        e.preventDefault();
-                        const nights = parseInt(document.getElementById('stay-duration').value);
-                        const rate = parseFloat(document.getElementById('room-rate').value);
-                        if (isNaN(nights) || isNaN(rate) || nights <= 0 || rate <= 0) {
-                            throw new Error('Invalid input for points calculation');
-                        }
-                        const points = Math.round(nights * rate * 10); // 10 points per £ spent
-                        document.getElementById('pointsResult').textContent = `Estimated Points: ${points}`;
-                        showToast('Points calculated successfully!');
-                    } catch (error) {
-                        handleError(error, 'Points calculation failed');
-                    }
-                });
-
-                // FAQ Accordion
-                document.querySelectorAll('.faq-question').forEach(question => {
-                    question.addEventListener('click', () => {
-                        try {
-                            const faqItem = question.parentElement;
-                            faqItem.classList.toggle('active');
-                        } catch (error) {
-                            handleError(error, 'FAQ toggle failed');
-                        }
-                    });
-                });
-
-                // Photo Gallery Lightbox
-                document.querySelectorAll('.gallery-img').forEach(img => {
-                    img.addEventListener('click', () => {
-                        try {
-                            const lightbox = document.createElement('div');
-                            lightbox.className = 'lightbox';
-                            lightbox.innerHTML = `<img src="${img.src}" class="lightbox-img" alt="${img.alt}">`;
-                            document.body.appendChild(lightbox);
-                            lightbox.style.display = 'flex';
-                            lightbox.addEventListener('click', () => {
-                                lightbox.remove();
-                            });
-                        } catch (error) {
-                            handleError(error, 'Lightbox display failed');
-                        }
-                    });
-                });
-
-                // Back-to-Top Button
-                const backToTop = document.getElementById('backToTop');
-                window.addEventListener('scroll', () => {
-                    try {
-                        backToTop.style.display = window.scrollY > 300 ? 'block' : 'none';
-                    } catch (error) {
-                        handleError(error, 'Back-to-top toggle failed');
-                    }
-                });
-                backToTop.addEventListener('click', () => {
-                    try {
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    } catch (error) {
-                        handleError(error, 'Back-to-top scroll failed');
-                    }
-                });
-
-                // Theme Selector
-                const themeSelector = document.getElementById('themeSelector');
-                const themeOptions = document.getElementById('themeOptions');
-                themeSelector.addEventListener('click', () => {
-                    try {
-                        themeOptions.classList.toggle('show');
-                    } catch (error) {
-                        handleError(error, 'Theme selector toggle failed');
-                    }
-                });
-                document.querySelectorAll('.theme-option').forEach(option => {
-                    option.addEventListener('click', () => {
-                        try {
-                            document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
-                            option.classList.add('active');
-                            const theme = option.dataset.theme;
-                            document.body.classList.remove('dark-mode', 'forest', 'royal', 'crimson');
-                            if (theme !== 'default') {
-                                document.body.classList.add(theme === 'darkModeToggle' ? 'dark-mode' : theme);
-                            }
-                            document.documentElement.style.setProperty('--primary', 
-                                theme === 'forest' ? '#2a6b3a' :
-                                theme === 'royal' ? '#7b3a8c' :
-                                theme === 'crimson' ? '#aa3c3c' : '#0a4da2'
-                            );
-                            document.documentElement.style.setProperty('--primary-dark', 
-                                theme === 'forest' ? '#1e4b2a' :
-                                theme === 'royal' ? '#5a2a6b' :
-                                theme === 'crimson' ? '#8a2c2c' : '#08367a'
-                            );
-                            showToast(`Theme changed to ${theme === 'darkModeToggle' ? 'Dark Mode' : theme.charAt(0).toUpperCase() + theme.slice(1)}`);
-                        } catch (error) {
-                            handleError(error, 'Theme change failed');
-                        }
-                    });
-                });
-
-                // Dark Mode Toggle
-                document.getElementById('darkModeToggle').addEventListener('click', () => {
-                    try {
-                        document.body.classList.toggle('dark-mode');
-                        showToast(document.body.classList.contains('dark-mode') ? 'Dark mode enabled' : 'Dark mode disabled');
-                    } catch (error) {
-                        handleError(error, 'Dark mode toggle failed');
-                    }
-                });
-
-                // Chat Widget
-                const chatBox = document.getElementById('chatBox');
-                const openChat = document.getElementById('openChat');
-                const chatMessages = document.getElementById('chatMessages');
-                const chatInput = document.getElementById('chatInput');
-                const sendChat = document.getElementById('sendChat');
-                openChat.addEventListener('click', () => {
-                    try {
-                        chatBox.style.display = chatBox.style.display === 'block' ? 'none' : 'block';
-                        if (chatBox.style.display === 'block') {
-                            chatMessages.innerHTML += '<p><b>Support:</b> Hello! How can we assist you today?</p>';
-                            chatMessages.scrollTop = chatMessages.scrollHeight;
-                        }
-                    } catch (error) {
-                        handleError(error, 'Chat toggle failed');
-                    }
-                });
-                sendChat.addEventListener('click', () => {
-                    try {
-                        const message = chatInput.value.trim();
-                        if (!message) throw new Error('Empty chat message');
-                        chatMessages.innerHTML += `<p><b>You:</b> ${message}</p>`;
-                        setTimeout(() => {
-                            chatMessages.innerHTML += `<p><b>Support:</b> Thank you for your message! We'll get back to you shortly.</p>`;
-                            chatMessages.scrollTop = chatMessages.scrollHeight;
-                        }, 1000);
-                        chatInput.value = '';
-                        chatMessages.scrollTop = chatMessages.scrollHeight;
-                    } catch (error) {
-                        handleError(error, 'Chat message send failed');
-                    }
-                });
-                chatInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') sendChat.click();
-                });
-
-                // Currency Converter
-                document.getElementById('language').addEventListener('change', (e) => {
-                    try {
-                        const currencyMap = { en: 'GBP', fr: 'EUR', es: 'EUR', de: 'EUR' };
-                        currentCurrency = currencyMap[e.target.value] || 'GBP';
-                        showToast(`Currency changed to ${currentCurrency}`);
-                    } catch (error) {
-                        handleError(error, 'Currency change failed');
-                    }
-                });
-
-                // Progress Bar
-                window.addEventListener('scroll', () => {
-                    try {
-                        const scrollTop = window.scrollY;
-                        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-                        const scrollPercent = (scrollTop / docHeight) * 100;
-                        document.getElementById('progressBar').style.width = `${scrollPercent}%`;
-                    } catch (error) {
-                        handleError(error, 'Progress bar update failed');
-                    }
-                });
-
-                // Social Media Feed Simulation
-                const socialFeed = document.querySelector('.social-feed');
-                const posts = [
-                    'Enjoying a relaxing spa day at our Nottingham hotel! 🧖‍♀️ #LuxuryStays',
-                    'Sunset views from our Peak District retreat are stunning! 🌅 #EastMidlandsPremier'
-                ];
-                socialFeed.querySelector('.social-post').innerHTML = posts[Math.floor(Math.random() * posts.length)];
-
-                // Lazy Loading Images
-                document.querySelectorAll('img[loading="lazy"]').forEach(img => {
-                    img.addEventListener('load', () => {
-                        img.style.opacity = '1';
-                    });
-                });
-
-                // Form Validation
-                const inputs = document.querySelectorAll('input, select, textarea');
-                inputs.forEach(input => {
-                    input.addEventListener('invalid', () => {
-                        showToast('Please fill out all required fields correctly.');
-                    });
-                });
-
-                // Animation on Scroll
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('animated');
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, { threshold: 0.1 });
-                document.querySelectorAll('.animated').forEach(element => {
-                    observer.observe(element);
-                });
-
-                // Initial Toast
-                showToast('Welcome to East Midlands Premier!');
-
-            } catch (error) {
-                handleError(error, 'Initialization failed');
-            }
-        });
-
-        // Close Modals on Outside Click
-        document.querySelectorAll('.modal').forEach(modal => {
-            modal.addEventListener('click', (e) => {
-                try {
-                    if (e.target === modal) {
-                        modal.style.display = 'none';
-                    }
-                } catch (error) {
-                    handleError(error, 'Modal close failed');
+    /* ========== Feature 3: Animated Counters ========== */
+    function animateCounters() {
+        document.querySelectorAll('.counter-number').forEach(counter => {
+            counter.innerText = '0';
+            const target = +counter.getAttribute('data-count');
+            let count = 0;
+            const updateCounter = () => {
+                let increment = Math.ceil(target / 60);
+                if(count < target) {
+                    count += increment;
+                    if(count > target) count = target;
+                    counter.innerText = count;
+                    setTimeout(updateCounter, 28);
+                } else {
+                    counter.innerText = target;
                 }
-            });
+            };
+            updateCounter();
         });
+    }
+    let countersStarted = false;
+    window.addEventListener('scroll', function() {
+        const hero = document.getElementById('hero');
+        if (!countersStarted && window.scrollY + window.innerHeight > hero.offsetTop + hero.offsetHeight / 2) {
+            animateCounters();
+            countersStarted = true;
+        }
+    });
 
-        // Keyboard Accessibility
-        document.addEventListener('keydown', (e) => {
-            try {
-                if (e.key === 'Escape') {
-                    document.querySelectorAll('.modal').forEach(modal => modal.style.display = 'none');
-                    document.getElementById('chatBox').style.display = 'none';
-                    document.getElementById('themeOptions').classList.remove('show');
-                }
-            } catch (error) {
-                handleError(error, 'Keyboard accessibility failed');
+    /* ========== Feature 4: Typewriter Effect ========== */
+    const heroTypewriter = document.getElementById('heroTypewriter');
+    const phrases = [
+        "Welcome to East Midlands Premier Hotels",
+        "Your Luxury Stay Awaits",
+        "Book Direct for Exclusive Perks"
+    ];
+    let twIndex = 0, charIndex = 0, isDeleting = false;
+    function typeWriter() {
+        const currentPhrase = phrases[twIndex];
+        if(isDeleting) {
+            heroTypewriter.innerHTML = currentPhrase.substring(0, charIndex--);
+            if(charIndex < 0) {
+                isDeleting = false; twIndex = (twIndex+1) % phrases.length;
+                setTimeout(typeWriter, 800);
+            } else setTimeout(typeWriter, 32);
+        } else {
+            heroTypewriter.innerHTML = currentPhrase.substring(0, charIndex++);
+            if(charIndex > currentPhrase.length) {
+                isDeleting = true;
+                setTimeout(typeWriter, 1200);
+            } else setTimeout(typeWriter, 55);
+        }
+    }
+    typeWriter();
+
+    /* ========== Feature 5: Promotions Slider ========== */
+    const promotionSlides = document.querySelectorAll('.promotion-slide');
+    let promoIdx = 0;
+    setInterval(() => {
+        promotionSlides[promoIdx].classList.remove('active');
+        promoIdx = (promoIdx + 1) % promotionSlides.length;
+        promotionSlides[promoIdx].classList.add('active');
+    }, 6000);
+
+    /* ========== Feature 6: Gallery Lightbox + Slideshow ========== */
+    const galleryImgs = Array.from(document.querySelectorAll('.gallery-img'));
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    let lbIdx = 0;
+    function openLightbox(idx) {
+        lbIdx = idx;
+        lightboxImg.src = galleryImgs[idx].src;
+        lightbox.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+    galleryImgs.forEach((img, i) => {
+        img.addEventListener('click', () => openLightbox(i));
+    });
+    function closeLightbox() {
+        lightbox.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+    document.getElementById('lightboxClose').onclick = closeLightbox;
+    document.getElementById('lightboxPrev').onclick = function() {
+        lbIdx = (lbIdx - 1 + galleryImgs.length) % galleryImgs.length;
+        lightboxImg.src = galleryImgs[lbIdx].src;
+    };
+    document.getElementById('lightboxNext').onclick = function() {
+        lbIdx = (lbIdx + 1) % galleryImgs.length;
+        lightboxImg.src = galleryImgs[lbIdx].src;
+    };
+    lightbox.addEventListener('click', function(e) {
+        if(e.target === lightbox) closeLightbox();
+    });
+    document.addEventListener('keydown', function(e){
+        if(!lightbox.classList.contains('show')) return;
+        if(e.key === "Escape") closeLightbox();
+        if(e.key === "ArrowLeft") document.getElementById('lightboxPrev').click();
+        if(e.key === "ArrowRight") document.getElementById('lightboxNext').click();
+    });
+
+    /* ========== Feature 7: Booking Form Date Picker and Validation ========== */
+    const today = new Date().toISOString().slice(0,10);
+    document.getElementById('checkIn').min = today;
+    document.getElementById('checkOut').min = today;
+    document.getElementById('checkIn').addEventListener('change', function(){
+        document.getElementById('checkOut').min = this.value;
+    });
+    // Validation
+    const bookingForm = document.getElementById('bookingForm');
+    function showHint(id, msg) { document.getElementById(id).textContent = msg; }
+    bookingForm.addEventListener('input', function(e){
+        const name = bookingForm.name.value.trim();
+        const email = bookingForm.email.value.trim();
+        const room = bookingForm.roomType.value;
+        const checkIn = bookingForm.checkIn.value;
+        const checkOut = bookingForm.checkOut.value;
+        showHint('nameHint', name.length ? "" : "Name is required.");
+        showHint('emailHint', /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(email) ? "" : "Valid email required.");
+        showHint('roomHint', room ? "" : "Select room type.");
+        showHint('checkinHint', checkIn ? "" : "Select check-in date.");
+        showHint('checkoutHint', checkOut ? "" : "Select check-out date.");
+        if(checkIn && checkOut && checkIn >= checkOut) {
+            showHint('checkoutHint', "Check-out must be after check-in.");
+        }
+    });
+    bookingForm.addEventListener('submit', function(e){
+        e.preventDefault();
+        let valid = true;
+        ['name','email','roomType','checkIn','checkOut'].forEach(field => {
+            if(!bookingForm[field].value.trim()) valid = false;
+        });
+        if(bookingForm.checkIn.value && bookingForm.checkOut.value && bookingForm.checkIn.value >= bookingForm.checkOut.value) valid = false;
+        if(valid) {
+            alert("Booking submitted! Thank you.");
+            bookingForm.reset();
+        } else {
+            alert("Please correct the highlighted fields.");
+        }
+    });
+
+    /* ========== Feature 8: Testimonials Slider/Carousel ========== */
+    const testimonials = document.querySelectorAll('.testimonial');
+    const testimonialNav = document.getElementById('testimonialNav');
+    let tIdx = 0;
+    testimonials.forEach((t, i) => {
+        let dot = document.createElement('span');
+        dot.className = 'testimonial-dot' + (i === 0 ? ' active' : '');
+        dot.addEventListener('click', () => showTestimonial(i));
+        testimonialNav.appendChild(dot);
+    });
+    function showTestimonial(idx) {
+        testimonials[tIdx].classList.remove('active');
+        testimonialNav.children[tIdx].classList.remove('active');
+        tIdx = idx;
+        testimonials[tIdx].classList.add('active');
+        testimonialNav.children[tIdx].classList.add('active');
+    }
+    setInterval(() => showTestimonial((tIdx+1)%testimonials.length), 8000);
+
+    /* ========== Feature 9: FAQ Accordion ========== */
+    document.querySelectorAll('.faq-question').forEach((q, idx, arr) => {
+        q.addEventListener('click', function() {
+            const item = this.parentElement;
+            const expanded = this.getAttribute('aria-expanded') === 'true';
+            arr.forEach(btn => btn.setAttribute('aria-expanded','false'));
+            document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+            if(!expanded) {
+                this.setAttribute('aria-expanded','true');
+                item.classList.add('active');
             }
         });
+    });
+
+    /* ========== Feature 10: Review Star Widget ========== */
+    const starRating = document.getElementById('starRating');
+    let selectedStar = 0;
+    starRating.querySelectorAll('.star').forEach((star, i, arr) => {
+        star.addEventListener('mouseenter', () => {
+            arr.forEach((s, idx) => s.classList.toggle('hovered', idx <= i));
+        });
+        star.addEventListener('mouseleave', () => {
+            arr.forEach((s, idx) => s.classList.toggle('hovered', false));
+        });
+        star.addEventListener('click', () => {
+            selectedStar = i+1;
+            arr.forEach((s, idx) => s.classList.toggle('selected', idx < selectedStar));
+        });
+    });
+    document.getElementById('reviewForm').addEventListener('submit', function(e){
+        e.preventDefault();
+        const text = document.getElementById('reviewText').value.trim();
+        if(selectedStar === 0 || text.length < 10) {
+            document.getElementById('reviewHint').textContent = "Please provide a rating and at least 10 characters of review.";
+        } else {
+            document.getElementById('reviewHint').textContent = "Thank you for your feedback!";
+            this.reset();
+            selectedStar = 0;
+            starRating.querySelectorAll('.star').forEach(s => s.classList.remove('selected'));
+            setTimeout(()=>document.getElementById('reviewHint').textContent='', 3000);
+        }
+    });
+
+    /* ========== Feature 11: Smooth Scroll to Section & Active Nav ========== */
+    document.querySelectorAll('.scroll-link').forEach(link => {
+        link.addEventListener('click', function(e){
+            e.preventDefault();
+            let target = document.querySelector(this.getAttribute('href'));
+            if(target) {
+                window.scrollTo({top: target.offsetTop - 75, behavior:'smooth'});
+                document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+                this.classList.add('active');
+            }
+        });
+    });
+
+    /* ========== Feature 12: Back to Top and Scroll Progress ========== */
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', function() {
+        if(window.scrollY > 350) backToTop.style.display = 'flex';
+        else backToTop.style.display = 'none';
+        // Progress bar
+        const height = document.body.scrollHeight - window.innerHeight;
+        const scrolled = (window.scrollY / height) * 100;
+        document.getElementById('progressBar').style.width = scrolled + "%";
+    });
+    backToTop.onclick = function() {
+        window.scrollTo({top:0, behavior:'smooth'});
+    };
+
+    /* ========== Feature 13: Cookie Consent Bar ========== */
+    if(!localStorage.getItem('cookieConsent')) {
+        document.getElementById('cookieConsent').style.display = 'flex';
+    }
+    document.getElementById('acceptCookies').onclick = function() {
+        document.getElementById('cookieConsent').style.display = 'none';
+        localStorage.setItem('cookieConsent','true');
+    };
+
+    /* ========== Feature 14: Accessibility Toolbar ========== */
+    let fontScale = 1;
+    document.getElementById('increaseFont').onclick = function() {
+        fontScale += 0.1;
+        document.body.style.fontSize = fontScale + 'em';
+    };
+    let hcMode = false;
+    document.getElementById('highContrast').onclick = function() {
+        hcMode = !hcMode;
+        if(hcMode) document.body.classList.add('high-contrast');
+        else document.body.classList.remove('high-contrast');
+    };
+    let srMode = false;
+    document.getElementById('screenReader').onclick = function() {
+        srMode = !srMode;
+        if(srMode) alert("Screen Reader support enabled (simulate).");
+        else alert("Screen Reader support disabled.");
+    };
+
+    /* ========== Feature 15: Language Switcher Demo Effect ========== */
+    document.getElementById('languageSelect').addEventListener('change', function() {
+        let lang = this.value;
+        alert("Language switched to: " + this.options[this.selectedIndex].text + " (Demo)");
+        // For real implementation: reload content in selected language
+    });
     </script>
 </body>
 </html>

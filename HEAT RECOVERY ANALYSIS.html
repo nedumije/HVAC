@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinch Analysis - Principles of Curve Interpretation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.0.2"></script>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --info: #3498db;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            color: var(--accent);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 2rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .hero {
+            background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.8)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%232c3e50"/><path d="M0 0L100 100" stroke="%233498db" stroke-width="2"/><path d="M100 0L0 100" stroke="%233498db" stroke-width="2"/></svg>');
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--accent);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background-color: #c0392b;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--primary);
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--secondary);
+            margin: 10px auto;
+            border-radius: 2px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-title {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-title i {
+            margin-right: 10px;
+            color: var(--accent);
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .graph-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .graph-title {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .graph-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            justify-content: center;
+        }
+        
+        .term-highlight {
+            color: var(--secondary);
+            font-weight: 600;
+            cursor: help;
+            border-bottom: 1px dotted var(--secondary);
+            position: relative;
+        }
+        
+        .term-tooltip {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-weight: normal;
+        }
+        
+        .term-highlight:hover .term-tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 2rem;
+            margin-top: 3rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-section h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .footer-section p, .footer-section li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-section ul {
+            list-style: none;
+        }
+        
+        .footer-section a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-section a:hover {
+            color: var(--accent);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <i class="fas fa-fire"></i>
+                <span>Pinch Analysis</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#introduction">Introduction</a></li>
+                <li><a href="#principles">Principles</a></li>
+                <li><a href="#curves">Curves</a></li>
+                <li><a href="#applications">Applications</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Principles of Interpreting Curves in Pinch Analysis</h1>
+        <p>Learn how to interpret composite curves, grand composite curves, and more through interactive visualizations and detailed explanations.</p>
+        <a href="#curves" class="btn">Explore Interactive Graphs</a>
+    </section>
+
+    <div class="container">
+        <section id="introduction">
+            <h2 class="section-title">Introduction to Pinch Analysis</h2>
+            <div class="card">
+                <h3 class="card-title"><i class="fas fa-info-circle"></i> What is Pinch Analysis?</h3>
+                <p>Pinch analysis is a systematic methodology for minimizing energy consumption in industrial processes by optimizing heat recovery, energy supply, and process operations. It involves the use of specialized graphs and curves to identify energy-saving opportunities.</p>
+                <p>The term <span class="term-highlight">"pinch"<span class="term-tooltip">The pinch point represents the most constrained region in the heat exchanger network</span></span> refers to the point in the process where the heat recovery is most constrained, representing the minimum temperature difference between hot and cold streams.</p>
+            </div>
+            
+            <div class="card">
+                <h3 class="card-title"><i class="fas fa-history"></i> Historical Background</h3>
+                <p>Pinch analysis was developed in the late 1970s by PhD student Bodo Linnhoff under the supervision of Professor John Flower at the University of Leeds. The technique has since become a cornerstone of process integration and energy optimization in chemical and process industries.</p>
+            </div>
+        </section>
+
+        <section id="principles">
+            <h2 class="section-title">Key Principles</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3 class="card-title"><i class="fas fa-thermometer-half"></i> Temperature-Enthalpy Diagrams</h3>
+                    <p>The foundation of pinch analysis is the temperature-enthalpy (T-H) diagram, which graphically represents the heat availability and requirements of process streams.</p>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-title"><i class="fas fa-exchange-alt"></i> Heat Recovery</h3>
+                    <p>The maximum amount of heat that can be recovered between hot and cold process streams is determined by the point of closest approach between composite curves.</p>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-title"><i class="fas fa-bolt"></i> Energy Targets</h3>
+                    <p>Pinch analysis establishes minimum energy consumption targets before designing the heat exchanger network, providing a benchmark for energy efficiency.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="curves">
+            <h2 class="section-title">Types of Curves in Pinch Analysis</h2>
+            
+            <div class="graph-container">
+                <h3 class="graph-title">Composite Curves</h3>
+                <p>Composite curves show the overall heat availability (hot composite curve) and heat requirements (cold composite curve) of all process streams. The point where these curves are closest is called the pinch point.</p>
+                <div class="graph-controls">
+                    <button class="btn" onclick="updateCompositeCurve('typical')">Typical View</button>
+                    <button class="btn" onclick="updateCompositeCurve('shifted')">Temperature Shifted</button>
+                    <button class="btn" onclick="updateCompositeCurve('animated')">Animate Pinch</button>
+                </div>
+                <canvas id="compositeCurve" height="400"></canvas>
+            </div>
+            
+            <div class="graph-container">
+                <h3 class="graph-title">Grand Composite Curve</h3>
+                <p>The grand composite curve (GCC) represents the net heat flow against temperature. It helps in identifying appropriate utility placement and integration.</p>
+                <div class="graph-controls">
+                    <button class="btn" onclick="updateGCC('typical')">Typical View</button>
+                    <button class="btn" onclick="updateGCC('withUtilities')">With Utilities</button>
+                    <button class="btn" onclick="updateGCC('animated')">Animate Integration</button>
+                </div>
+                <canvas id="grandCompositeCurve" height="400"></canvas>
+            </div>
+            
+            <div class="graph-container">
+                <h3 class="graph-title">Stream Grid Diagram</h3>
+                <p>The stream grid (or grid diagram) shows the individual process streams and how they are connected through heat exchangers.</p>
+                <div class="graph-controls">
+                    <button class="btn" onclick="updateStreamGrid('basic')">Basic Grid</button>
+                    <button class="btn" onclick="updateStreamGrid('withExchange')">With Heat Exchange</button>
+                    <button class="btn" onclick="updateStreamGrid('optimized')">Optimized Network</button>
+                </div>
+                <canvas id="streamGrid" height="400"></canvas>
+            </div>
+        </section>
+
+        <section id="applications">
+            <h2 class="section-title">Practical Applications</h2>
+            <div class="card">
+                <h3 class="card-title"><i class="fas fa-industry"></i> Industrial Applications</h3>
+                <p>Pinch analysis is widely used in chemical plants, refineries, power plants, and other energy-intensive industries to reduce fuel consumption, optimize utility systems, and minimize operating costs.</p>
+            </div>
+            
+            <div class="card">
+                <h3 class="card-title"><i class="fas fa-leaf"></i> Environmental Benefits</h3>
+                <p>By maximizing heat recovery and reducing energy consumption, pinch analysis helps industries lower their greenhouse gas emissions and environmental footprint.</p>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About This Resource</h3>
+                <p>This educational webpage provides an interactive introduction to the principles of interpreting curves in pinch analysis, featuring interactive visualizations and detailed explanations.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#introduction">Introduction</a></li>
+                    <li><a href="#principles">Key Principles</a></li>
+                    <li><a href="#curves">Curve Types</a></li>
+                    <li><a href="#applications">Applications</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Related Resources</h3>
+                <ul>
+                    <li><a href="#">Advanced Pinch Analysis Techniques</a></li>
+                    <li><a href="#">Case Studies in Process Integration</a></li>
+                    <li><a href="#">Software Tools for Energy Optimization</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2023 Pinch Analysis Educational Resource | For Academic and Educational Use</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Charts
+        document.addEventListener('DOMContentLoaded', function() {
+            initCompositeCurve();
+            initGrandCompositeCurve();
+            initStreamGrid();
+        });
+
+        // Composite Curve Chart
+        function initCompositeCurve() {
+            const ctx = document.getElementById('compositeCurve').getContext('2d');
+            window.compositeChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200],
+                    datasets: [
+                        {
+                            label: 'Hot Composite Curve',
+                            data: [220, 210, 200, 190, 180, 170, 160, 150, 140, 130, 120],
+                            borderColor: '#e74c3c',
+                            backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Cold Composite Curve',
+                            data: [80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180],
+                            borderColor: '#3498db',
+                            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Temperature (°C)'
+                            },
+                            min: 50,
+                            max: 250
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Enthalpy (kW)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Composite Curves in Pinch Analysis'
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Grand Composite Curve Chart
+        function initGrandCompositeCurve() {
+            const ctx = document.getElementById('grandCompositeCurve').getContext('2d');
+            window.grandCompositeChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [0, 20, 40, 60, 80, 100, 120, 140, 160],
+                    datasets: [
+                        {
+                            label: 'Grand Composite Curve',
+                            data: [50, 30, 10, -5, -15, -10, 5, 20, 40],
+                            borderColor: '#2ecc71',
+                            backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Net Heat Flow (kW)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Temperature (°C)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Grand Composite Curve'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Stream Grid Diagram
+        function initStreamGrid() {
+            const ctx = document.getElementById('streamGrid').getContext('2d');
+            window.streamGridChart = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        {
+                            label: 'Hot Streams',
+                            data: [
+                                {x: 50, y: 200},
+                                {x: 70, y: 180},
+                                {x: 90, y: 160},
+                                {x: 110, y: 140},
+                                {x: 130, y: 120}
+                            ],
+                            backgroundColor: '#e74c3c',
+                            pointRadius: 8
+                        },
+                        {
+                            label: 'Cold Streams',
+                            data: [
+                                {x: 50, y: 80},
+                                {x: 70, y: 100},
+                                {x: 90, y: 120},
+                                {x: 110, y: 140},
+                                {x: 130, y: 160}
+                            ],
+                            backgroundColor: '#3498db',
+                            pointRadius: 8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Temperature (°C)'
+                            },
+                            min: 50,
+                            max: 250
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Stream Population'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Stream Grid Diagram'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update functions for interactive controls
+        function updateCompositeCurve(type) {
+            if (type === 'shifted') {
+                window.compositeChart.data.datasets[0].data = [220, 210, 200, 190, 180, 170, 160, 150, 140, 130, 120];
+                window.compositeChart.data.datasets[1].data = [100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200];
+            } else if (type === 'animated') {
+                // Simple animation by shifting data points
+                const originalData = [220, 210, 200, 190, 180, 170, 160, 150, 140, 130, 120];
+                const shiftedData = originalData.map(value => value - 20);
+                
+                window.compositeChart.data.datasets[0].data = shiftedData;
+            } else {
+                window.compositeChart.data.datasets[0].data = [220, 210, 200, 190, 180, 170, 160, 150, 140, 130, 120];
+                window.compositeChart.data.datasets[1].data = [80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180];
+            }
+            
+            window.compositeChart.update();
+        }
+
+        function updateGCC(type) {
+            if (type === 'withUtilities') {
+                window.grandCompositeChart.data.datasets.push({
+                    label: 'Utility Placement',
+                    data: [null, null, null, -5, -15, -10, 5, null, null],
+                    borderColor: '#f39c12',
+                    backgroundColor: 'rgba(243, 156, 18, 0.2)',
+                    fill: false,
+                    pointRadius: 6
+                });
+            } else if (type === 'animated') {
+                // Simple animation by modifying the dataset
+                window.grandCompositeChart.data.datasets[0].data = [50, 30, 10, -5, -15, -10, 5, 20, 40];
+            } else {
+                // Reset to typical view
+                if (window.grandCompositeChart.data.datasets.length > 1) {
+                    window.grandCompositeChart.data.datasets.pop();
+                }
+                window.grandCompositeChart.data.datasets[0].data = [50, 30, 10, -5, -15, -10, 5, 20, 40];
+            }
+            
+            window.grandCompositeChart.update();
+        }
+
+        function updateStreamGrid(type) {
+            if (type === 'withExchange') {
+                window.streamGridChart.data.datasets.push({
+                    label: 'Heat Exchanges',
+                    data: [
+                        {x: 60, y: 190},
+                        {x: 80, y: 170},
+                        {x: 100, y: 150},
+                        {x: 120, y: 130}
+                    ],
+                    backgroundColor: '#2ecc71',
+                    pointRadius: 4,
+                    showLine: true
+                });
+            } else if (type === 'optimized') {
+                // Clear previous data if any
+                if (window.streamGridChart.data.datasets.length > 2) {
+                    window.streamGridChart.data.datasets = window.streamGridChart.data.datasets.slice(0, 2);
+                }
+                
+                window.streamGridChart.data.datasets.push({
+                    label: 'Optimized Network',
+                    data: [
+                        {x: 55, y: 195},
+                        {x: 75, y: 175},
+                        {x: 95, y: 155},
+                        {x: 115, y: 135},
+                        {x: 135, y: 115}
+                    ],
+                    backgroundColor: '#9b59b6',
+                    pointRadius: 5,
+                    showLine: true
+                });
+            } else {
+                // Reset to basic view
+                window.streamGridChart.data.datasets = window.streamGridChart.data.datasets.slice(0, 2);
+            }
+            
+            window.streamGridChart.update();
+        }
+    </script>
+</body>
+</html>

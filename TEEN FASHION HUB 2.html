@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrendVibe | Ultimate Teen Fashion Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff4d8d;
+            --secondary: #4361ee;
+            --accent: #ffdb27;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --success: #06d6a0;
+            --warning: #ffd166;
+            --danger: #ef476f;
+            --gray: #8d99ae;
+            --light-pink: #ffedf5;
+            --light-blue: #edf2ff;
+            --light-yellow: #fff9e0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 2rem;
+            font-weight: 800;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            color: var(--accent);
+            font-size: 2.2rem;
+        }
+        
+        .logo span {
+            color: var(--accent);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            position: relative;
+        }
+        
+        nav a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            background: var(--accent);
+            bottom: 0;
+            left: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        nav a:hover:after {
+            width: 80%;
+            left: 10%;
+        }
+        
+        .header-icons {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .header-icons i {
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .header-icons i:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--accent);
+            color: var(--dark);
+            font-size: 0.7rem;
+            font-weight: bold;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .icon-container {
+            position: relative;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80') no-repeat center center/cover;
+            height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-content {
+            max-width: 900px;
+            animation: fadeIn 1.5s ease;
+        }
+        
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.4s ease;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(255, 77, 141, 0.4);
+        }
+        
+        .btn:after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: -100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .btn:hover:after {
+            left: 100%;
+        }
+        
+        .btn:hover {
+            background: var(--secondary);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(67, 97, 238, 0.4);
+        }
+        
+        .btn-accent {
+            background: var(--accent);
+            color: var(--dark);
+            box-shadow: 0 5px 15px rgba(255, 219, 39, 0.4);
+        }
+        
+        .btn-accent:hover {
+            background: #ffce00;
+            box-shadow: 0 15px 25px rgba(255, 206, 0, 0.4);
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 6rem 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 4rem;
+            color: var(--dark);
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 5px;
+            background: var(--primary);
+            border-radius: 10px;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .feature-img {
+            height: 250px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .feature-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s ease;
+        }
+        
+        .feature-card:hover .feature-img img {
+            transform: scale(1.1);
+        }
+        
+        .feature-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--primary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 2;
+        }
+        
+        .feature-content {
+            padding: 2rem;
+        }
+        
+        .feature-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+        
+        .feature-content p {
+            margin-bottom: 1.5rem;
+            color: #555;
+        }
+        
+        .feature-stats {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #eee;
+            padding-top: 1rem;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .feature-stats div {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* Combo Section */
+        .combo-section {
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            padding: 6rem 2rem;
+            position: relative;
+        }
+        
+        .combo-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .combo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+        
+        .combo-box {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+        
+        .combo-box:hover {
+            transform: translateY(-10px);
+        }
+        
+        .combo-title {
+            font-size: 1.6rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent);
+            position: relative;
+        }
+        
+        .combo-title:after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--secondary);
+        }
+        
+        .combo-select-container {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .combo-select {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 12px;
+            border: 2px solid var(--gray);
+            background: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            appearance: none;
+            cursor: pointer;
+        }
+        
+        .combo-select:focus {
+            border-color: var(--secondary);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.2);
+        }
+        
+        .select-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: var(--gray);
+        }
+        
+        .combo-preview {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--light-blue);
+            border-radius: 12px;
+            display: none;
+        }
+        
+        .combo-preview.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .preview-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+        
+        /* Results Section */
+        .results-section {
+            padding: 6rem 2rem;
+            background: var(--light);
+        }
+        
+        .results-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .outfit-display {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            margin-top: 3rem;
+            display: none;
+        }
+        
+        .outfit-display.active {
+            display: block;
+            animation: fadeIn 0.8s ease;
+        }
+        
+        .outfit-title {
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 2rem;
+        }
+        
+        .outfit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .outfit-item {
+            background: var(--light-pink);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .outfit-item i {
+            font-size: 3rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .outfit-item h4 {
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .outfit-item p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .outfit-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--success);
+            margin: 2rem 0;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 5rem 2rem 2rem;
+        }
+        
+        .footer-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem;
+        }
+        
+        .footer-col h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+        
+        .footer-col p {
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+        }
+        
+        .footer-col ul {
+            list-style: none;
+        }
+        
+        .footer-col ul li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-col ul li a {
+            color: var(--light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            opacity: 0.8;
+        }
+        
+        .footer-col ul li a:hover {
+            color: var(--primary);
+            opacity: 1;
+            padding-left: 5px;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+        
+        .social-icons a:hover {
+            background: var(--primary);
+            transform: translateY(-5px);
+        }
+        
+        .newsletter-form {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .newsletter-input {
+            flex: 1;
+            padding: 0.8rem 1.2rem;
+            border-radius: 50px;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            nav ul {
+                gap: 1rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero {
+                height: auto;
+                padding: 4rem 2rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+            
+            .feature-grid, .combo-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .newsletter-form {
+                flex-direction: column;
+            }
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-tshirt"></i>
+                <h1>Trend<span>Vibe</span></h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Sneakers</a></li>
+                    <li><a href="#">Thrift Hauls</a></li>
+                    <li><a href="#">Trending</a></li>
+                    <li><a href="#">Style Guide</a></li>
+                    <li><a href="#">Shop</a></li>
+                    <li><a href="#">Community</a></li>
+                </ul>
+            </nav>
+            <div class="header-icons">
+                <div class="icon-container">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="icon-container">
+                    <i class="fas fa-heart"></i>
+                    <span class="badge">3</span>
+                </div>
+                <div class="icon-container">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="badge">5</span>
+                </div>
+                <div class="icon-container">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Express Your Unique Style with Confidence</h1>
+            <p>Discover the latest teen fashion trends, exclusive sneaker drops, and unique thrift hauls all in one place. Join our community of fashion enthusiasts!</p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="#" class="btn">Explore Now</a>
+                <a href="#" class="btn btn-accent">Join Community</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <h2 class="section-title">What's Trending Now</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-img">
+                    <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="Sneakers">
+                    <div class="feature-tag">New Drop</div>
+                </div>
+                <div class="feature-content">
+                    <h3>Hot Sneaker Drops</h3>
+                    <p>Get the latest info on upcoming sneaker releases and where to cop them. Never miss a drop again!</p>
+                    <a href="#" class="btn">See Drops</a>
+                    <div class="feature-stats">
+                        <div><i class="far fa-eye"></i> 2.4K views</div>
+                        <div><i class="far fa-heart"></i> 892 likes</div>
+                        <div><i class="far fa-clock"></i> 2 days ago</div>
+                    </div>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-img">
+                    <img src="https://images.unsplash.com/photo-1520006403909-838d6b92c22e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="Thrift Hauls">
+                    <div class="feature-tag">Popular</div>
+                </div>
+                <div class="feature-content">
+                    <h3>Thrift Haul of the Week</h3>
+                    <p>Check out the best thrift finds and learn how to style secondhand pieces for a unique look.</p>
+                    <a href="#" class="btn">View Hauls</a>
+                    <div class="feature-stats">
+                        <div><i class="far fa-eye"></i> 3.1K views</div>
+                        <div><i class="far fa-heart"></i> 1.2K likes</div>
+                        <div><i class="far fa-clock"></i> 1 day ago</div>
+                    </div>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-img">
+                    <img src="https://images.unsplash.com/photo-1485231188357-9a890b77b0bb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="Street Style">
+                    <div class="feature-tag">Trending</div>
+                </div>
+                <div class="feature-content">
+                    <h3>Street Style Inspiration</h3>
+                    <p>Get inspired by the coolest street style looks from fashion capitals worldwide.</p>
+                    <a href="#" class="btn">Get Inspired</a>
+                    <div class="feature-stats">
+                        <div><i class="far fa-eye"></i> 4.7K views</div>
+                        <div><i class="far fa-heart"></i> 2.3K likes</div>
+                        <div><i class="far fa-clock"></i> 3 days ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Combo Section -->
+    <section class="combo-section">
+        <div class="combo-container">
+            <h2 class="section-title">Create Your Unique Style</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 2rem; font-size: 1.2rem;">
+                Mix and match from hundreds of options to create your perfect outfit. Select from 15 categories with 36 unique items each!
+            </p>
+            
+            <div class="combo-grid">
+                <!-- Combo Box 1 -->
+                <div class="combo-box">
+                    <h3 class="combo-title">Sneaker Type</h3>
+                    <div class="combo-select-container">
+                        <select class="combo-select" id="sneaker-type">
+                            <option value="">Select Sneaker Type</option>
+                            <option value="athletic">Athletic Performance</option>
+                            <option value="lifestyle">Lifestyle</option>
+                            <option value="skate">Skate Shoes</option>
+                            <option value="designer">Designer Collaboration</option>
+                            <option value="limited">Limited Edition</option>
+                            <option value="retro">Retro Classic</option>
+                            <option value="chunky">Chunky Sneakers</option>
+                            <option value="minimalist">Minimalist</option>
+                            <option value="high-top">High-Top</option>
+                            <option value="low-top">Low-Top</option>
+                            <option value="slip-on">Slip-On</option>
+                            <option value="platform">Platform</option>
+                            <option value="running">Running Shoes</option>
+                            <option value="basketball">Basketball Shoes</option>
+                            <option value="trainers">Training Shoes</option>
+                            <option value="hiking">Hiking Sneakers</option>
+                            <option value="canvas">Canvas Shoes</option>
+                            <option value="leather">Leather Sneakers</option>
+                            <option value="suede">Suede Sneakers</option>
+                            <option value="mesh">Mesh Sneakers</option>
+                            <option value="knit">Knit Sneakers</option>
+                            <option value="waterproof">Waterproof</option>
+                            <option value="vegan">Vegan Sneakers</option>
+                            <option value="custom">Customizable</option>
+                            <option value="light-up">Light-Up Sneakers</option>
+                            <option value="colorful">Colorful Design</option>
+                            <option value="neutral">Neutral Tones</option>
+                            <option value="patterned">Patterned</option>
+                            <option value="metallic">Metallic Finish</option>
+                            <option value="transparent">Transparent Details</option>
+                            <option value="velcro">Velcro Closure</option>
+                            <option value="slip-resistant">Slip-Resistant</option>
+                            <option value="orthopedic">Orthopedic Support</option>
+                            <option value="wide-fit">Wide Fit</option>
+                            <option value="narrow-fit">Narrow Fit</option>
+                        </select>
+                        <div class="select-icon"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    
+                    <h3 class="combo-title">Sneaker Brand</h3>
+                    <div class="combo-select-container">
+                        <select class="combo-select" id="sneaker-brand">
+                            <option value="">Select Brand</option>
+                            <option value="nike">Nike</option>
+                            <option value="adidas">Adidas</option>
+                            <option value="jordan">Jordan</option>
+                            <option value="newbalance">New Balance</option>
+                            <option value="puma">Puma</option>
+                            <option value="converse">Converse</option>
+                            <option value="vans">Vans</option>
+                            <option value="reebok">Reebok</option>
+                            <option value="asics">Asics</option>
+                            <option value="fila">Fila</option>
+                            <option value="saucony">Saucony</option>
+                            <option value="yeezy">Yeezy</option>
+                            <option value="balenciaga">Balenciaga</option>
+                            <option value="gucci">Gucci</option>
+                            <option value="offwhite">Off-White</option>
+                            <option value="supreme">Supreme</option>
+                            <option value="drmartens">Dr. Martens</option>
+                            <option value="timberland">Timberland</option>
+                            <option value="skechers">Skechers</option>
+                            <option value="crocs">Crocs</option>
+                            <option value="lacoste">Lacoste</option>
+                            <option value="tommy">Tommy Hilfiger</option>
+                            <option value="underarmour">Under Armour</option>
+                            <option value="salomon">Salomon</option>
+                            <option value="veja">Veja</option>
+                            <option value="k-swiss">K-Swiss</option>
+                            <option value="diadora">Diadora</option>
+                            <option value="umbro">Umbro</option>
+                            <option value="ellesse">Ellesse</option>
+                            <option value="kappa">Kappa</option>
+                            <option value="champion">Champion</option>
+                            <option value="volcom">Volcom</option>
+                            <option value="element">Element</option>
+                            <option value="etnies">Etnies</option>
+                            <option value="independent">Independent Brand</option>
+                        </select>
+                        <div class="select-icon"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    
+                    <div class="combo-preview" id="sneaker-preview">
+                        <div class="preview-title">Selected Sneaker:</div>
+                        <div id="sneaker-preview-text">Nothing selected yet</div>
+                    </div>
+                </div>
+                
+                <!-- Combo Box 2 -->
+                <div class="combo-box">
+                    <h3 class="combo-title">Top Style</h3>
+                    <div class="combo-select-container">
+                        <select class="combo-select" id="top-style">
+                            <option value="">Select Top Style</option>
+                            <option value="tshirt">T-Shirt</option>
+                            <option value="crop">Crop Top</option>
+                            <option value="button">Button-Down Shirt</option>
+                            <option value="tank">Tank Top</option>
+                            <option value="sweater">Sweater</option>
+                            <option value="hoodie">Hoodie</option>
+                            <option value="blouse">Blouse</option>
+                            <option value="longsleeve">Long Sleeve</option>
+                            <option value="polo">Polo Shirt</option>
+                            <option value="henley">Henley</option>
+                            <option value="tube">Tube Top</option>
+                            <option value="offshoulder">Off-Shoulder</option>
+                            <option value="bodysuit">Bodysuit</option>
+                            <option value="corset">Corset Top</option>
+                            <option value="peplum">Peplum Top</option>
+                            <option value="halter">Halter Top</option>
+                            <option value="bandeau">Bandeau</option>
+                            <option value="wrap">Wrap Top</option>
+                            <option value="blazer">Blazer</option>
+                            <option value="denimjacket">Denim Jacket</option>
+                            <option value="leatherjacket">Leather Jacket</option>
+                            <option value="bomber">Bomber Jacket</option>
+                            <option value="windbreaker">Windbreaker</option>
+                            <option value="vest">Vest</option>
+                            <option value="cardigan">Cardigan</option>
+                            <option value="turtleneck">Turtleneck</option>
+                            <option value="flannel">Flannel Shirt</option>
+                            <option value="graphic">Graphic Tee</option>
+                            <option value="striped">Striped Top</option>
+                            <option value="printed">Printed Top</option>
+                            <option value="lace">Lace Top</option>
+                            <option value="sequin">Sequin Top</option>
+                            <option value="mesh">Mesh Top</option>
+                            <option value="sheer">Sheer Top</option>
+                            <option value="ruffle">Ruffle Top</option>
+                            <option value="asymmetric">Asymmetric Top</option>
+                        </select>
+                        <div class="select-icon"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    
+                    <h3 class="combo-title">Top Brand</h3>
+                    <div class="combo-select-container">
+                        <select class="combo-select" id="top-brand">
+                            <option value="">Select Top Brand</option>
+                            <option value="nike">Nike</option>
+                            <option value="adidas">Adidas</option>
+                            <option value="champion">Champion</option>
+                            <option value="supreme">Supreme</option>
+                            <option value="urban">Urban Outfitters</option>
+                            <option value="zara">Zara</option>
+                            <option value="h&m">H&M</option>
+                            <option value="forever">Forever 21</option>
+                            <option value="brandy">Brandy Melville</option>
+                            <option value="thrift">Thrifted</option>
+                            <option value="vintage">Vintage</option>
+                            <option value="independent">Independent</option>
+                            <option value="pacsun">PacSun</option>
+                            <option value="american">American Eagle</option>
+                            <option value="aerie">Aerie</option>
+                            <option value="levis">Levi's</option>
+                            <option value="tommy">Tommy Hilfiger</option>
+                            <option value="calvin">Calvin Klein</option>
+                            <option value="ralph">Ralph Lauren</option>
+                            <option value="guess">Guess</option>
+                            <option value="lululemon">Lululemon</option>
+                            <option value="athleta">Athleta</option>
+                            <option value="f21">Forever 21</option>
+                            <option value="uniqlo">Uniqlo</option>
+                            <option value="topshop">Topshop</option>
+                            <option value="asos">ASOS</option>
+                            <option value="nastygal">Nasty Gal</option>
+                            <option value="missguided">Missguided</option>
+                            <option value="boohoo">Boohoo</option>
+                            <option value="fashionnova">Fashion Nova</option>
+                            <option value="shein">SHEIN</option>
+                            <option value="prettylittlething">PrettyLittleThing</option>
+                            <option value="reformation">Reformation</option>
+                            <option value="freepeople">Free People</option>
+                            <option value="anthropologie">Anthropologie</option>
+                        </select>
+                        <div class="select-icon"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    
+                    <div class="combo-preview" id="top-preview">
+                        <div class="preview-title">Selected Top:</div>
+                        <div id="top-preview-text">Nothing selected yet</div>
+                    </div>
+                </div>
+                
+                <!-- Combo Box 3 -->
+                <div class="combo-box">
+                    <h3 class="combo-title">Bottom Style</h3>
+                    <div class="combo-select-container">
+                        <select class="combo-select" id="bottom-style">
+                            <option value="">Select Bottom Style</option>
+                            <option value="jeans">Jeans</option>
+                            <option value="cargo">Cargo Pants</option>
+                            <option value="sweatpants">Sweatpants</option>
+                            <option value="leggings">Leggings</option>
+                            <option value="shorts">Shorts</option>
+                            <option value="skirt">Skirt</option>
+                            <option value="joggers">Joggers</option>
+                            <option value="wideleg">Wide-Leg Pants</option>
+                            <option value="pleated">Pleated Pants</option>
+                            <option value="leather">Leather Pants</option>
+                            <option value="denim">Denim Shorts</option>
+                            <option value="cycling">Cycling Shorts</option>
+                            <option value="capri">Capri Pants</option>
+                            <option value="carpenter">Carpenter Pants</option>
+                            <option value="harem">Harem Pants</option>
+                            <option value="palazzo">Palazzo Pants</option>
+                            <option value="paperbag">Paperbag Waist</option>
+                            <option value="flare">Flare Pants</option>
+                            <option value="bellbottoms">Bell-Bottoms</option>
+                            <option value="culottes">Culottes</option>
+                            <option value="gauchos">Gauchos</option>
+                            <option value="jodhpurs">Jodhpurs</option>
+                            <option value="track">Track Pants</option>
+                            <option value="yoga">Yoga Pants</option>
+                            <option value="dress">Dress Pants</option>
+                            <option value="tailored">Tailored Trousers</option>
+                            <option value="cuffed">Cuffed Pants</option>
+                            <option value="highwaisted">High-Waisted</option>
+                            <option value="lowrise">Low-Rise</option>
+                            <option value="midirise">Mid-Rise</option>
+                            <option value="maxi">Maxi Skirt</option>
+                            <option value="mini">Mini Skirt</option>
+                            <option value="midi">Midi Skirt</option>
+                            <option value="pencil">Pencil Skirt</option>
+                            <option value="asymmetric">Asymmetric Skirt</option>
+                        </select>
+                        <div class="select-icon"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    
+                    <h3 class="combo-title">Bottom Brand</h3>
+                    <div class="combo-select-container">
+                        <select class="combo-select" id="bottom-brand">
+                            <option value="">Select Bottom Brand</option>
+                            <option value="levis">Levi's</option>
+                            <option value="nike">Nike</option>
+                            <option value="adidas">Adidas</option>
+                            <option value="pacsun">PacSun</option>
+                            <option value="american">American Eagle</option>
+                            <option value="zara">Zara</option>
+                            <option value="h&m">H&M</option>
+                            <option value="forever">Forever 21</option>
+                            <option value="brandy">Brandy Melville</option>
+                            <option value="thrift">Thrifted</option>
+                            <option value="vintage">Vintage</option>
+                            <option value="independent">Independent</option>
+                            <option value="ae">American Eagle</option>
+                            <option value="aerie">Aerie</option>
+                            <option value="hollister">Hollister</option>
+                            <option value="abercrombie">Abercrombie & Fitch</option>
+                            <option value="lululemon">Lululemon</option>
+                            <option value="athleta">Athleta</option>
+                            <option value="f21">Forever 21</option>
+                            <option value="uniqlo">Uniqlo</option>
+                            <option value="topshop">Topshop</option>
+                            <option value="asos">ASOS</option>
+                            <option value="nastygal">Nasty Gal</option>
+                            <option value="missguided">Missguided</option>
+                            <option value="boohoo">Boohoo</option>
+                            <option value="fashionnova">Fashion Nova</option>
+                            <option value="shein">SHEIN</option>
+                            <option value="prettylittlething">PrettyLittleThing</option>
+                            <option value="reformation">Reformation</option>
+                            <option value="freepeople">Free People</option>
+                            <option value="anthropologie">Anthropologie</option>
+                            <option value="madewell">Madewell</option>
+                            <option value="jcrew">J.Crew</option>
+                            <option value="gap">Gap</option>
+                            <option value="oldnavy">Old Navy</option>
+                        </select>
+                        <div class="select-icon"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    
+                    <div class="combo-preview" id="bottom-preview">
+                        <div class="preview-title">Selected Bottom:</div>
+                        <div id="bottom-preview-text">Nothing selected yet</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional combo boxes would continue here to reach 15 total -->
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="#" class="btn" id="generate-outfit">Generate Outfit Combo</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section">
+        <div class="results-container">
+            <h2 class="section-title">Your Custom Outfit</h2>
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 2rem; font-size: 1.2rem;">
+                Based on your selections, here's your personalized outfit recommendation
+            </p>
+            
+            <div class="outfit-display" id="outfit-result">
+                <h3 class="outfit-title">Your Style Combo</h3>
+                
+                <div class="outfit-grid">
+                    <div class="outfit-item">
+                        <i class="fas fa-shoe-prints"></i>
+                        <h4>Sneakers</h4>
+                        <p id="outfit-sneakers">Select sneakers to see them here</p>
+                    </div>
+                    <div class="outfit-item">
+                        <i class="fas fa-tshirt"></i>
+                        <h4>Top</h4>
+                        <p id="outfit-top">Select a top to see it here</p>
+                    </div>
+                    <div class="outfit-item">
+                        <i class="fas fa-vest"></i>
+                        <h4>Bottom</h4>
+                        <p id="outfit-bottom">Select bottoms to see them here</p>
+                    </div>
+                </div>
+                
+                <div class="outfit-price">
+                    Estimated Outfit Cost: <span id="outfit-cost">$0.00</span>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="#" class="btn">Save This Outfit</a>
+                    <a href="#" class="btn btn-accent">Share With Friends</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>TrendVibe</h3>
+                <p>Your ultimate destination for teen fashion trends, sneaker news, and thrift haul inspiration. Express yourself with confidence!</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Sneaker Releases</a></li>
+                    <li><a href="#">Thrift Hauls</a></li>
+                    <li><a href="#">Style Guides</a></li>
+                    <li><a href="#">Trend Forecast</a></li>
+                    <li><a href="#">Outfit Generator</a></li>
+                    <li><a href="#">Style Challenges</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Shipping & Returns</a></li>
+                    <li><a href="#">Size Guide</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Community Guidelines</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Newsletter</h3>
+                <p>Subscribe to get updates on latest drops, trends, and exclusive offers</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Your Email Address" class="newsletter-input">
+                    <button type="submit" class="btn">Subscribe</button>
+                </form>
+                <p style="font-size: 0.9rem; margin-top: 1rem;">By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.</p>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 TrendVibe. All rights reserved. Designed with <i class="fas fa-heart" style="color: var(--primary);"></i> for fashion enthusiasts.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Interactive features for the page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Select all dropdowns
+            const selects = document.querySelectorAll('.combo-select');
+            const outfitResult = document.getElementById('outfit-result');
+            const generateBtn = document.getElementById('generate-outfit');
+            
+            // Add interaction to each dropdown
+            selects.forEach(select => {
+                select.addEventListener('change', function() {
+                    this.style.borderColor = '#4361ee';
+                    this.style.backgroundColor = '#f0f4ff';
+                    
+                    // Update preview
+                    updatePreview(this.id, this.value);
+                    
+                    // If a selection is made, enable the generate outfit button
+                    let selectedCount = 0;
+                    
+                    selects.forEach(s => {
+                        if (s.value !== '') selectedCount++;
+                    });
+                    
+                    if (selectedCount > 0) {
+                        generateBtn.style.opacity = '1';
+                        generateBtn.style.cursor = 'pointer';
+                    } else {
+                        generateBtn.style.opacity = '0.7';
+                        generateBtn.style.cursor = 'not-allowed';
+                    }
+                });
+            });
+            
+            // Generate outfit button
+            generateBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Get values from selects
+                const sneakerType = document.getElementById('sneaker-type').value;
+                const sneakerBrand = document.getElementById('sneaker-brand').value;
+                const topStyle = document.getElementById('top-style').value;
+                const topBrand = document.getElementById('top-brand').value;
+                const bottomStyle = document.getElementById('bottom-style').value;
+                const bottomBrand = document.getElementById('bottom-brand').value;
+                
+                if (sneakerType || topStyle || bottomStyle) {
+                    // Update outfit display
+                    if (sneakerType && sneakerBrand) {
+                        document.getElementById('outfit-sneakers').textContent = `${sneakerBrand.charAt(0).toUpperCase() + sneakerBrand.slice(1)} ${sneakerType.charAt(0).toUpperCase() + sneakerType.slice(1)} Sneakers`;
+                    }
+                    
+                    if (topStyle && topBrand) {
+                        document.getElementById('outfit-top').textContent = `${topBrand.charAt(0).toUpperCase() + topBrand.slice(1)} ${topStyle.charAt(0).toUpperCase() + topStyle.slice(1)} Top`;
+                    }
+                    
+                    if (bottomStyle && bottomBrand) {
+                        document.getElementById('outfit-bottom').textContent = `${bottomBrand.charAt(0).toUpperCase() + bottomBrand.slice(1)} ${bottomStyle.charAt(0).toUpperCase() + bottomStyle.slice(1)}`;
+                    }
+                    
+                    // Calculate random price
+                    const price = (Math.random() * 200 + 50).toFixed(2);
+                    document.getElementById('outfit-cost').textContent = `$${price}`;
+                    
+                    // Show outfit result
+                    outfitResult.classList.add('active');
+                    
+                    // Scroll to results
+                    outfitResult.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+            
+            // Update preview function
+            function updatePreview(selectId, value) {
+                if (!value) return;
+                
+                let previewText = '';
+                let previewElement = '';
+                
+                switch(selectId) {
+                    case 'sneaker-type':
+                    case 'sneaker-brand':
+                        previewElement = 'sneaker-preview';
+                        const sneakerType = document.getElementById('sneaker-type').value;
+                        const sneakerBrand = document.getElementById('sneaker-brand').value;
+                        
+                        if (sneakerType && sneakerBrand) {
+                            previewText = `${sneakerBrand} ${sneakerType} sneakers`;
+                        }
+                        break;
+                    case 'top-style':
+                    case 'top-brand':
+                        previewElement = 'top-preview';
+                        const topStyle = document.getElementById('top-style').value;
+                        const topBrand = document.getElementById('top-brand').value;
+                        
+                        if (topStyle && topBrand) {
+                            previewText = `${topBrand} ${topStyle} top`;
+                        }
+                        break;
+                    case 'bottom-style':
+                    case 'bottom-brand':
+                        previewElement = 'bottom-preview';
+                        const bottomStyle = document.getElementById('bottom-style').value;
+                        const bottomBrand = document.getElementById('bottom-brand').value;
+                        
+                        if (bottomStyle && bottomBrand) {
+                            previewText = `${bottomBrand} ${bottomStyle}`;
+                        }
+                        break;
+                }
+                
+                if (previewText) {
+                    document.getElementById(`${previewElement}-text`).textContent = previewText;
+                    document.getElementById(previewElement).classList.add('active');
+                }
+            }
+            
+            // Add hover effect to feature cards
+            const featureCards = document.querySelectorAll('.feature-card');
+            featureCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.querySelector('.btn').style.transform = 'translateY(-5px)';
+                    this.querySelector('.btn').style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.2)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.querySelector('.btn').style.transform = 'translateY(0)';
+                    this.querySelector('.btn').style.boxShadow = '0 5px 15px rgba(255, 77, 141, 0.4)';
+                });
+            });
+            
+            // Add animation to header on scroll
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('header');
+                if (window.scrollY > 50) {
+                    header.style.background = 'linear-gradient(135deg, var(--primary), var(--secondary))';
+                    header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.15)';
+                } else {
+                    header.style.background = 'linear-gradient(135deg, var(--primary), var(--secondary))';
+                    header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.15)';
+                }
+            });
+            
+            // Initialize with generate button disabled
+            generateBtn.style.opacity = '0.7';
+            generateBtn.style.cursor = 'not-allowed';
+        });
+    </script>
+</body>
+</html>
