@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elegant Interiors | Premium Design Solutions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #121212;
+            --secondary: #1a1a1a;
+            --accent: #c9a74d;
+            --text: #e0e0e0;
+            --text-light: #a0a0a0;
+            --white: #ffffff;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--primary);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, h4, h5 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            color: var(--white);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: rgba(18, 18, 18, 0.95);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            padding: 20px 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--white);
+        }
+        
+        .logo-text span {
+            color: var(--accent);
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-item {
+            margin: 0 15px;
+        }
+        
+        .nav-link {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent);
+            transition: var(--transition);
+        }
+        
+        .nav-link:hover {
+            color: var(--accent);
+        }
+        
+        .nav-link:hover:after {
+            width: 100%;
+        }
+        
+        .header-buttons {
+            display: flex;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-block;
+        }
+        
+        .btn-outline {
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            margin-right: 15px;
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--accent);
+            color: var(--primary);
+        }
+        
+        .btn-primary {
+            background-color: var(--accent);
+            color: var(--primary);
+        }
+        
+        .btn-primary:hover {
+            background-color: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding-top: 160px;
+            padding-bottom: 100px;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80') no-repeat center center/cover;
+            position: relative;
+        }
+        
+        .hero-content {
+            max-width: 700px;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 40px;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+        }
+        
+        /* Services Section */
+        .section {
+            padding: 100px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--accent);
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            max-width: 700px;
+            margin: 0 auto 60px;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .service-card {
+            background-color: var(--secondary);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .service-img {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+        }
+        
+        .service-content {
+            padding: 25px;
+        }
+        
+        .service-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .service-desc {
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+        
+        .service-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        
+        .service-link i {
+            margin-left: 5px;
+            transition: var(--transition);
+        }
+        
+        .service-link:hover i {
+            margin-left: 10px;
+        }
+        
+        /* Portfolio Section */
+        .portfolio {
+            background-color: var(--secondary);
+        }
+        
+        .portfolio-filters {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+        
+        .filter-btn {
+            background: transparent;
+            border: none;
+            color: var(--text);
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: var(--transition);
+            border-radius: 30px;
+        }
+        
+        .filter-btn.active, .filter-btn:hover {
+            background-color: var(--accent);
+            color: var(--primary);
+        }
+        
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .portfolio-item {
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            height: 300px;
+        }
+        
+        .portfolio-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        
+        .portfolio-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 25px;
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .portfolio-item:hover .portfolio-overlay {
+            opacity: 1;
+        }
+        
+        .portfolio-item:hover .portfolio-img {
+            transform: scale(1.1);
+        }
+        
+        .portfolio-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .portfolio-category {
+            color: var(--accent);
+            font-size: 14px;
+        }
+        
+        /* Regions Section */
+        .regions {
+            text-align: center;
+        }
+        
+        .regions-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-top: 50px;
+        }
+        
+        .region-card {
+            background-color: var(--secondary);
+            border-radius: 10px;
+            padding: 30px;
+            width: 300px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+        
+        .region-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .region-icon {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+        
+        .region-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .region-desc {
+            color: var(--text-light);
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            background-color: var(--secondary);
+        }
+        
+        .testimonial-slider {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+        
+        .testimonial {
+            text-align: center;
+            padding: 40px;
+            background-color: var(--primary);
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .testimonial-text {
+            font-size: 1.2rem;
+            font-style: italic;
+            margin-bottom: 20px;
+            color: var(--text-light);
+        }
+        
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--white);
+        }
+        
+        .testimonial-role {
+            color: var(--accent);
+            font-size: 14px;
+        }
+        
+        /* Contact Section */
+        .contact-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 50px;
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        
+        .contact-icon {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+        
+        .contact-form {
+            background-color: var(--secondary);
+            padding: 30px;
+            border-radius: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary);
+            border: 1px solid #333;
+            border-radius: 5px;
+            color: var(--text);
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        textarea.form-input {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #0a0a0a;
+            padding: 80px 0 30px;
+        }
+        
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+        
+        .footer-col h4 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-col h4:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--accent);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-link {
+            margin-bottom: 10px;
+        }
+        
+        .footer-link a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-link a:hover {
+            color: var(--accent);
+            padding-left: 5px;
+        }
+        
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--secondary);
+            border-radius: 50%;
+            color: var(--text);
+            transition: var(--transition);
+        }
+        
+        .social-icon:hover {
+            background-color: var(--accent);
+            color: var(--primary);
+            transform: translateY(-5px);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #333;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 80px;
+                flex-direction: column;
+                background-color: var(--secondary);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                padding: 20px 0;
+            }
+            
+            .nav-menu.active {
+                left: 0;
+            }
+            
+            .nav-item {
+                margin: 15px 0;
+            }
+            
+            .hamburger {
+                display: block;
+                cursor: pointer;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .section {
+                padding: 70px 0;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+        
+        /* Interactive Elements */
+        .counter {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin: 60px 0;
+        }
+        
+        .counter-item {
+            text-align: center;
+        }
+        
+        .counter-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+        
+        .counter-text {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: var(--secondary);
+            padding: 40px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: var(--text);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .close-modal:hover {
+            color: var(--accent);
+        }
+        
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 1s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <div class="logo-text">Elegant<span>Interiors</span></div>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="#services" class="nav-link">Services</a></li>
+                <li class="nav-item"><a href="#portfolio" class="nav-link">Portfolio</a></li>
+                <li class="nav-item"><a href="#regions" class="nav-link">Regions</a></li>
+                <li class="nav-item"><a href="#testimonials" class="nav-link">Testimonials</a></li>
+                <li class="nav-item"><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            
+            <div class="header-buttons">
+                <a href="#contact" class="btn btn-outline">Consultation</a>
+                <a href="#contact" class="btn btn-primary">Get Started</a>
+            </div>
+            
+            <div class="hamburger">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Transform Your Space Into A Masterpiece</h1>
+                <p class="hero-subtitle">Premium interior design services across the UK, EU, and West Africa. We create spaces that reflect your personality and inspire your life.</p>
+                <div class="hero-buttons">
+                    <a href="#portfolio" class="btn btn-primary">View Our Work</a>
+                    <a href="#services" class="btn btn-outline">Our Services</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="section">
+        <div class="container">
+            <h2 class="section-title">Our Services</h2>
+            <p class="section-subtitle">We offer a comprehensive range of interior design services to transform your residential or commercial space into a functional and beautiful environment.</p>
+            
+            <div class="services-grid">
+                <div class="service-card fade-in">
+                    <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1558&q=80" alt="Residential Design" class="service-img">
+                    <div class="service-content">
+                        <h3 class="service-title">Residential Design</h3>
+                        <p class="service-desc">Complete home transformation including living rooms, bedrooms, kitchens, and bathrooms.</p>
+                        <a href="#" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                
+                <div class="service-card fade-in">
+                    <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1500&q=80" alt="Commercial Design" class="service-img">
+                    <div class="service-content">
+                        <h3 class="service-title">Commercial Design</h3>
+                        <p class="service-desc">Office, retail, and hospitality spaces designed to enhance productivity and customer experience.</p>
+                        <a href="#" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                
+                <div class="service-card fade-in">
+                    <img src="https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1600&q=80" alt="Lighting Design" class="service-img">
+                    <div class="service-content">
+                        <h3 class="service-title">Lighting Design</h3>
+                        <p class="service-desc">Strategic lighting solutions to create ambiance and highlight architectural features.</p>
+                        <a href="#" class="service-link">Learn More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="counter">
+                <div class="counter-item">
+                    <div class="counter-number" data-target="550">0</div>
+                    <div class="counter-text">Projects Completed</div>
+                </div>
+                <div class="counter-item">
+                    <div class="counter-number" data-target="120">0</div>
+                    <div class="counter-text">Happy Clients</div>
+                </div>
+                <div class="counter-item">
+                    <div class="counter-number" data-target="15">0</div>
+                    <div class="counter-text">Years Experience</div>
+                </div>
+                <div class="counter-item">
+                    <div class="counter-number" data-target="35">0</div>
+                    <div class="counter-text">Team Members</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="section portfolio">
+        <div class="container">
+            <h2 class="section-title">Our Portfolio</h2>
+            <p class="section-subtitle">Explore our latest projects across residential and commercial design in different regions and styles.</p>
+            
+            <div class="portfolio-filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="residential">Residential</button>
+                <button class="filter-btn" data-filter="commercial">Commercial</button>
+                <button class="filter-btn" data-filter="uk">UK Projects</button>
+                <button class="filter-btn" data-filter="eu">EU Projects</button>
+                <button class="filter-btn" data-filter="africa">West Africa</button>
+            </div>
+            
+            <div class="portfolio-grid">
+                <div class="portfolio-item" data-category="residential uk">
+                    <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="Luxury Apartment London" class="portfolio-img">
+                    <div class="portfolio-overlay">
+                        <h3 class="portfolio-title">Luxury Apartment London</h3>
+                        <p class="portfolio-category">Residential / UK</p>
+                    </div>
+                </div>
+                
+                <div class="portfolio-item" data-category="commercial eu">
+                    <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1500&q=80" altOffice Berlin" class="portfolio-img">
+                    <div class="portfolio-overlay">
+                        <h3 class="portfolio-title">Modern Office Berlin</h3>
+                        <p class="portfolio-category">Commercial / EU</p>
+                    </div>
+                </div>
+                
+                <div class="portfolio-item" data-category="residential africa">
+                    <img src="https://images.unsplash.com/photo-1600573472550-8090be0cac5f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1587&q=80" alt="Lagos Penthouse" class="portfolio-img">
+                    <div class="portfolio-overlay">
+                        <h3 class="portfolio-title">Lagos Penthouse</h3>
+                        <p class="portfolio-category">Residential / West Africa</p>
+                    </div>
+                </div>
+                
+                <div class="portfolio-item" data-category="commercial uk">
+                    <img src="https://images.unsplash.com/photo-1560448204-603b3fc33ddc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80" alt="London Restaurant" class="portfolio-img">
+                    <div class="portfolio-overlay">
+                        <h3 class="portfolio-title">London Restaurant</h3>
+                        <p class="portfolio-category">Commercial / UK</p>
+                    </div>
+                </div>
+                
+                <div class="portfolio-item" data-category="residential eu">
+                    <img src="https://images.unsplash.com/photo-1536376072261-38c75010e6c9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1500&q=80" alt="Paris Apartment" class="portfolio-img">
+                    <div class="portfolio-overlay">
+                        <h3 class="portfolio-title">Paris Apartment</h3>
+                        <p class="portfolio-category">Residential / EU</p>
+                    </div>
+                </div>
+                
+                <div class="portfolio-item" data-category="commercial africa">
+                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1500&q=80" alt="Accra Office" class="portfolio-img">
+                    <div class="portfolio-overlay">
+                        <h3 class="portfolio-title">Accra Office Space</h3>
+                        <p class="portfolio-category">Commercial / West Africa</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Regions Section -->
+    <section id="regions" class="section regions">
+        <div class="container">
+            <h2 class="section-title">Our Regions</h2>
+            <p class="section-subtitle">We provide premium interior design services across three major regions, tailoring our designs to local styles and preferences.</p>
+            
+            <div class="regions-container">
+                <div class="region-card fade-in">
+                    <div class="region-icon">
+                        <i class="fas fa-landmark"></i>
+                    </div>
+                    <h3 class="region-title">United Kingdom</h3>
+                    <p class="region-desc">Elegant and timeless designs that blend traditional British aesthetics with contemporary elements for homes and businesses across England, Scotland, Wales, and Northern Ireland.</p>
+                </div>
+                
+                <div class="region-card fade-in">
+                    <div class="region-icon">
+                        <i class="fas fa-globe-europe"></i>
+                    </div>
+                    <h3 class="region-title">European Union</h3>
+                    <p class="region-desc">Inspired by diverse European design traditions, from Scandinavian minimalism to Mediterranean warmth, creating spaces that reflect the continent's rich cultural heritage.</p>
+                </div>
+                
+                <div class="region-card fade-in">
+                    <div class="region-icon">
+                        <i class="fas fa-globe-africa"></i>
+                    </div>
+                    <h3 class="region-title">West Africa</h3>
+                    <p class="region-desc">Vibrant and culturally rich designs that incorporate traditional African elements with modern functionality, serving clients in Nigeria, Ghana, Senegal, and neighboring countries.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="section testimonials">
+        <div class="container">
+            <h2 class="section-title">Client Testimonials</h2>
+            <p class="section-subtitle">Hear what our clients have to say about our design services and their experience working with our team.</p>
+            
+            <div class="testimonial-slider">
+                <div class="testimonial">
+                    <p class="testimonial-text">"Elegant Interiors transformed our London apartment into a dream home. Their attention to detail and understanding of our style preferences was exceptional. The project was completed on time and within budget."</p>
+                    <h4 class="testimonial-author">Sarah Johnson</h4>
+                    <p class="testimonial-role">London, UK</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <p class="section-subtitle">Reach out to us for a consultation or inquiry about our interior design services.</p>
+            
+            <div class="contact-container">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h3>Visit Us</h3>
+                            <p>123 Design Street, London, UK</p>
+                            <p>456 Style Avenue, Paris, France</p>
+                            <p>789 Interior Road, Lagos, Nigeria</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div>
+                            <h3>Call Us</h3>
+                            <p>UK: +44 20 1234 5678</p>
+                            <p>EU: +33 1 2345 6789</p>
+                            <p>Africa: +234 1 234 5678</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h3>Email Us</h3>
+                            <p>info@elegantinteriors.com</p>
+                            <p>projects@elegantinteriors.com</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form">
+                    <form id="designForm">
+                        <div class="form-group">
+                            <input type="text" class="form-input" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="form-input" placeholder="Your Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" class="form-input" placeholder="Your Phone">
+                        </div>
+                        <div class="form-group">
+                            <select class="form-input" required>
+                                <option value="" disabled selected>Select Region</option>
+                                <option value="uk">United Kingdom</option>
+                                <option value="eu">European Union</option>
+                                <option value="africa">West Africa</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-input" required>
+                                <option value="" disabled selected>Service Type</option>
+                                <option value="residential">Residential Design</option>
+                                <option value="commercial">Commercial Design</option>
+                                <option value="lighting">Lighting Design</option>
+                                <option value="consultation">Consultation</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-input" placeholder="Your Message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Request</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-col">
+                    <h4>About Us</h4>
+                    <p>Elegant Interiors is a premium interior design company serving clients across the UK, EU, and West Africa. We create beautiful, functional spaces that reflect our clients' personalities and needs.</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Services</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="#">Residential Design</a></li>
+                        <li class="footer-link"><a href="#">Commercial Design</a></li>
+                        <li class="footer-link"><a href="#">Lighting Design</a></li>
+                        <li class="footer-link"><a href="#">Space Planning</a></li>
+                        <li class="footer-link"><a href="#">Furniture Selection</a></li>
+                        <li class="footer-link"><a href="#">Color Consultation</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li class="footer-link"><a href="#">Home</a></li>
+                        <li class="footer-link"><a href="#services">Services</a></li>
+                        <li class="footer-link"><a href="#portfolio">Portfolio</a></li>
+                        <li class="footer-link"><a href="#regions">Regions</a></li>
+                        <li class="footer-link"><a href="#testimonials">Testimonials</a></li>
+                        <li class="footer-link"><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h4>Newsletter</h4>
+                    <p>Subscribe to our newsletter for design tips, trends, and exclusive offers.</p>
+                    <form class="footer-form">
+                        <input type="email" placeholder="Your Email" class="form-input" required>
+                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023 Elegant Interiors. All Rights Reserved. | Designed with <i class="fas fa-heart" style="color: #c9a74d;"></i></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            hamburger.innerHTML = navMenu.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+        
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+                hamburger.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+        
+        // Portfolio filtering
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const portfolioItems = document.querySelectorAll('.portfolio-item');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active class to clicked button
+                button.classList.add('active');
+                
+                // Get filter value
+                const filterValue = button.getAttribute('data-filter');
+                
+                // Show/hide portfolio items based on filter
+                portfolioItems.forEach(item => {
+                    if (filterValue === 'all' || item.getAttribute('data-category').includes(filterValue)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Counter animation
+        const counters = document.querySelectorAll('.counter-number');
+        const speed = 200;
+        
+        const animateCounters = () => {
+            counters.forEach(counter => {
+                const target = +counter.getAttribute('data-target');
+                const count = +counter.innerText;
+                const increment = Math.ceil(target / speed);
+                
+                if (count < target) {
+                    counter.innerText = Math.min(count + increment, target);
+                    setTimeout(() => animateCounters(), 1);
+                }
+            });
+        };
+        
+        // Intersection Observer for fade-in animations
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeIn 1s ease forwards';
+                    fadeObserver.unobserve(entry.target);
+                    
+                    // Animate counters when the services section is in view
+                    if (entry.target.classList.contains('service-card')) {
+                        animateCounters();
+                    }
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        fadeElements.forEach(element => {
+            fadeObserver.observe(element);
+        });
+        
+        // Form submission
+        const contactForm = document.getElementById('designForm');
+        
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thank you for your inquiry! We will contact you shortly.');
+            contactForm.reset();
+        });
+    </script>
+</body>
+</html>
