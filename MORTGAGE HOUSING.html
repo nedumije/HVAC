@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Mortgage Solutions | UK & West Africa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --primary: #0a84ff;
+            --secondary: #ff9500;
+            --accent: #00c7b5;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #f8f9fa;
+            --gray: #2c2c2c;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none"/><path d="M0,50 L100,50 M50,0 L50,100" stroke="rgba(10, 132, 255, 0.03)" stroke-width="1"/></svg>');
+            background-attachment: fixed;
+            line-height: 1.6;
+        }
+        
+        .watermark {
+            position: fixed;
+            opacity: 0.03;
+            font-size: 15rem;
+            color: white;
+            z-index: -1;
+            font-weight: bold;
+            pointer-events: none;
+        }
+        
+        .watermark-1 {
+            top: 10%;
+            left: 5%;
+            transform: rotate(-30deg);
+        }
+        
+        .watermark-2 {
+            bottom: 10%;
+            right: 5%;
+            transform: rotate(15deg);
+        }
+        
+        header {
+            background: linear-gradient(to right, var(--darker), var(--gray));
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo img {
+            height: 50px;
+        }
+        
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .cta-button {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(10, 132, 255, 0.3);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(10, 132, 255, 0.4);
+        }
+        
+        .hero {
+            padding: 5rem 2rem;
+            text-align: center;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23121212"/><path d="M0,0 L100,100 M100,0 L0,100" stroke="%232c2c2c" stroke-width="1"/></svg>');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            color: #ccc;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.2rem;
+            color: var(--primary);
+            position: relative;
+            padding-bottom: 1rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            border-radius: 2px;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
+        .feature-card {
+            background: var(--gray);
+            border-radius: 10px;
+            padding: 2rem;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            border-color: var(--primary);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent);
+        }
+        
+        .calculator {
+            background: var(--darker);
+            padding: 3rem;
+            border-radius: 15px;
+            margin-bottom: 4rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group select, .form-group input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: var(--dark);
+            color: var(--light);
+            font-size: 1rem;
+        }
+        
+        .form-group select:focus, .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.3);
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        
+        .results {
+            background: var(--gray);
+            padding: 2rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+        }
+        
+        .results h3 {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        
+        .pdf-button {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            background: linear-gradient(to right, var(--secondary), #ff6b00);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .pdf-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(255, 149, 0, 0.3);
+        }
+        
+        footer {
+            background: linear-gradient(to right, var(--darker), var(--gray));
+            padding: 4rem 2rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+        
+        .footer-column h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-column a {
+            color: #ccc;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-column a:hover {
+            color: var(--primary);
+            padding-left: 5px;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--dark);
+            color: var(--light);
+            transition: var(--transition);
+        }
+        
+        .social-icons a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #999;
+        }
+        
+        @media (max-width: 992px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            nav ul {
+                gap: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero {
+                padding: 3rem 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .calculator {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="watermark watermark-1">GMS</div>
+    <div class="watermark watermark-2">MORTGAGE</div>
+    
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-home" style="font-size: 2rem; color: var(--primary);"></i>
+                <div class="logo-text">Global Mortgage Solutions</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Mortgages</a></li>
+                    <li><a href="#">Calculator</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </nav>
+            <button class="cta-button">Apply Now <i class="fas fa-arrow-right"></i></button>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <h1>Your Dream Home, Our Mortgage Solutions</h1>
+        <p>With over 20 years of experience in the UK and West Africa, we provide tailored mortgage solutions to help you achieve your home ownership dreams. Competitive rates, personalized service, and expert guidance.</p>
+        <button class="cta-button">Get Started Today</button>
+    </section>
+    
+    <div class="container">
+        <h2 class="section-title">Our Services</h2>
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-pound-sign"></i>
+                </div>
+                <h3>UK Mortgage Solutions</h3>
+                <p>First-time buyer mortgages, buy-to-let, remortgaging, equity release, and more for UK properties.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-building"></i>
+                </div>
+                <h3>West Africa Properties</h3>
+                <p>Specialized mortgage products for properties in Nigeria, Ghana, Senegal, and other West African countries.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-calculator"></i>
+                </div>
+                <h3>Mortgage Calculator</h3>
+                <p>Calculate your monthly payments, compare mortgage options, and plan your budget effectively.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-hand-holding-usd"></i>
+                </div>
+                <h3>Refinancing Options</h3>
+                <p>Lower your monthly payments, reduce your interest rate, or access equity in your home.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Mortgage Protection</h3>
+                <p>Insurance products to protect your mortgage repayments in case of illness, accident, or unemployment.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-university"></i>
+                </div>
+                <h3>Expert Advice</h3>
+                <p>Our mortgage advisors provide personalized guidance to help you make the right decisions.</p>
+            </div>
+        </div>
+        
+        <h2 class="section-title">Mortgage Calculator</h2>
+        <div class="calculator">
+            <div class="grid-3">
+                <div class="form-group">
+                    <label for="country">Select Country</label>
+                    <select id="country">
+                        <option value="uk">United Kingdom</option>
+                        <option value="nigeria">Nigeria</option>
+                        <option value="ghana">Ghana</option>
+                        <option value="senegal">Senegal</option>
+                        <option value="cameroon">Cameroon</option>
+                        <option value="ivorycoast">Ivory Coast</option>
+                        <option value="liberia">Liberia</option>
+                        <option value="sierraleone">Sierra Leone</option>
+                        <option value="togo">Togo</option>
+                        <option value="benin">Benin</option>
+                        <option value="niger">Niger</option>
+                        <option value="mali">Mali</option>
+                        <option value="burkinafaso">Burkina Faso</option>
+                        <option value="guinea">Guinea</option>
+                        <option value="gambia">Gambia</option>
+                        <option value="capeverde">Cape Verde</option>
+                        <option value="mauritania">Mauritania</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="propertyType">Property Type</label>
+                    <select id="propertyType">
+                        <option value="detached">Detached House</option>
+                        <option value="semi-detached">Semi-Detached House</option>
+                        <option value="terraced">Terraced House</option>
+                        <option value="flat">Flat/Apartment</option>
+                        <option value="bungalow">Bungalow</option>
+                        <option value="cottage">Cottage</option>
+                        <option value="mansion">Mansion</option>
+                        <option value="villa">Villa</option>
+                        <option value="duplex">Duplex</option>
+                        <option value="townhouse">Townhouse</option>
+                        <option value="penthouse">Penthouse</option>
+                        <option value="studio">Studio Apartment</option>
+                        <option value="commercial">Commercial Property</option>
+                        <option value="land">Land</option>
+                        <option value="farm">Farm</option>
+                        <option value="beachhouse">Beach House</option>
+                        <option value="island">Island Property</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="mortgageType">Mortgage Type</label>
+                    <select id="mortgageType">
+                        <option value="fixed">Fixed Rate</option>
+                        <option value="variable">Variable Rate</option>
+                        <option value="tracker">Tracker</option>
+                        <option value="discount">Discount</option>
+                        <option value="capped">Capped Rate</option>
+                        <option value="standard">Standard Variable</option>
+                        <option value="interest">Interest Only</option>
+                        <option value="repayment">Repayment</option>
+                        <option value="offset">Offset</option>
+                        <option value="buy-to-let">Buy-to-Let</option>
+                        <option value="commercial">Commercial</option>
+                        <option value="bridging">Bridging Loan</option>
+                        <option value="equity">Equity Release</option>
+                        <option value="shared">Shared Ownership</option>
+                        <option value="help-to-buy">Help to Buy</option>
+                        <option value="right-to-buy">Right to Buy</option>
+                        <option value="self-build">Self-Build</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="propertyValue">Property Value (£)</label>
+                    <input type="number" id="propertyValue" placeholder="Enter property value" value="300000">
+                </div>
+                
+                <div class="form-group">
+                    <label for="deposit">Deposit Amount (£)</label>
+                    <input type="number" id="deposit" placeholder="Enter deposit amount" value="60000">
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="loanTerm">Loan Term (Years)</label>
+                    <select id="loanTerm">
+                        <option value="5">5 years</option>
+                        <option value="10">10 years</option>
+                        <option value="15">15 years</option>
+                        <option value="20">20 years</option>
+                        <option value="25">25 years</option>
+                        <option value="30" selected>30 years</option>
+                        <option value="35">35 years</option>
+                        <option value="40">40 years</option>
+                        <option value="45">45 years</option>
+                        <option value="50">50 years</option>
+                        <option value="55">55 years</option>
+                        <option value="60">60 years</option>
+                        <option value="65">65 years</option>
+                        <option value="70">70 years</option>
+                        <option value="75">75 years</option>
+                        <option value="80">80 years</option>
+                        <option value="85">85 years</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="interestRate">Interest Rate (%)</label>
+                    <input type="number" id="interestRate" step="0.01" placeholder="Enter interest rate" value="4.5">
+                </div>
+            </div>
+            
+            <button class="cta-button" onclick="calculateMortgage()">Calculate Mortgage</button>
+            
+            <div class="results" id="results">
+                <h3>Your Mortgage Calculation</h3>
+                <div class="result-item">
+                    <span>Loan Amount:</span>
+                    <span>£240,000</span>
+                </div>
+                <div class="result-item">
+                    <span>Monthly Payment:</span>
+                    <span>£1,216</span>
+                </div>
+                <div class="result-item">
+                    <span>Total Payment:</span>
+                    <span>£437,760</span>
+                </div>
+                <div class="result-item">
+                    <span>Total Interest:</span>
+                    <span>£197,760</span>
+                </div>
+                <div class="result-item">
+                    <span>Loan-to-Value Ratio:</span>
+                    <span>80%</span>
+                </div>
+            </div>
+            
+            <button class="pdf-button" onclick="generatePDF()">
+                <i class="fas fa-file-pdf"></i> Generate PDF Quote
+            </button>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Global Mortgage Solutions</h3>
+                <p>Your trusted partner for mortgage solutions in the UK and West Africa. We're committed to helping you find the perfect mortgage for your dream home.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Mortgage Calculator</a></li>
+                    <li><a href="#">UK Mortgages</a></li>
+                    <li><a href="#">West Africa Mortgages</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>UK Mortgage Products</h3>
+                <ul>
+                    <li><a href="#">First Time Buyers</a></li>
+                    <li><a href="#">Buy-to-Let</a></li>
+                    <li><a href="#">Remortgaging</a></li>
+                    <li><a href="#">Equity Release</a></li>
+                    <li><a href="#">Help to Buy</a></li>
+                    <li><a href="#">Shared Ownership</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>West Africa Products</h3>
+                <ul>
+                    <li><a href="#">Nigeria Mortgages</a></li>
+                    <li><a href="#">Ghana Mortgages</a></li>
+                    <li><a href="#">Senegal Properties</a></li>
+                    <li><a href="#">Expat Mortgages</a></li>
+                    <li><a href="#">Investment Properties</a></li>
+                    <li><a href="#">Commercial Real Estate</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Contact Information</h3>
+                <ul>
+                    <li><i class="fas fa-map-marker-alt"></i> 123 Finance Street, London, UK</li>
+                    <li><i class="fas fa-phone"></i> +44 20 1234 5678</li>
+                    <li><i class="fas fa-envelope"></i> info@globalmortgage.com</li>
+                    <li><i class="fas fa-clock"></i> Mon-Fri: 9am-5pm</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2023 Global Mortgage Solutions. All rights reserved. | FCA Registered: 123456</p>
+        </div>
+    </footer>
+    
+    <script>
+        function calculateMortgage() {
+            const propertyValue = parseFloat(document.getElementById('propertyValue').value);
+            const deposit = parseFloat(document.getElementById('deposit').value);
+            const interestRate = parseFloat(document.getElementById('interestRate').value) / 100 / 12;
+            const loanTerm = parseInt(document.getElementById('loanTerm').value) * 12;
+            
+            const loanAmount = propertyValue - deposit;
+            const ltv = (loanAmount / propertyValue) * 100;
+            
+            const x = Math.pow(1 + interestRate, loanTerm);
+            const monthlyPayment = (loanAmount * x * interestRate) / (x - 1);
+            
+            const totalPayment = monthlyPayment * loanTerm;
+            const totalInterest = totalPayment - loanAmount;
+            
+            document.getElementById('results').innerHTML = `
+                <h3>Your Mortgage Calculation</h3>
+                <div class="result-item">
+                    <span>Loan Amount:</span>
+                    <span>£${loanAmount.toLocaleString('en-GB', {maximumFractionDigits: 2})}</span>
+                </div>
+                <div class="result-item">
+                    <span>Monthly Payment:</span>
+                    <span>£${monthlyPayment.toLocaleString('en-GB', {maximumFractionDigits: 2})}</span>
+                </div>
+                <div class="result-item">
+                    <span>Total Payment:</span>
+                    <span>£${totalPayment.toLocaleString('en-GB', {maximumFractionDigits: 2})}</span>
+                </div>
+                <div class="result-item">
+                    <span>Total Interest:</span>
+                    <span>£${totalInterest.toLocaleString('en-GB', {maximumFractionDigits: 2})}</span>
+                </div>
+                <div class="result-item">
+                    <span>Loan-to-Value Ratio:</span>
+                    <span>${ltv.toFixed(2)}%</span>
+                </div>
+            `;
+        }
+        
+        function generatePDF() {
+            const element = document.getElementById('results');
+            const options = {
+                margin: 10,
+                filename: 'mortgage_quote.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            
+            html2pdf().set(options).from(element).save();
+        }
+        
+        // Initialize with a calculation
+        window.onload = calculateMortgage;
+    </script>
+</body>
+</html>
